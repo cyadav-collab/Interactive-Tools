@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50 text-slate-800">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBDP Mathematics: Real-World Composite Functions & Domain Explorer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for rendering LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        if (window.onMathJaxReady) window.onMathJaxReady();
+                    });
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom light scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Flowchart animation keyframes */
+        @keyframes flowPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .animate-flow {
+            animation: flowPulse 2.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col bg-slate-50 text-slate-800 overflow-x-hidden">
+
+    <!-- Header / Navigation Bar (Light Theme) -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm backdrop-blur-md bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Title & Badge -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md">
+                        <i class="fa-solid fa-diagram-project text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-lg text-slate-900 tracking-tight">Composite Functions Explorer</h1>
+                            <span class="bg-indigo-100 text-indigo-800 border border-indigo-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                IBDP Maths AA / AI
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500">Real-World Applications, Practical Inputs & Physical Domains</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200" id="mainTabNav">
+                    <button onclick="switchTab('realworld')" id="tab-realworld" class="nav-tab active px-4 py-2 text-xs font-semibold rounded-lg transition-all text-indigo-700 bg-white shadow-sm flex items-center space-x-2 border border-slate-200/60">
+                        <i class="fa-solid fa-earth-americas text-indigo-600"></i>
+                        <span>1. Real-World Contexts & Domains</span>
+                    </button>
+                    <button onclick="switchTab('visualizer')" id="tab-visualizer" class="nav-tab px-4 py-2 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center space-x-2">
+                        <i class="fa-solid fa-gears text-slate-500"></i>
+                        <span>2. Function Machine & Domain Simulator</span>
+                    </button>
+                </nav>
+
+                <!-- Mobile Navigation Selector -->
+                <div class="md:hidden">
+                    <select id="mobileTabSelect" onchange="switchTab(this.value)" class="bg-white text-slate-800 border border-slate-300 text-xs rounded-lg p-2 focus:ring-2 focus:ring-indigo-500">
+                        <option value="realworld">1. Real-World Contexts & Domains</option>
+                        <option value="visualizer">2. Function Machine & Domain Simulator</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+
+        <!-- ==================== TAB 1: REAL-WORLD CONTEXT & DOMAINS ==================== -->
+        <section id="section-realworld" class="tab-content block space-y-6">
+            <!-- Conceptual Overview Banner -->
+            <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white p-6 rounded-2xl shadow-md border border-indigo-700">
+                <div class="flex items-start space-x-4">
+                    <div class="bg-white/10 p-3 rounded-xl border border-white/20 text-indigo-200 hidden sm:block">
+                        <i class="fa-solid fa-lightbulb text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white mb-1.5">Why Do We Composite Functions in Real Life?</h2>
+                        <p class="text-indigo-100 text-sm leading-relaxed">
+                            In the real world, many quantities are linked through a **chain reaction**. One variable determines an intermediate result, which then determines the final outcome! 
+                            When function $g$ converts input $x$ into $g(x)$, and function $f$ converts $g(x)$ into $f(g(x))$, we create a **Composite Function**:
+                            <span class="inline-block bg-white/15 px-3 py-1 rounded-lg font-mono font-bold text-amber-300 border border-white/20 ml-1">
+                                \((f \circ g)(x) = f(g(x))\)
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario Selection Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Scenario A -->
+                <button onclick="setScenario('wages')" id="btn-scenario-wages" class="scenario-card p-5 rounded-2xl border-2 border-indigo-600 bg-white shadow-sm text-left transition-all hover:shadow-md focus:outline-none">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Scenario A</span>
+                        <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Hours Worked \(\rightarrow\) Income Tax</h3>
+                    <p class="text-xs text-slate-500 mt-1">Hours worked determines Gross Earnings, which determines Tax owed.</p>
+                </button>
+
+                <!-- Scenario B -->
+                <button onclick="setScenario('ripple')" id="btn-scenario-ripple" class="scenario-card p-5 rounded-2xl border-2 border-slate-200 bg-white shadow-sm text-left transition-all hover:border-slate-300 hover:shadow-md focus:outline-none">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Scenario B</span>
+                        <div class="p-2 bg-cyan-50 rounded-lg text-cyan-600">
+                            <i class="fa-solid fa-water"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Ripples in a Pond</h3>
+                    <p class="text-xs text-slate-500 mt-1">Time elapsed determines Ripple Radius, which determines Area of water affected.</p>
+                </button>
+
+                <!-- Scenario C -->
+                <button onclick="setScenario('altitude')" id="btn-scenario-altitude" class="scenario-card p-5 rounded-2xl border-2 border-slate-200 bg-white shadow-sm text-left transition-all hover:border-slate-300 hover:shadow-md focus:outline-none">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Scenario C</span>
+                        <div class="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                            <i class="fa-solid fa-mountain"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Altitude \(\rightarrow\) Water Boiling Point</h3>
+                    <p class="text-xs text-slate-500 mt-1">Mountain Altitude determines Temperature, which determines Water Boiling Point.</p>
+                </button>
+            </div>
+
+            <!-- SCENARIO WORKSPACE A: WAGES & TAX -->
+            <div id="workspace-wages" class="scenario-workspace bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-4 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-indigo-600"></i>
+                            Simple Job Model: Hours Worked \(\rightarrow\) Income Tax Owed
+                        </h3>
+                        <p class="text-xs text-slate-500">Calculate how many tax dollars you pay directly as a function of hours worked.</p>
+                    </div>
+
+                    <!-- Interactive Slider Control -->
+                    <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <label class="text-xs font-semibold text-slate-700">Hours Worked (\(h\)):</label>
+                        <input type="range" id="wageHoursInput" min="0" max="60" step="1" value="30" oninput="updateWagesScenario()" class="w-32 accent-indigo-600">
+                        <span id="wageHoursDisplay" class="font-mono text-sm font-bold text-indigo-600 min-w-[55px]">30 hrs</span>
+                    </div>
+                </div>
+
+                <!-- Pipeline Display -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+                    <!-- Step 1: Input -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+                        <span class="text-slate-500 uppercase text-[10px] font-sans font-bold tracking-wider">1. Initial Input (\(h\))</span>
+                        <div id="wage-h-val" class="text-2xl font-bold text-slate-800">30 hrs</div>
+                        <span class="text-slate-500 text-[11px] font-sans block">Hours worked per week</span>
+                    </div>
+
+                    <!-- Step 2: Inner Function -->
+                    <div class="bg-indigo-50/70 p-4 rounded-xl border border-indigo-200 text-center space-y-2">
+                        <span class="text-indigo-700 uppercase text-[10px] font-sans font-bold tracking-wider">2. Inner Function \(g(h)\)</span>
+                        <div id="wage-g-val" class="text-2xl font-bold text-indigo-700">$750.00</div>
+                        <span class="text-indigo-900 text-[11px] font-sans block">Gross Earnings: \(g(h) = 25h\) ($25/hr)</span>
+                    </div>
+
+                    <!-- Step 3: Outer Function -->
+                    <div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-200 text-center space-y-2">
+                        <span class="text-emerald-700 uppercase text-[10px] font-sans font-bold tracking-wider">3. Outer Composite \((T \circ g)(h)\)</span>
+                        <div id="wage-t-val" class="text-2xl font-bold text-emerald-700">$112.50</div>
+                        <span class="text-emerald-900 text-[11px] font-sans block">Tax Owed (15%): \(T(g) = 0.15g\)</span>
+                    </div>
+                </div>
+
+                <!-- Formula Breakdown Box -->
+                <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 text-xs space-y-2 text-slate-700">
+                    <strong class="text-indigo-900 font-bold block text-sm">Direct Composite Formula:</strong>
+                    <div class="font-mono text-sm text-indigo-800 bg-white p-2.5 rounded-lg border border-indigo-200 inline-block">
+                        \((T \circ g)(h) = T(g(h)) = 0.15 \times (25h) = 3.75h \text{ dollars}\)
+                    </div>
+                    <p class="text-slate-600 text-xs">
+                        Instead of performing two calculations (first calculating gross pay, then taking 15%), the composite function \((T \circ g)(h) = 3.75h\) tells you directly that you pay <strong>$3.75 in tax for every hour worked</strong>!
+                    </p>
+                </div>
+
+                <!-- Domain & Practical Input Analysis -->
+                <div class="bg-amber-50 rounded-xl p-5 border border-amber-200 text-xs space-y-3">
+                    <div class="flex items-center space-x-2 text-amber-900 font-bold text-sm">
+                        <i class="fa-solid fa-compass text-amber-600 text-base"></i>
+                        <span>Practical Domain & Input Discussion</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Mathematical Domain vs. Physical Domain:</strong>
+                            <p>Mathematically, the expression \(3.75h\) accepts any real number \(h \in \mathbb{R}\). However, in real life:</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li>Negative hours are impossible (\(h \ge 0\)).</li>
+                                <li>A human cannot work more than 168 hours in a week (\(h \le 168\)).</li>
+                                <li><strong>Practical Domain:</strong> \(0 \le h \le 60\) (or \(80\) max).</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Corresponding Practical Range:</strong>
+                            <p>The output represents Tax Owed in dollars:</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li>At minimum input \(h = 0\text{ hrs}\), Tax = \(\$0.00\).</li>
+                                <li>At full week \(h = 40\text{ hrs}\), Tax = \(\$150.00\).</li>
+                                <li><strong>Practical Range:</strong> \([\$0, \$225]\) for up to 60 hours.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCENARIO WORKSPACE B: RIPPLES IN A POND -->
+            <div id="workspace-ripple" class="scenario-workspace hidden bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-4 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-water text-cyan-600"></i>
+                            Expanding Ripple: Time \(\rightarrow\) Radius \(\rightarrow\) Area
+                        </h3>
+                        <p class="text-xs text-slate-500">Calculate surface area affected by a water ripple over time.</p>
+                    </div>
+
+                    <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <label class="text-xs font-semibold text-slate-700">Time elapsed (\(t\)):</label>
+                        <input type="range" id="timeInput" min="0" max="10" step="0.5" value="4" oninput="updateRippleScenario()" class="w-32 accent-cyan-600">
+                        <span id="timeDisplay" class="font-mono text-sm font-bold text-cyan-600 min-w-[50px]">4.0 s</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                    <!-- Canvas Drawing -->
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col items-center justify-center relative min-h-[250px]">
+                        <canvas id="rippleCanvas" width="280" height="220" class="rounded-lg"></canvas>
+                        <span class="absolute bottom-3 text-[11px] text-cyan-300 font-mono">Dynamic Water Ripple Simulation</span>
+                    </div>
+
+                    <!-- Formulas & Values -->
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider">Individual Functions</h4>
+                            <div class="text-xs space-y-2 font-mono">
+                                <p class="p-2.5 bg-white rounded border border-slate-200 text-cyan-700">
+                                    Radius from time: \(r(t) = 2t \text{ meters}\)
+                                </p>
+                                <p class="p-2.5 bg-white rounded border border-slate-200 text-teal-700">
+                                    Area from radius: \(A(r) = \pi r^2 \text{ m}^2\)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-cyan-50 p-4 rounded-xl border border-cyan-200 space-y-2">
+                            <h4 class="text-xs font-bold uppercase text-cyan-900 tracking-wider">Composite Function: Area over Time \((A \circ r)(t)\)</h4>
+                            <p class="text-xs text-slate-700">
+                                Area directly as a function of time:
+                                <span class="block text-cyan-900 font-mono font-bold text-sm my-1">
+                                    \((A \circ r)(t) = A(r(t)) = \pi (2t)^2 = 4\pi t^2 \text{ m}^2\)
+                                </span>
+                            </p>
+                            <div class="bg-white p-2.5 rounded border border-cyan-200 font-mono text-xs flex justify-between items-center">
+                                <span>Area at \(t = \)<span id="r-time-val">4.0</span>\(\text{s}\):</span>
+                                <span id="r-area-val" class="font-bold text-cyan-700 text-sm">201.1 m²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Domain & Range Analysis -->
+                <div class="bg-amber-50 rounded-xl p-5 border border-amber-200 text-xs space-y-3">
+                    <div class="flex items-center space-x-2 text-amber-900 font-bold text-sm">
+                        <i class="fa-solid fa-compass text-amber-600 text-base"></i>
+                        <span>Practical Domain & Input Discussion</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Allowed Inputs (Domain):</strong>
+                            <p>Time cannot be negative (\(t < 0\)) prior to dropping the stone.</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li><strong>Mathematical Domain:</strong> \(t \in \mathbb{R}\)</li>
+                                <li><strong>Physical Domain:</strong> \(t \ge 0\) (seconds)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Possible Outputs (Range):</strong>
+                            <p>Area must be non-negative because radius \(r(t) \ge 0\).</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li><strong>Physical Range:</strong> \(A \ge 0 \text{ m}^2\)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCENARIO WORKSPACE C: ALTITUDE TO BOILING POINT -->
+            <div id="workspace-altitude" class="scenario-workspace hidden bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-4 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-mountain text-emerald-600"></i>
+                            Mountain Altitude \(\rightarrow\) Atmospheric Temp \(\rightarrow\) Water Boiling Point
+                        </h3>
+                        <p class="text-xs text-slate-500">Why water boils at lower temperatures at higher elevations!</p>
+                    </div>
+
+                    <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <label class="text-xs font-semibold text-slate-700">Altitude (\(a\)):</label>
+                        <input type="range" id="altInput" min="0" max="8" step="0.5" value="2" oninput="updateAltitudeScenario()" class="w-32 accent-emerald-600">
+                        <span id="altDisplay" class="font-mono text-sm font-bold text-emerald-600 min-w-[55px]">2.0 km</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+                        <span class="text-slate-500 uppercase text-[10px] font-sans font-bold tracking-wider">1. Altitude Input (\(a\))</span>
+                        <div id="alt-a-val" class="text-2xl font-bold text-slate-800">2.0 km</div>
+                        <span class="text-slate-500 text-[11px] font-sans block">Elevation above sea level</span>
+                    </div>
+
+                    <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-center space-y-2">
+                        <span class="text-emerald-700 uppercase text-[10px] font-sans font-bold tracking-wider">2. Temperature \(T(a)\)</span>
+                        <div id="alt-t-val" class="text-2xl font-bold text-emerald-700">7.0 °C</div>
+                        <span class="text-slate-600 text-[11px] font-sans block">Temp drops 6.5°C per km: \(20 - 6.5a\)</span>
+                    </div>
+
+                    <div class="bg-teal-50 p-4 rounded-xl border border-teal-200 text-center space-y-2">
+                        <span class="text-teal-700 uppercase text-[10px] font-sans font-bold tracking-wider">3. Boiling Point \((B \circ T)(a)\)</span>
+                        <div id="alt-b-val" class="text-2xl font-bold text-teal-700">93.3 °C</div>
+                        <span class="text-slate-600 text-[11px] font-sans block">Boiling point: \(100 - 3.35a\)</span>
+                    </div>
+                </div>
+
+                <!-- Domain & Range Analysis -->
+                <div class="bg-amber-50 rounded-xl p-5 border border-amber-200 text-xs space-y-3">
+                    <div class="flex items-center space-x-2 text-amber-900 font-bold text-sm">
+                        <i class="fa-solid fa-compass text-amber-600 text-base"></i>
+                        <span>Practical Domain & Input Constraints</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Physical Domain Restriction:</strong>
+                            <p>Altitude \(a\) cannot be lower than sea level (\(0\text{ km}\)) or higher than Mount Everest (\(\approx 8.8\text{ km}\)).</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li><strong>Practical Domain:</strong> \(0 \le a \le 8.8 \text{ km}\)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Practical Range:</strong>
+                            <p>At Everest peak (\(a = 8.85\text{ km}\)), water boils at roughly \(70^\circ\text{C}\)!</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li><strong>Practical Range:</strong> \([70^\circ\text{C}, 100^\circ\text{C}]\)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: FUNCTION MACHINE & GRAPH SIMULATOR ==================== -->
+        <section id="section-visualizer" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <!-- Header & Preset Controls -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-gears text-indigo-600"></i>
+                            Function Machine & Interactive Grapher
+                        </h2>
+                        <p class="text-xs text-slate-500">Explore how inputs flow through inner machine \(g(x)\) into outer machine \(f(u)\).</p>
+                    </div>
+
+                    <!-- Preset Selector -->
+                    <div class="flex items-center space-x-2">
+                        <label class="text-xs font-semibold text-slate-700">Real-World Presets:</label>
+                        <select id="functionPreset" onchange="loadFunctionPreset()" class="bg-slate-50 text-slate-800 border border-slate-300 text-xs rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 font-medium">
+                            <option value="p1">1. Earnings to Tax: g(x) = 25x , f(u) = 0.15u</option>
+                            <option value="p2">2. Ripple Radius to Area: g(x) = 2x , f(u) = 3.14 · u^2</option>
+                            <option value="p3">3. Altitude to Temp: g(x) = 20 - 6.5x , f(u) = 100 - 0.51·(20 - u)</option>
+                            <option value="p4">4. Restricted Domain: g(x) = x - 3 , f(u) = sqrt(u)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Custom Function Inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div>
+                        <label class="block text-xs font-bold text-cyan-700 mb-1">Inner Machine \(g(x)\):</label>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-mono text-slate-500 text-sm">g(x) =</span>
+                            <input type="text" id="gInput" value="25x" onchange="updateGrapher()" class="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-indigo-700 mb-1">Outer Machine \(f(u)\):</label>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-mono text-slate-500 text-sm">f(u) =</span>
+                            <input type="text" id="fInput" value="0.15u" onchange="updateGrapher()" class="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Machine Flow Display -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Interactive Input Machine</span>
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <label class="text-xs text-slate-700 font-mono">Input x = </label>
+                            <input type="range" id="xSlider" min="0" max="10" step="0.5" value="4" oninput="updateGrapher()" class="flex-1 sm:w-48 accent-indigo-600">
+                            <span id="xValDisplay" class="font-mono text-sm font-bold text-indigo-600 min-w-[35px]">4.0</span>
+                        </div>
+                    </div>
+
+                    <!-- Flow Blocks -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-center text-xs font-mono items-center">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-[10px] text-slate-500 block font-sans font-semibold">1. Input Value</span>
+                            <span class="text-slate-800 font-bold">x = </span>
+                            <span id="p-x" class="text-indigo-600 font-bold">4.0</span>
+                        </div>
+
+                        <div class="bg-cyan-50 p-3 rounded-xl border border-cyan-200 animate-flow shadow-sm">
+                            <span class="text-[10px] text-cyan-800 block font-sans font-semibold">2. Inner Output \(g(x)\)</span>
+                            <span id="p-gx" class="text-cyan-800 font-bold">g(4.0) = 100.0</span>
+                        </div>
+
+                        <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200 animate-flow shadow-sm">
+                            <span class="text-[10px] text-indigo-800 block font-sans font-semibold">3. Outer Output \(f(u)\)</span>
+                            <span id="p-fgx" class="text-indigo-800 font-bold">f(100.0) = 15.0</span>
+                        </div>
+
+                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 shadow-sm">
+                            <span class="text-[10px] text-emerald-800 block font-sans font-semibold">Composite Final</span>
+                            <span id="p-out" class="text-emerald-800 font-bold">(f ∘ g)(4.0) = 15.0</span>
+                        </div>
+                    </div>
+
+                    <!-- Domain Status Warning Box -->
+                    <div id="domainStatusBox" class="hidden p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center space-x-2">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500 text-sm"></i>
+                        <span id="domainStatusText">Value is outside the valid physical domain!</span>
+                    </div>
+                </div>
+
+                <!-- Canvas Graph Plotter -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
+                        <h3 class="text-xs font-bold uppercase text-slate-500 tracking-wider">Curves & Domain Plotter</h3>
+                        <div class="flex flex-wrap gap-4 text-xs font-mono">
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded-full bg-cyan-500 inline-block"></span>
+                                <span class="text-slate-700">Inner g(x)</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span>
+                                <span class="text-slate-700">Outer f(x)</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded-full bg-emerald-600 inline-block"></span>
+                                <span class="text-slate-900 font-bold">Composite (f ∘ g)(x)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full overflow-hidden flex justify-center bg-slate-50 rounded-xl p-3 border border-slate-200">
+                        <canvas id="mainGraphCanvas" width="700" height="360" class="w-full max-w-2xl h-auto rounded bg-white border border-slate-200 shadow-inner cursor-crosshair"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Logic Engine -->
+    <script>
+        // State variables
+        let currentTab = 'realworld';
+        let currentScenario = 'wages';
+
+        // Canvas context pointers
+        let rippleCanvas, rippleCtx;
+        let graphCanvas, graphCtx;
+
+        // Initialize on page load
+        window.onload = function() {
+            rippleCanvas = document.getElementById('rippleCanvas');
+            if (rippleCanvas) rippleCtx = rippleCanvas.getContext('2d');
+
+            graphCanvas = document.getElementById('mainGraphCanvas');
+            if (graphCanvas) graphCtx = graphCanvas.getContext('2d');
+
+            // Initialize scenario states
+            updateWagesScenario();
+            updateRippleScenario();
+            updateAltitudeScenario();
+            updateGrapher();
+
+            // Re-render LaTeX math
+            triggerMathJax();
+        };
+
+        // MathJax helper
+        function triggerMathJax() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.log(err));
+            }
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            currentTab = tabId;
+
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const targetSection = document.getElementById(`section-${tabId}`);
+            if (targetSection) targetSection.classList.remove('hidden');
+
+            // Nav styling
+            document.querySelectorAll('#mainTabNav .nav-tab').forEach(btn => {
+                btn.classList.remove('text-indigo-700', 'bg-white', 'shadow-sm', 'border', 'border-slate-200/60');
+                btn.classList.add('text-slate-600', 'hover:text-slate-900');
+            });
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-indigo-700', 'bg-white', 'shadow-sm', 'border', 'border-slate-200/60');
+                activeBtn.classList.remove('text-slate-600');
+            }
+
+            // Sync Mobile dropdown
+            const mobileSelect = document.getElementById('mobileTabSelect');
+            if (mobileSelect) mobileSelect.value = tabId;
+
+            // Redraw graphs
+            if (tabId === 'visualizer') {
+                setTimeout(updateGrapher, 50);
+            } else if (tabId === 'realworld' && currentScenario === 'ripple') {
+                setTimeout(updateRippleScenario, 50);
+            }
+
+            triggerMathJax();
+        }
+
+        /* ==================== REAL-WORLD SCENARIOS LOGIC ==================== */
+        function setScenario(scenario) {
+            currentScenario = scenario;
+            document.querySelectorAll('.scenario-workspace').forEach(el => el.classList.add('hidden'));
+            const targetWorkspace = document.getElementById(`workspace-${scenario}`);
+            if (targetWorkspace) targetWorkspace.classList.remove('hidden');
+
+            // Update card borders
+            document.querySelectorAll('.scenario-card').forEach(card => {
+                card.classList.remove('border-indigo-600');
+                card.classList.add('border-slate-200');
+            });
+            const activeCard = document.getElementById(`btn-scenario-${scenario}`);
+            if (activeCard) {
+                activeCard.classList.add('border-indigo-600');
+                activeCard.classList.remove('border-slate-200');
+            }
+
+            if (scenario === 'ripple') updateRippleScenario();
+            triggerMathJax();
+        }
+
+        function updateWagesScenario() {
+            const h = parseFloat(document.getElementById('wageHoursInput').value);
+            document.getElementById('wageHoursDisplay').innerText = `${h} hrs`;
+
+            const gross = h * 25;
+            const tax = gross * 0.15;
+
+            document.getElementById('wage-h-val').innerText = `${h} hrs`;
+            document.getElementById('wage-g-val').innerText = `$${gross.toFixed(2)}`;
+            document.getElementById('wage-t-val').innerText = `$${tax.toFixed(2)}`;
+        }
+
+        function updateRippleScenario() {
+            const t = parseFloat(document.getElementById('timeInput').value);
+            document.getElementById('timeDisplay').innerText = `${t.toFixed(1)} s`;
+
+            const r = 2 * t;
+            const area = Math.PI * r * r;
+
+            document.getElementById('r-time-val').innerText = t.toFixed(1);
+            document.getElementById('r-area-val').innerText = `${area.toFixed(1)} m²`;
+
+            if (!rippleCtx) return;
+            rippleCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
+
+            const centerX = rippleCanvas.width / 2;
+            const centerY = rippleCanvas.height / 2;
+            const maxRadiusPx = 95;
+            const radiusPx = (r / 20) * maxRadiusPx;
+
+            // Outer expanding circle
+            rippleCtx.beginPath();
+            rippleCtx.arc(centerX, centerY, Math.min(radiusPx, 100), 0, 2 * Math.PI);
+            rippleCtx.fillStyle = 'rgba(6, 182, 212, 0.25)';
+            rippleCtx.fill();
+            rippleCtx.strokeStyle = '#0891b2';
+            rippleCtx.lineWidth = 2;
+            rippleCtx.stroke();
+
+            // Center droplet
+            rippleCtx.beginPath();
+            rippleCtx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
+            rippleCtx.fillStyle = '#0891b2';
+            rippleCtx.fill();
+
+            // Radius vector
+            if (radiusPx > 2) {
+                rippleCtx.beginPath();
+                rippleCtx.moveTo(centerX, centerY);
+                rippleCtx.lineTo(centerX + radiusPx, centerY);
+                rippleCtx.strokeStyle = '#0284c7';
+                rippleCtx.lineWidth = 1.5;
+                rippleCtx.setLineDash([3, 3]);
+                rippleCtx.stroke();
+                rippleCtx.setLineDash([]);
+
+                rippleCtx.fillStyle = '#0284c7';
+                rippleCtx.font = '11px JetBrains Mono, monospace';
+                rippleCtx.fillText(`r = ${r.toFixed(1)}m`, centerX + radiusPx / 2 - 15, centerY - 6);
+            }
+        }
+
+        function updateAltitudeScenario() {
+            const a = parseFloat(document.getElementById('altInput').value);
+            document.getElementById('altDisplay').innerText = `${a.toFixed(1)} km`;
+
+            const temp = 20 - 6.5 * a;
+            const boiling = 100 - 3.35 * a;
+
+            document.getElementById('alt-a-val').innerText = `${a.toFixed(1)} km`;
+            document.getElementById('alt-t-val').innerText = `${temp.toFixed(1)} °C`;
+            document.getElementById('alt-b-val').innerText = `${boiling.toFixed(1)} °C`;
+        }
+
+        /* ==================== TAB 2: FUNCTION PIPELINE & GRAPHER ==================== */
+        function formatExpression(expr) {
+            // Replace common patterns with math-friendly eval patterns
+            // Allow implicit multiplication like '2x' or '0.15u'
+            return expr
+                .replace(/·/g, '*') // Allow user to type dot
+                .replace(/(\d)([x|u])/g, '$1*$2') // e.g., 25x -> 25*x
+                .replace(/([x|u])(\d)/g, '$1*$2') // just in case
+                .replace(/(\))([x|u])/g, '$1*$2')
+                .replace(/(\d)(\()/g, '$1*$2'); 
+        }
+
+        function safeEval(expr, xVal) {
+            try {
+                let formattedExpr = formatExpression(expr);
+                let sanitized = formattedExpr
+                    .replace(/x/g, `(${xVal})`)
+                    .replace(/u/g, `(${xVal})`)
+                    .replace(/sqrt/g, 'Math.sqrt')
+                    .replace(/abs/g, 'Math.abs')
+                    .replace(/sin/g, 'Math.sin')
+                    .replace(/cos/g, 'Math.cos')
+                    .replace(/\^/g, '**');
+
+                const val = Function(`'use strict'; return (${sanitized})`)();
+                return isNaN(val) || !isFinite(val) ? null : val;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function loadFunctionPreset() {
+            const preset = document.getElementById('functionPreset').value;
+            if (preset === 'p1') {
+                document.getElementById('gInput').value = '25x';
+                document.getElementById('fInput').value = '0.15u';
+                document.getElementById('xSlider').value = '4';
+            } else if (preset === 'p2') {
+                document.getElementById('gInput').value = '2x';
+                document.getElementById('fInput').value = '3.14159 · u^2';
+                document.getElementById('xSlider').value = '3';
+            } else if (preset === 'p3') {
+                document.getElementById('gInput').value = '20 - 6.5x';
+                document.getElementById('fInput').value = '100 - 0.51·(20 - u)';
+                document.getElementById('xSlider').value = '2';
+            } else if (preset === 'p4') {
+                document.getElementById('gInput').value = 'x - 3';
+                document.getElementById('fInput').value = 'sqrt(u)';
+                document.getElementById('xSlider').value = '5';
+            }
+            updateGrapher();
+        }
+
+        function updateGrapher() {
+            const gExpr = document.getElementById('gInput').value;
+            const fExpr = document.getElementById('fInput').value;
+            const xVal = parseFloat(document.getElementById('xSlider').value);
+
+            document.getElementById('xValDisplay').innerText = xVal.toFixed(1);
+            document.getElementById('p-x').innerText = xVal.toFixed(1);
+
+            const gxVal = safeEval(gExpr, xVal);
+            const domainBox = document.getElementById('domainStatusBox');
+            const domainText = document.getElementById('domainStatusText');
+
+            if (gxVal === null) {
+                document.getElementById('p-gx').innerText = 'Undefined!';
+                document.getElementById('p-fgx').innerText = 'Undefined!';
+                document.getElementById('p-out').innerText = 'Undefined!';
+                domainBox.classList.remove('hidden');
+                domainText.innerText = `Domain Exception: Input x = ${xVal} produces an undefined inner output g(x).`;
+                drawMainGraph(gExpr, fExpr, xVal, null, null);
+                return;
+            } else {
+                document.getElementById('p-gx').innerText = `g(${xVal.toFixed(1)}) = ${gxVal.toFixed(1)}`;
+            }
+
+            const fgxVal = safeEval(fExpr, gxVal);
+            if (fgxVal === null) {
+                document.getElementById('p-fgx').innerText = 'Undefined!';
+                document.getElementById('p-out').innerText = 'Undefined!';
+                domainBox.classList.remove('hidden');
+                domainText.innerText = `Domain Restriction: Inner result g(${xVal.toFixed(1)}) = ${gxVal.toFixed(1)} is outside outer function domain f(u)!`;
+            } else {
+                domainBox.classList.add('hidden');
+                document.getElementById('p-fgx').innerText = `f(${gxVal.toFixed(1)}) = ${fgxVal.toFixed(1)}`;
+                document.getElementById('p-out').innerText = `(f ∘ g)(${xVal.toFixed(1)}) = ${fgxVal.toFixed(1)}`;
+            }
+
+            drawMainGraph(gExpr, fExpr, xVal, gxVal, fgxVal);
+        }
+
+        function drawMainGraph(gExpr, fExpr, currentX, currentGx, currentFgx) {
+            if (!graphCtx) return;
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
+
+            graphCtx.clearRect(0, 0, w, h);
+
+            const originX = 50;
+            const originY = h - 40;
+            const scaleX = 55; 
+            const scaleY = 4; // Auto-scaling grid
+
+            // Draw Grid Lines
+            graphCtx.strokeStyle = '#f1f5f9';
+            graphCtx.lineWidth = 1;
+
+            for (let x = originX; x < w; x += 50) {
+                graphCtx.beginPath();
+                graphCtx.moveTo(x, 0);
+                graphCtx.lineTo(x, originY);
+                graphCtx.stroke();
+            }
+            for (let y = originY; y > 0; y -= 40) {
+                graphCtx.beginPath();
+                graphCtx.moveTo(originX, y);
+                graphCtx.lineTo(w, y);
+                graphCtx.stroke();
+            }
+
+            // Draw Axes
+            graphCtx.strokeStyle = '#64748b';
+            graphCtx.lineWidth = 1.5;
+            // X-Axis
+            graphCtx.beginPath();
+            graphCtx.moveTo(originX, originY);
+            graphCtx.lineTo(w - 10, originY);
+            graphCtx.stroke();
+            // X-Axis Label
+            graphCtx.fillStyle = '#64748b';
+            graphCtx.font = '12px Inter, sans-serif';
+            graphCtx.fillText('x (Input)', w - 50, originY + 15);
+            
+            // Y-Axis
+            graphCtx.beginPath();
+            graphCtx.moveTo(originX, originY);
+            graphCtx.lineTo(originX, 10);
+            graphCtx.stroke();
+            // Y-Axis Label
+            graphCtx.fillText('y (Output)', originX + 10, 20);
+
+            // Draw axis ticks & numbers
+            graphCtx.fillStyle = '#94a3b8';
+            graphCtx.font = '10px Inter, sans-serif';
+            for (let x = originX + 50; x < w; x += 50) {
+                const val = (x - originX) / scaleX;
+                graphCtx.fillText(val.toFixed(1), x - 10, originY + 15);
+            }
+            for (let y = originY - 40; y > 0; y -= 40) {
+                const val = (originY - y) / scaleY;
+                graphCtx.fillText(val.toFixed(0), originX - 25, y + 4);
+            }
+
+
+            // Plot curves
+            plotCurve(gExpr, '#06b6d4', 2);
+            plotCurve(fExpr, '#6366f1', 2);
+            plotCompositeCurve(gExpr, fExpr, '#059669', 3);
+
+            // Highlight active point and show coordinates
+            if (currentX !== null && currentFgx !== null) {
+                const px = originX + currentX * scaleX;
+                const py = originY - currentFgx * scaleY;
+
+                if (px >= originX && px <= w && py >= 0 && py <= originY) {
+                    graphCtx.beginPath();
+                    graphCtx.moveTo(px, originY);
+                    graphCtx.lineTo(px, py);
+                    graphCtx.strokeStyle = '#10b981';
+                    graphCtx.setLineDash([3, 3]);
+                    graphCtx.stroke();
+                    graphCtx.setLineDash([]);
+
+                    graphCtx.beginPath();
+                    graphCtx.arc(px, py, 6, 0, 2 * Math.PI);
+                    graphCtx.fillStyle = '#059669';
+                    graphCtx.fill();
+                    graphCtx.strokeStyle = '#ffffff';
+                    graphCtx.lineWidth = 2;
+                    graphCtx.stroke();
+                    
+                    // Draw Coordinate Box
+                    const coordText = `(${currentX.toFixed(1)}, ${currentFgx.toFixed(1)})`;
+                    graphCtx.font = 'bold 11px JetBrains Mono, monospace';
+                    const textWidth = graphCtx.measureText(coordText).width;
+                    
+                    // Box background
+                    graphCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    graphCtx.fillRect(px + 10, py - 20, textWidth + 10, 20);
+                    graphCtx.strokeStyle = '#059669';
+                    graphCtx.lineWidth = 1;
+                    graphCtx.strokeRect(px + 10, py - 20, textWidth + 10, 20);
+                    
+                    // Text
+                    graphCtx.fillStyle = '#047857';
+                    graphCtx.fillText(coordText, px + 15, py - 6);
+                }
+            }
+
+            function plotCurve(expr, color, lineWidth) {
+                graphCtx.beginPath();
+                graphCtx.strokeStyle = color;
+                graphCtx.lineWidth = lineWidth;
+                let started = false;
+
+                for (let px = originX; px <= w; px += 2) {
+                    const mathX = (px - originX) / scaleX;
+                    const mathY = safeEval(expr, mathX);
+
+                    if (mathY !== null) {
+                        const canvasY = originY - mathY * scaleY;
+                        if (canvasY >= -50 && canvasY <= originY + 50) {
+                            if (!started) {
+                                graphCtx.moveTo(px, canvasY);
+                                started = true;
+                            } else {
+                                graphCtx.lineTo(px, canvasY);
+                            }
+                        } else {
+                            started = false;
+                        }
+                    } else {
+                        started = false;
+                    }
+                }
+                graphCtx.stroke();
+            }
+
+            function plotCompositeCurve(gExp, fExp, color, lineWidth) {
+                graphCtx.beginPath();
+                graphCtx.strokeStyle = color;
+                graphCtx.lineWidth = lineWidth;
+                let started = false;
+
+                for (let px = originX; px <= w; px += 2) {
+                    const mathX = (px - originX) / scaleX;
+                    const innerY = safeEval(gExp, mathX);
+
+                    if (innerY !== null) {
+                        const compY = safeEval(fExp, innerY);
+                        if (compY !== null) {
+                            const canvasY = originY - compY * scaleY;
+                            if (canvasY >= -50 && canvasY <= originY + 50) {
+                                if (!started) {
+                                    graphCtx.moveTo(px, canvasY);
+                                    started = true;
+                                } else {
+                                    graphCtx.lineTo(px, canvasY);
+                                }
+                            } else {
+                                started = false;
+                            }
+                        } else {
+                            started = false;
+                        }
+                    } else {
+                        started = false;
+                    }
+                }
+                graphCtx.stroke();
+            }
+        }
+    </script>
+</body>
+</html>
