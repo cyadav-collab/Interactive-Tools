@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBDP Mathematics Interactive Lab Portal</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,8 +28,8 @@
         /* Math Grid Background Pattern */
         .math-grid-bg {
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+                linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
             background-size: 32px 32px;
         }
 
@@ -43,8 +43,8 @@
             50% { transform: translateY(18px) rotate(-6deg); }
         }
         @keyframes pulse-glow {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.08); }
+            0%, 100% { opacity: 0.35; transform: scale(1); }
+            50% { opacity: 0.75; transform: scale(1.08); }
         }
 
         .float-1 { animation: float-slow 7s ease-in-out infinite; }
@@ -54,16 +54,16 @@
 
         /* Glassmorphism Cards */
         .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(255, 255, 255, 0.12);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .glass-card:hover {
             transform: translateY(-6px);
-            border-color: rgba(168, 85, 247, 0.4);
+            border-color: rgba(168, 85, 247, 0.45);
             box-shadow: 0 20px 35px -10px rgba(124, 58, 237, 0.25);
         }
 
@@ -90,46 +90,25 @@
         <div class="absolute top-16 left-[8%] text-purple-500/20 text-6xl font-serif float-1">∫</div>
         <div class="absolute top-48 right-[12%] text-indigo-500/20 text-5xl font-mono float-2">f(x)</div>
         <div class="absolute bottom-32 left-[15%] text-cyan-500/20 text-7xl font-bold float-3">∑</div>
-        <div class="absolute top-1/3 right-[25%] text-pink-500/20 text-6xl float-1">π</div>
+        <div class="absolute top-1/3 right-[22%] text-pink-500/20 text-6xl float-1">π</div>
         <div class="absolute bottom-1/4 right-[8%] text-amber-500/20 text-5xl font-mono float-2">lim x→∞</div>
         <div class="absolute top-2/3 left-[5%] text-emerald-500/20 text-6xl float-3">√x</div>
+        <div class="absolute top-20 right-[40%] text-teal-500/15 text-5xl float-2">θ</div>
+        <div class="absolute bottom-12 left-[45%] text-purple-400/15 text-6xl float-1">∞</div>
         
         <!-- Ambient Radial Glows -->
-        <div class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-600/15 rounded-full blur-[120px] pulse-bg pointer-events-none"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[100px] pulse-bg pointer-events-none"></div>
+        <div class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[650px] h-[650px] bg-indigo-600/15 rounded-full blur-[130px] pulse-bg pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[550px] h-[550px] bg-purple-600/15 rounded-full blur-[110px] pulse-bg pointer-events-none"></div>
     </div>
 
-    <!-- Top Interactive Toolbar: Customize Teacher Name -->
-    <div class="relative z-50 bg-slate-900/90 border-b border-slate-800 backdrop-blur-md py-2 px-4 shadow-md">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-sm">
-            <div class="flex items-center gap-2 text-slate-300">
-                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                </span>
-                <span class="font-medium">Live Portal Customizer:</span>
-                <span class="text-xs text-slate-400 hidden md:inline">(Type your name below to personalize your site)</span>
-            </div>
-            
-            <div class="flex items-center gap-2 w-full sm:w-auto">
-                <label for="teacherNameInput" class="text-xs text-slate-400 whitespace-nowrap">Teacher Name:</label>
-                <div class="relative flex-1 sm:w-64">
-                    <input type="text" id="teacherNameInput" value="Mr. Mathematics" 
-                        class="w-full bg-slate-800 border border-slate-700 focus:border-purple-500 text-white text-xs rounded-lg px-3 py-1.5 outline-none transition"
-                        placeholder="e.g. Ms. Smith / Dr. Jones">
-                    <span class="absolute right-2 top-1.5 text-[10px] text-purple-400 font-semibold uppercase tracking-wider">Saved</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
 
         <!-- Hero Header -->
         <header class="text-center max-w-3xl mx-auto mb-12">
-            <!-- IBDP Subject Tag Badges -->
-            <div class="inline-flex flex-wrap items-center justify-center gap-2 mb-4">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-graduation-cap"></i> IBDP Mathematics Portal
+            <!-- IBDP Subject Badges -->
+            <div class="inline-flex flex-wrap items-center justify-center gap-2 mb-5">
+                <span class="px-3.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-300 flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-graduation-cap text-indigo-400"></i> IBDP Mathematics Portal
                 </span>
                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/20 text-blue-400">
                     AA SL & HL
@@ -147,21 +126,21 @@
                 </span>
             </h1>
 
-            <p class="text-slate-300 text-base sm:text-lg mb-6 leading-relaxed">
-                A collection of dynamic visual tools and inquiry lab simulations designed for IB Diploma Programme Mathematics students.
+            <p class="text-slate-300 text-base sm:text-lg mb-7 leading-relaxed">
+                Dynamic visual tools and inquiry lab simulations crafted specifically for IB Diploma Programme Mathematics students.
             </p>
 
-            <!-- Prominent Creator Badge Header -->
-            <div class="inline-flex items-center gap-3 bg-slate-800/80 border border-purple-500/30 rounded-2xl px-5 py-2.5 shadow-lg shadow-purple-500/5 backdrop-blur-md">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
-                    <i class="fa-solid fa-chalkboard-user"></i>
+            <!-- Permanent Creator Badge (No Customizer Bar) -->
+            <div class="inline-flex items-center gap-3.5 bg-slate-800/90 border border-purple-500/30 rounded-2xl px-6 py-3 shadow-xl shadow-purple-950/20 backdrop-blur-md">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
+                    <i class="fa-solid fa-user-gear"></i>
                 </div>
                 <div class="text-left">
-                    <p class="text-[11px] uppercase tracking-wider text-purple-300 font-bold">Curated & Designed By</p>
-                    <p id="displayTeacherName" class="text-base font-bold text-white leading-tight">Mr. Mathematics</p>
+                    <p class="text-[10px] uppercase tracking-wider text-purple-300 font-bold">Curated & Designed By</p>
+                    <p class="text-lg font-bold text-white leading-snug">Chandrabhan</p>
                 </div>
-                <span class="ml-2 pl-3 border-l border-slate-700 text-xs text-slate-400 flex items-center gap-1">
-                    <i class="fa-solid fa-check-circle text-emerald-400"></i> Verified Teacher
+                <span class="ml-2 pl-3.5 border-l border-slate-700 text-xs text-slate-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i> IB Math Educator
                 </span>
             </div>
         </header>
@@ -170,51 +149,48 @@
         <section class="mb-10">
             <div class="glass-card rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 
-                <!-- Topic Filter Buttons -->
+                <!-- Filter Buttons -->
                 <div class="flex flex-wrap items-center gap-2 w-full md:w-auto" id="filterContainer">
-                    <button data-filter="all" class="filter-btn active-filter px-4 py-2 rounded-xl text-xs font-semibold bg-purple-600 text-white shadow-md transition">
-                        All Simulations
+                    <button data-filter="all" class="filter-btn active-filter px-4 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md transition-all">
+                        All Simulations (2)
                     </button>
-                    <button data-filter="topic2" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+                    <button data-filter="topic2" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all">
                         Topic 2: Functions
-                    </button>
-                    <button data-filter="topic5" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-                        Topic 5: Calculus
                     </button>
                 </div>
 
                 <!-- Search Input -->
                 <div class="relative w-full md:w-72">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                     <input type="text" id="searchInput" placeholder="Search simulations..." 
-                        class="w-full bg-slate-900/80 border border-slate-700 focus:border-purple-500 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none transition">
+                        class="w-full bg-slate-900/90 border border-slate-700 focus:border-purple-500 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none transition-all">
                 </div>
 
             </div>
         </section>
 
-        <!-- Simulation Cards Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8" id="simulationsGrid">
+        <!-- Simulation Cards Grid (Only active modules) -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8" id="simulationsGrid">
 
             <!-- Card 1: Rational Functions Visualizer -->
-            <div class="sim-card glass-card rounded-3xl overflow-hidden flex flex-col group" data-topic="topic2" data-keywords="rational functions asymptote domain range vertical horizontal drug model">
-                <!-- Card Header Accent Banner -->
+            <div class="sim-card glass-card rounded-3xl overflow-hidden flex flex-col group" data-topic="topic2" data-keywords="rational functions asymptote domain range vertical horizontal drug model business cost 2.8">
+                <!-- Banner Accent -->
                 <div class="h-3 bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-400"></div>
                 
-                <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+                <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
                     <div>
-                        <!-- Topic Tag & IB Badge -->
+                        <!-- Topic Badge & IB Standard -->
                         <div class="flex items-center justify-between gap-2 mb-4">
                             <span class="px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider bg-purple-500/10 border border-purple-500/20 text-purple-300">
                                 Topic 2.8 • Rational Functions
                             </span>
-                            <span class="text-xs font-semibold text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded-md border border-cyan-500/20">
+                            <span class="text-xs font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded-md border border-cyan-500/20">
                                 AA SL / HL
                             </span>
                         </div>
 
                         <!-- Card Title -->
-                        <h3 class="heading-font text-2xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors flex items-center justify-between">
+                        <h3 class="heading-font text-2xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors flex items-center justify-between">
                             <span>Rational Functions Explorer</span>
                             <i class="fa-solid fa-chart-line text-purple-400 text-xl group-hover:scale-110 transition-transform"></i>
                         </h3>
@@ -224,30 +200,30 @@
                             Investigate asymptotes, holes, domain restrictions, and real-world mathematical applications including drug concentration models and average business costs.
                         </p>
 
-                        <!-- Highlights List -->
-                        <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
+                        <!-- Highlight Bullet Points -->
+                        <div class="space-y-2.5 mb-8">
+                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
                                 <span>15-Minute Pre-Lesson Discovery Lab Task</span>
                             </div>
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
+                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
                                 <span>Real-time dynamic graph sandbox ($a, b, c, d$ sliders)</span>
                             </div>
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Interactive Asymptote Detector</span>
+                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
+                                <span>Interactive Asymptote Detector & Business Models</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Action Button Bar -->
-                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
-                        <a href="interactive_rational_functions_visualizer.html" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-600/20 transition-all transform active:scale-95">
+                    <!-- Action Link & Direct Share -->
+                    <div class="pt-5 border-t border-slate-800 flex items-center justify-between gap-3">
+                        <a href="interactive_rational_functions_visualizer.html" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-600/25 transition-all transform active:scale-95">
                             <span>Launch Simulation</span>
                             <i class="fa-solid fa-arrow-right text-xs"></i>
                         </a>
-                        <button onclick="copyLink('interactive_rational_functions_visualizer.html')" title="Copy Direct Link" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">
+                        <button onclick="copyLink('interactive_rational_functions_visualizer.html')" title="Copy Direct Link" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all">
                             <i class="fa-solid fa-link text-xs"></i>
                         </button>
                     </div>
@@ -255,24 +231,24 @@
             </div>
 
             <!-- Card 2: Composite Functions Simulation -->
-            <div class="sim-card glass-card rounded-3xl overflow-hidden flex flex-col group" data-topic="topic2" data-keywords="composite functions mapping domain range inverse f(g(x)) g(f(x))">
-                <!-- Card Header Accent Banner -->
+            <div class="sim-card glass-card rounded-3xl overflow-hidden flex flex-col group" data-topic="topic2" data-keywords="composite functions mapping domain range inverse f(g(x)) g(f(x)) 2.5 pipeline">
+                <!-- Banner Accent -->
                 <div class="h-3 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400"></div>
                 
-                <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+                <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
                     <div>
-                        <!-- Topic Tag & IB Badge -->
+                        <!-- Topic Badge & IB Standard -->
                         <div class="flex items-center justify-between gap-2 mb-4">
                             <span class="px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider bg-pink-500/10 border border-pink-500/20 text-pink-300">
-                                Topic 2.2 • Composite Functions
+                                Topic 2.5 • Composite Functions
                             </span>
-                            <span class="text-xs font-semibold text-pink-400 bg-pink-500/10 px-2.5 py-0.5 rounded-md border border-pink-500/20">
+                            <span class="text-xs font-bold text-pink-400 bg-pink-500/10 px-2.5 py-0.5 rounded-md border border-pink-500/20">
                                 AA & AI SL/HL
                             </span>
                         </div>
 
                         <!-- Card Title -->
-                        <h3 class="heading-font text-2xl font-bold text-white mb-2 group-hover:text-pink-300 transition-colors flex items-center justify-between">
+                        <h3 class="heading-font text-2xl font-bold text-white mb-3 group-hover:text-pink-300 transition-colors flex items-center justify-between">
                             <span>Composite Functions Lab</span>
                             <i class="fa-solid fa-diagram-project text-pink-400 text-xl group-hover:scale-110 transition-transform"></i>
                         </h3>
@@ -282,119 +258,31 @@
                             Visualize how inputs pass through inner and outer function pipelines $f(g(x))$ vs $g(f(x))$, with step-by-step mapping diagrams and domain constraint checkers.
                         </p>
 
-                        <!-- Highlights List -->
-                        <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
+                        <!-- Highlight Bullet Points -->
+                        <div class="space-y-2.5 mb-8">
+                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
                                 <span>Visual function machine pipeline builder</span>
                             </div>
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
+                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
                                 <span>Non-commutative property checker $f(g(x)) \neq g(f(x))$</span>
                             </div>
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Domain and Range constraint explorer</span>
+                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
+                                <span>Interactive domain and range constraint explorer</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Action Button Bar -->
-                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
-                        <a id="compositeLinkBtn" href="composite.html" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white shadow-lg shadow-pink-600/20 transition-all transform active:scale-95">
+                    <!-- Action Link & Direct Share -->
+                    <div class="pt-5 border-t border-slate-800 flex items-center justify-between gap-3">
+                        <a href="composite_functions.html" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white shadow-lg shadow-pink-600/25 transition-all transform active:scale-95">
                             <span>Launch Simulation</span>
                             <i class="fa-solid fa-arrow-right text-xs"></i>
                         </a>
-                        <button onclick="copyLink('composite.html')" title="Copy Direct Link" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">
+                        <button onclick="copyLink('composite_functions.html')" title="Copy Direct Link" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all">
                             <i class="fa-solid fa-link text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 3: Function Transformations (Upcoming / Additional Module) -->
-            <div class="sim-card glass-card rounded-3xl overflow-hidden flex flex-col group opacity-90" data-topic="topic2" data-keywords="transformations translation stretch reflection a f(b(x-c))+d">
-                <div class="h-3 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
-                <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between gap-2 mb-4">
-                            <span class="px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-                                Topic 2.3 • Transformations
-                            </span>
-                            <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
-                                AA & AI SL/HL
-                            </span>
-                        </div>
-
-                        <h3 class="heading-font text-2xl font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors flex items-center justify-between">
-                            <span>Function Transformations</span>
-                            <i class="fa-solid fa-sliders text-emerald-400 text-xl"></i>
-                        </h3>
-
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                            Master vertical and horizontal stretches, translations, and reflections $a \cdot f(b(x-c)) + d$ with instant graph overlay comparisons.
-                        </p>
-
-                        <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Multi-transform vector shifts</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Coordinate tracking table $(x,y) \rightarrow (x',y')$</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
-                        <button onclick="showToast('Add your transformations HTML file to activate this button!')" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
-                            <span>Explore Module</span>
-                            <i class="fa-solid fa-layer-group text-xs text-slate-400"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 4: Calculus Derivatives Visualizer -->
-            <div class="sim-card glass-card rounded-3xl overflow-hidden flex flex-col group opacity-90" data-topic="topic5" data-keywords="calculus derivative tangent secant rate of change optimization">
-                <div class="h-3 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
-                <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between gap-2 mb-4">
-                            <span class="px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider bg-blue-500/10 border border-blue-500/20 text-blue-300">
-                                Topic 5.1 • Differential Calculus
-                            </span>
-                            <span class="text-xs font-semibold text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-md border border-blue-500/20">
-                                AA & AI SL/HL
-                            </span>
-                        </div>
-
-                        <h3 class="heading-font text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors flex items-center justify-between">
-                            <span>Derivative & Tangent Lab</span>
-                            <i class="fa-solid fa-wave-square text-blue-400 text-xl"></i>
-                        </h3>
-
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                            See how secant lines approach tangent lines as $h \to 0$. Dynamically trace gradient functions $f'(x)$ alongside original curves.
-                        </p>
-
-                        <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Limit definition of derivative visualization</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-xs text-slate-300">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Instantaneous rate of change slope tracer</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
-                        <button onclick="showToast('Add your calculus HTML file to activate this button!')" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
-                            <span>Explore Module</span>
-                            <i class="fa-solid fa-square-root-variable text-xs text-slate-400"></i>
                         </button>
                     </div>
                 </div>
@@ -402,95 +290,27 @@
 
         </section>
 
-        <!-- Filename Settings Helper Drawer / Footer Info -->
-        <div class="mt-12 glass-card rounded-2xl p-6 border border-slate-800 text-slate-300 text-xs leading-relaxed flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 text-sm font-bold">
-                    <i class="fa-solid fa-gear"></i>
-                </div>
-                <div>
-                    <h4 class="font-bold text-white text-sm mb-1">Teacher Quick Tip: Managing Filenames</h4>
-                    <p class="text-slate-400">
-                        Make sure the target filename in your cards matches your uploaded file name on GitHub (e.g., <code class="text-purple-300 bg-slate-900 px-1.5 py-0.5 rounded">composite.html</code> or <code class="text-purple-300 bg-slate-900 px-1.5 py-0.5 rounded">interactive_rational_functions_visualizer.html</code>).
-                    </p>
-                </div>
-            </div>
-            
-            <button onclick="openConfigModal()" class="px-4 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 font-semibold text-xs transition whitespace-nowrap">
-                <i class="fa-solid fa-sliders mr-1.5"></i> Change Composite Link
-            </button>
-        </div>
-
         <!-- Footer -->
-        <footer class="mt-12 text-center text-slate-500 text-xs">
-            <p>© IBDP Mathematics Learning Resources • Created for classroom exploration</p>
+        <footer class="mt-16 text-center text-slate-500 text-xs py-4 border-t border-slate-800/60">
+            <p>© IBDP Mathematics Learning Resources • Curated & Designed by Chandrabhan</p>
         </footer>
 
     </div>
 
-    <!-- Custom Config Modal -->
-    <div id="configModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-3xl p-6 border border-slate-700 shadow-2xl">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="heading-font text-lg font-bold text-white">Configure Composite File Name</h3>
-                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-white text-sm">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <p class="text-slate-300 text-xs mb-4">
-                If your newly uploaded Composite Functions file has a different name than <code class="text-pink-300">composite.html</code>, type it here to update the button link:
-            </p>
-            
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Your HTML File Name:</label>
-            <input type="text" id="customFileNameInput" placeholder="e.g. composite_functions.html" 
-                class="w-full bg-slate-900 border border-slate-700 focus:border-purple-500 rounded-xl px-3 py-2 text-xs text-white outline-none mb-4">
-            
-            <div class="flex items-center justify-end gap-2">
-                <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-800">
-                    Cancel
-                </button>
-                <button onclick="saveCustomFileName()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-purple-600 text-white hover:bg-purple-500">
-                    Update Link
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification Container -->
+    <!-- Toast Popup Notification -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-slate-800 border border-purple-500/50 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2">
-            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <div class="bg-slate-800 border border-purple-500/50 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
             <span id="toastMsg">Link copied to clipboard!</span>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            initTeacherName();
             initFiltersAndSearch();
         });
 
-        /* Teacher Name LocalStorage Handler */
-        function initTeacherName() {
-            const nameInput = document.getElementById('teacherNameInput');
-            const displayTitle = document.getElementById('displayTeacherName');
-
-            // Load saved teacher name if present
-            const savedName = localStorage.getItem('ibdp_teacher_name');
-            if (savedName) {
-                nameInput.value = savedName;
-                displayTitle.textContent = savedName;
-            }
-
-            // Real-time update on typing
-            nameInput.addEventListener('input', (e) => {
-                const newName = e.target.value.trim() || 'Mr. Mathematics';
-                displayTitle.textContent = newName;
-                localStorage.setItem('ibdp_teacher_name', newName);
-            });
-        }
-
-        /* Filter and Search Logic */
+        /* Filter and Search Event Handlers */
         function initFiltersAndSearch() {
             const filterBtns = document.querySelectorAll('.filter-btn');
             const searchInput = document.getElementById('searchInput');
@@ -516,33 +336,34 @@
                 });
             }
 
-            // Category filter click
+            // Category filter click handler
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterBtns.forEach(b => {
-                        b.classList.remove('bg-purple-600', 'text-white');
-                        b.classList.add('bg-slate-800', 'text-slate-300');
+                        b.classList.remove('bg-purple-600', 'text-white', 'font-bold');
+                        b.classList.add('bg-slate-800', 'text-slate-300', 'font-semibold');
                     });
-                    btn.classList.remove('bg-slate-800', 'text-slate-300');
-                    btn.classList.add('bg-purple-600', 'text-white');
+                    btn.classList.remove('bg-slate-800', 'text-slate-300', 'font-semibold');
+                    btn.classList.add('bg-purple-600', 'text-white', 'font-bold');
 
                     currentFilter = btn.getAttribute('data-filter');
                     updateVisibility();
                 });
             });
 
-            // Search input typing
+            // Search input handler
             searchInput.addEventListener('input', (e) => {
                 currentQuery = e.target.value.toLowerCase().trim();
                 updateVisibility();
             });
         }
 
-        /* Copy Link Handler */
+        /* Clipboard Copy Link Utility */
         function copyLink(filename) {
-            const fullURL = window.location.origin + window.location.pathname.replace('index.html', '') + filename;
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+            const fullURL = window.location.origin + basePath + filename;
             
-            // Clipboard fallback
             const tempInput = document.createElement('input');
             tempInput.value = fullURL;
             document.body.appendChild(tempInput);
@@ -550,10 +371,10 @@
             document.execCommand('copy');
             document.body.removeChild(tempInput);
 
-            showToast(`Copied URL: ${filename}`);
+            showToast(`Copied URL for ${filename}`);
         }
 
-        /* Toast Popup Utility */
+        /* Toast Popup Renderer */
         function showToast(message) {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toastMsg');
@@ -563,25 +384,6 @@
             setTimeout(() => {
                 toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
             }, 3000);
-        }
-
-        /* Config Modal Logic for Custom Composite Filenames */
-        function openConfigModal() {
-            document.getElementById('configModal').classList.remove('hidden');
-        }
-
-        function closeConfigModal() {
-            document.getElementById('configModal').classList.add('hidden');
-        }
-
-        function saveCustomFileName() {
-            const fileNameInput = document.getElementById('customFileNameInput').value.trim();
-            if (fileNameInput) {
-                const compositeBtn = document.getElementById('compositeLinkBtn');
-                compositeBtn.setAttribute('href', fileNameInput);
-                showToast(`Composite button updated to: ${fileNameInput}`);
-                closeConfigModal();
-            }
         }
     </script>
 </body>
