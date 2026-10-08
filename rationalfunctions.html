@@ -1,715 +1,946 @@
-
-interactive_rational_functions_visualizer.html
-100%
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-50 text-slate-800">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IB Math AASL - Rational Functions Explorer</title>
+    <title>IBDP Mathematics: Real-World Composite Functions & Domain Explorer</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for rendering LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        if (window.onMathJaxReady) window.onMathJaxReady();
+                    });
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
-        .tab-btn.active {
-            border-bottom: 3px solid #2563eb;
-            color: #2563eb;
-            font-weight: 600;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom light scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Flowchart animation keyframes */
+        @keyframes flowPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .animate-flow {
+            animation: flowPulse 2.5s infinite ease-in-out;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+<body class="h-full flex flex-col bg-slate-50 text-slate-800 overflow-x-hidden">
 
-    <!-- Header -->
-    <header class="bg-indigo-900 text-white py-4 px-6 shadow-md">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
-            <div>
-                <h1 class="text-2xl font-bold tracking-tight">Rational Functions Explorer</h1>
-                <p class="text-indigo-200 text-sm">IBDP Mathematics Analysis & Approaches (AA SL)</p>
+    <!-- Header / Navigation Bar (Light Theme) -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm backdrop-blur-md bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Title & Badge -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md">
+                        <i class="fa-solid fa-diagram-project text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-lg text-slate-900 tracking-tight">Composite Functions Explorer</h1>
+                            <span class="bg-indigo-100 text-indigo-800 border border-indigo-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                IBDP Maths AA / AI
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500">Real-World Applications, Practical Inputs & Physical Domains</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200" id="mainTabNav">
+                    <button onclick="switchTab('realworld')" id="tab-realworld" class="nav-tab active px-4 py-2 text-xs font-semibold rounded-lg transition-all text-indigo-700 bg-white shadow-sm flex items-center space-x-2 border border-slate-200/60">
+                        <i class="fa-solid fa-earth-americas text-indigo-600"></i>
+                        <span>1. Real-World Contexts & Domains</span>
+                    </button>
+                    <button onclick="switchTab('visualizer')" id="tab-visualizer" class="nav-tab px-4 py-2 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center space-x-2">
+                        <i class="fa-solid fa-gears text-slate-500"></i>
+                        <span>2. Function Machine & Domain Simulator</span>
+                    </button>
+                </nav>
+
+                <!-- Mobile Navigation Selector -->
+                <div class="md:hidden">
+                    <select id="mobileTabSelect" onchange="switchTab(this.value)" class="bg-white text-slate-800 border border-slate-300 text-xs rounded-lg p-2 focus:ring-2 focus:ring-indigo-500">
+                        <option value="realworld">1. Real-World Contexts & Domains</option>
+                        <option value="visualizer">2. Function Machine & Domain Simulator</option>
+                    </select>
+                </div>
             </div>
-            <span class="bg-indigo-800 text-indigo-100 text-xs px-3 py-1 rounded-full border border-indigo-600 font-mono">
-                Syllabus Topic 2.8
-            </span>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-4 md:p-6">
-        <!-- Navigation Tabs -->
-        <div class="flex flex-wrap border-b border-slate-200 mb-6 bg-white rounded-t-xl px-2 md:px-4 shadow-sm gap-1">
-            <button onclick="switchTab('discovery')" id="tab-discovery" class="tab-btn active py-3 px-4 text-sm md:text-base font-semibold">
-                🕵️ 15-Min Discovery Lab (Pre-Lesson)
-            </button>
-            <button onclick="switchTab('explorer')" id="tab-explorer" class="tab-btn py-3 px-4 text-sm md:text-base text-slate-600">
-                📊 Interactive Grapher
-            </button>
-            <button onclick="switchTab('hook')" id="tab-hook" class="tab-btn py-3 px-4 text-sm md:text-base text-slate-600">
-                🚀 Average Cost Business Model
-            </button>
-            <button onclick="switchTab('pharma')" id="tab-pharma" class="tab-btn py-3 px-4 text-sm md:text-base text-slate-600">
-                💊 Drug Concentration Model
-            </button>
-        </div>
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
 
-        <!-- TAB 0: 15-MINUTE STUDENT DISCOVERY LAB -->
-        <div id="view-discovery" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Left Panel: Guided Discovery Tasks -->
-            <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div>
-                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                        Student Inquiry Task
-                    </span>
-                    <h2 class="text-2xl font-bold text-slate-900 mt-2">15-Minute Asymptote Investigation</h2>
-                    <p class="text-slate-600 text-sm mt-1">
-                        Explore the interactive graph on the right to answer these 4 quick mystery questions before your teacher introduces rational functions!
-                    </p>
-                </div>
-
-                <!-- Step 1 -->
-                <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-lg space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-indigo-900 text-sm">Task 1: The Broken Graph Mystery</span>
-                        <span class="text-xs bg-indigo-200 text-indigo-800 font-mono px-2 py-0.5 rounded">3 mins</span>
-                    </div>
-                    <p class="text-xs text-indigo-900 leading-relaxed">
-                        Set the sliders on the right to <strong>a = 2, b = 4, c = 1, d = -2</strong>.
-                        Look at x = 2 on the graph. Why does the curve split into two infinitely tall branches here?
-                    </p>
-                    <div class="text-xs space-y-1 bg-white p-3 rounded border border-indigo-100 font-mono text-indigo-950">
-                        <div>Denominator calculation: (1)x + (-2)</div>
-                        <div>When x = 2: (1)(2) - 2 = 0</div>
-                    </div>
-                    <button onclick="toggleHint('hint-1')" class="text-xs text-indigo-700 underline font-semibold hover:text-indigo-900">
-                        💡 Click for Discovery Question 1
-                    </button>
-                    <div id="hint-1" class="hidden text-xs bg-indigo-100/70 p-3 rounded text-indigo-900 space-y-1">
-                        <strong>Key Insight:</strong> What happens when you divide any number by zero in mathematics? This vertical "forbidden wall" is called a <strong>Vertical Asymptote</strong>.
-                    </div>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-emerald-900 text-sm">Task 2: The Long-Distance Ceiling</span>
-                        <span class="text-xs bg-emerald-200 text-emerald-800 font-mono px-2 py-0.5 rounded">4 mins</span>
-                    </div>
-                    <p class="text-xs text-emerald-900 leading-relaxed">
-                        Keep <strong>a = 2, b = 4, c = 1, d = -2</strong>. Look at what happens to the graph when x becomes very large (like x = 8 or 10). What y-value does the graph level off towards?
-                    </p>
-                    <div class="flex items-center gap-2 text-xs">
-                        <button onclick="testTargetValue(2)" class="bg-emerald-600 text-white px-3 py-1 rounded font-medium hover:bg-emerald-700">Test y = 2</button>
-                        <button onclick="testTargetValue(0)" class="bg-slate-200 text-slate-700 px-3 py-1 rounded font-medium hover:bg-slate-300">Test y = 0</button>
-                        <button onclick="testTargetValue(5)" class="bg-slate-200 text-slate-700 px-3 py-1 rounded font-medium hover:bg-slate-300">Test y = 5</button>
-                    </div>
-                    <div id="target-feedback" class="text-xs font-semibold text-emerald-800 min-h-[18px]"></div>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-purple-900 text-sm">Task 3: The Ratio Pattern</span>
-                        <span class="text-xs bg-purple-200 text-purple-800 font-mono px-2 py-0.5 rounded">4 mins</span>
-                    </div>
-                    <p class="text-xs text-purple-900 leading-relaxed">
-                        Change parameter <strong>a</strong> to 4 and <strong>c</strong> to 2. Notice where the horizontal leveling line goes.
-                        Now try <strong>a = 6, c = 2</strong>. What is the pattern between coefficients (a, c) and the horizontal asymptote y?
-                    </p>
-                    <button onclick="toggleHint('hint-3')" class="text-xs text-purple-700 underline font-semibold hover:text-purple-900">
-                        🔍 Reveal Pattern Formula
-                    </button>
-                    <div id="hint-3" class="hidden text-xs bg-purple-100 p-3 rounded text-purple-900 space-y-1">
-                        <strong>Rule Discovered:</strong> As x grows huge, the terms b and d become negligible! The graph approaches the simple ratio <strong>y = a / c</strong>.
-                    </div>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-amber-900 text-sm">Task 4: Real-World Business Test</span>
-                        <span class="text-xs bg-amber-200 text-amber-800 font-mono px-2 py-0.5 rounded">4 mins</span>
-                    </div>
-                    <p class="text-xs text-amber-900 leading-relaxed">
-                        A business spends 1200 dollars on equipment plus 15 dollars per item made. Average cost formula is:
-                        <br><span class="font-mono font-bold text-amber-950">Average Cost = (1200 + 15x) / x</span>
-                    </p>
-                    <p class="text-xs text-amber-950 font-medium">
-                        Can the business ever sell hoodies for an average cost of 10 dollars if raw materials cost 15 dollars per hoodie?
-                    </p>
-                    <div class="flex gap-2">
-                        <button onclick="answerBusiness(false)" class="bg-amber-600 text-white text-xs px-3 py-1 rounded hover:bg-amber-700">No, impossible!</button>
-                        <button onclick="answerBusiness(true)" class="bg-slate-200 text-slate-700 text-xs px-3 py-1 rounded hover:bg-slate-300">Yes, if they sell enough</button>
-                    </div>
-                    <div id="biz-feedback" class="text-xs font-semibold text-amber-900 min-h-[18px]"></div>
-                </div>
-            </div>
-
-            <!-- Right Panel: Discovery Graph Sandbox -->
-            <div class="lg:col-span-7 bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-bold text-slate-800 text-base">Sandbox Function Graph</h3>
-                        <div class="text-sm font-mono text-indigo-700 bg-indigo-50 px-3 py-1 rounded-lg font-bold">
-                            f(x) = (<span id="disc-val-a">2</span>x + <span id="disc-val-b">4</span>) / (<span id="disc-val-c">1</span>x + <span id="disc-val-d">-2</span>)
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-lg mb-4 text-xs font-medium">
-                        <div>
-                            <label class="block text-slate-600 mb-1">a = <span id="d-a-num">2</span></label>
-                            <input type="range" id="d-a" min="-10" max="10" value="2" step="1" class="w-full accent-indigo-600" oninput="syncDiscoverySliders()">
-                        </div>
-                        <div>
-                            <label class="block text-slate-600 mb-1">b = <span id="d-b-num">4</span></label>
-                            <input type="range" id="d-b" min="-10" max="10" value="4" step="1" class="w-full accent-indigo-600" oninput="syncDiscoverySliders()">
-                        </div>
-                        <div>
-                            <label class="block text-slate-600 mb-1">c = <span id="d-c-num">1</span></label>
-                            <input type="range" id="d-c" min="-5" max="5" value="1" step="0.5" class="w-full accent-indigo-600" oninput="syncDiscoverySliders()">
-                        </div>
-                        <div>
-                            <label class="block text-slate-600 mb-1">d = <span id="d-d-num">-2</span></label>
-                            <input type="range" id="d-d" min="-10" max="10" value="-2" step="1" class="w-full accent-indigo-600" oninput="syncDiscoverySliders()">
-                        </div>
-                    </div>
-
-                    <div class="relative w-full h-[380px]">
-                        <canvas id="discoveryCanvas"></canvas>
-                    </div>
-                </div>
-
-                <div class="mt-3 p-3 bg-slate-100 rounded-lg text-xs text-slate-700 flex justify-between items-center">
-                    <span><strong>Live Coordinates Tracker:</strong> Move sliders to see how the undefined line moves!</span>
-                    <button onclick="switchTab('explorer')" class="bg-indigo-600 text-white px-3 py-1.5 rounded font-semibold hover:bg-indigo-700 transition">
-                        Proceed to Full Visualizer →
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 1: INTERACTIVE EXPLORER -->
-        <div id="view-explorer" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Controls Sidebar -->
-            <div class="lg:col-span-4 bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col gap-5">
-                <div>
-                    <h2 class="text-lg font-bold text-slate-900 mb-1">Function Form</h2>
-                    <div class="text-lg font-mono text-indigo-700 bg-indigo-50 p-3 rounded-lg text-center font-bold">
-                        f(x) = <span id="eq-display">(ax + b) / (cx + d)</span>
-                    </div>
-                </div>
-
-                <!-- Parameters -->
-                <div class="space-y-4">
-                    <div>
-                        <div class="flex justify-between text-sm font-medium mb-1">
-                            <label for="param-a">Parameter a: <span id="val-a" class="font-bold text-indigo-600">2</span></label>
-                        </div>
-                        <input type="range" id="param-a" min="-10" max="10" value="2" step="0.5" class="w-full accent-indigo-600" oninput="updateGraph()">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between text-sm font-medium mb-1">
-                            <label for="param-b">Parameter b: <span id="val-b" class="font-bold text-indigo-600">4</span></label>
-                        </div>
-                        <input type="range" id="param-b" min="-10" max="10" value="4" step="0.5" class="w-full accent-indigo-600" oninput="updateGraph()">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between text-sm font-medium mb-1">
-                            <label for="param-c">Parameter c: <span id="val-c" class="font-bold text-indigo-600">1</span></label>
-                        </div>
-                        <input type="range" id="param-c" min="-5" max="5" value="1" step="0.5" class="w-full accent-indigo-600" oninput="updateGraph()">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between text-sm font-medium mb-1">
-                            <label for="param-d">Parameter d: <span id="val-d" class="font-bold text-indigo-600">-2</span></label>
-                        </div>
-                        <input type="range" id="param-d" min="-10" max="10" value="-2" step="0.5" class="w-full accent-indigo-600" oninput="updateGraph()">
-                    </div>
-                </div>
-
-                <!-- Toggles -->
-                <div class="pt-2 border-t border-slate-100 space-y-2">
-                    <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-                        <input type="checkbox" id="show-asymptotes" checked onchange="updateGraph()" class="rounded accent-indigo-600 w-4 h-4">
-                        Show Asymptotes
-                    </label>
-                    <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-                        <input type="checkbox" id="show-intercepts" checked onchange="updateGraph()" class="rounded accent-indigo-600 w-4 h-4">
-                        Show Intercepts
-                    </label>
-                </div>
-
-                <!-- Live Key Properties Panel -->
-                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-2 text-xs md:text-sm">
-                    <h3 class="font-semibold text-slate-800 border-b pb-1">IB Key Properties</h3>
-                    <p><strong>Vertical Asymptote:</strong> <span id="info-va" class="font-mono text-red-600 font-bold">x = 2.00</span></p>
-                    <p><strong>Horizontal Asymptote:</strong> <span id="info-ha" class="font-mono text-blue-600 font-bold">y = 2.00</span></p>
-                    <p><strong>x-intercept:</strong> <span id="info-xint" class="font-mono text-emerald-600">(-2.00, 0)</span></p>
-                    <p><strong>y-intercept:</strong> <span id="info-yint" class="font-mono text-purple-600">(0, -2.00)</span></p>
-                    <p><strong>Domain:</strong> <span id="info-domain" class="font-mono text-slate-700">x in R, x ≠ 2.00</span></p>
-                </div>
-            </div>
-
-            <!-- Canvas Graph Area -->
-            <div class="lg:col-span-8 bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
-                <div class="relative w-full h-[480px]">
-                    <canvas id="graphCanvas"></canvas>
-                </div>
-                <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs md:text-sm text-amber-800">
-                    💡 <strong>IB Teaching Tip:</strong> Point out how f(x) = (ax + b) / (cx + d) can be rewritten as f(x) = k + A / (x - h) through division, revealing horizontal translation h and vertical translation k.
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 2: REAL-WORLD HOOK (AVERAGE COST) -->
-        <div id="view-hook" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                <div class="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-semibold">
-                    Classroom Hook Scenario
-                </div>
-                <h2 class="text-2xl font-bold text-slate-900">The Hoodies Startup</h2>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    A group of IB students start a business selling custom hoodies. They invest in printing equipment and digital assets, incurring fixed overhead costs plus production costs per hoodie.
-                </p>
-                
-                <div class="space-y-3 bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm">
-                    <div>
-                        <label class="block font-medium text-slate-700">Fixed Overhead Cost (USD):</label>
-                        <input type="number" id="cost-fixed" value="1200" step="100" class="w-full mt-1 p-2 border rounded font-mono" onchange="updateHookGraph()">
+        <!-- ==================== TAB 1: REAL-WORLD CONTEXT & DOMAINS ==================== -->
+        <section id="section-realworld" class="tab-content block space-y-6">
+            <!-- Conceptual Overview Banner -->
+            <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white p-6 rounded-2xl shadow-md border border-indigo-700">
+                <div class="flex items-start space-x-4">
+                    <div class="bg-white/10 p-3 rounded-xl border border-white/20 text-indigo-200 hidden sm:block">
+                        <i class="fa-solid fa-lightbulb text-2xl"></i>
                     </div>
                     <div>
-                        <label class="block font-medium text-slate-700">Material Cost per Hoodie (USD):</label>
-                        <input type="number" id="cost-var" value="15" step="1" class="w-full mt-1 p-2 border rounded font-mono" onchange="updateHookGraph()">
+                        <h2 class="text-xl font-bold text-white mb-1.5">Why Do We Composite Functions in Real Life?</h2>
+                        <p class="text-indigo-100 text-sm leading-relaxed">
+                            In the real world, many quantities are linked through a **chain reaction**. One variable determines an intermediate result, which then determines the final outcome! 
+                            When function $g$ converts input $x$ into $g(x)$, and function $f$ converts $g(x)$ into $f(g(x))$, we create a **Composite Function**:
+                            <span class="inline-block bg-white/15 px-3 py-1 rounded-lg font-mono font-bold text-amber-300 border border-white/20 ml-1">
+                                \((f \circ g)(x) = f(g(x))\)
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario Selection Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Scenario A -->
+                <button onclick="setScenario('wages')" id="btn-scenario-wages" class="scenario-card p-5 rounded-2xl border-2 border-indigo-600 bg-white shadow-sm text-left transition-all hover:shadow-md focus:outline-none">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Scenario A</span>
+                        <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Hours Worked \(\rightarrow\) Income Tax</h3>
+                    <p class="text-xs text-slate-500 mt-1">Hours worked determines Gross Earnings, which determines Tax owed.</p>
+                </button>
+
+                <!-- Scenario B -->
+                <button onclick="setScenario('ripple')" id="btn-scenario-ripple" class="scenario-card p-5 rounded-2xl border-2 border-slate-200 bg-white shadow-sm text-left transition-all hover:border-slate-300 hover:shadow-md focus:outline-none">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Scenario B</span>
+                        <div class="p-2 bg-cyan-50 rounded-lg text-cyan-600">
+                            <i class="fa-solid fa-water"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Ripples in a Pond</h3>
+                    <p class="text-xs text-slate-500 mt-1">Time elapsed determines Ripple Radius, which determines Area of water affected.</p>
+                </button>
+
+                <!-- Scenario C -->
+                <button onclick="setScenario('altitude')" id="btn-scenario-altitude" class="scenario-card p-5 rounded-2xl border-2 border-slate-200 bg-white shadow-sm text-left transition-all hover:border-slate-300 hover:shadow-md focus:outline-none">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Scenario C</span>
+                        <div class="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                            <i class="fa-solid fa-mountain"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Altitude \(\rightarrow\) Water Boiling Point</h3>
+                    <p class="text-xs text-slate-500 mt-1">Mountain Altitude determines Temperature, which determines Water Boiling Point.</p>
+                </button>
+            </div>
+
+            <!-- SCENARIO WORKSPACE A: WAGES & TAX -->
+            <div id="workspace-wages" class="scenario-workspace bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-4 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-indigo-600"></i>
+                            Simple Job Model: Hours Worked \(\rightarrow\) Income Tax Owed
+                        </h3>
+                        <p class="text-xs text-slate-500">Calculate how many tax dollars you pay directly as a function of hours worked.</p>
+                    </div>
+
+                    <!-- Interactive Slider Control -->
+                    <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <label class="text-xs font-semibold text-slate-700">Hours Worked (\(h\)):</label>
+                        <input type="range" id="wageHoursInput" min="0" max="60" step="1" value="30" oninput="updateWagesScenario()" class="w-32 accent-indigo-600">
+                        <span id="wageHoursDisplay" class="font-mono text-sm font-bold text-indigo-600 min-w-[55px]">30 hrs</span>
                     </div>
                 </div>
 
-                <div class="p-4 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-900 space-y-2">
-                    <h4 class="font-bold">Average Cost Model Formula:</h4>
-                    <p class="font-mono text-base font-bold text-indigo-700">Average Cost C̄(x) = (1200 + 15x) / x = 15 + 1200/x</p>
-                    <p class="text-xs text-indigo-800">
-                        Notice how as x becomes very large (x → ∞), the average cost C̄(x) approaches 15 dollars. The line y = 15 forms the horizontal asymptote!
+                <!-- Pipeline Display -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+                    <!-- Step 1: Input -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+                        <span class="text-slate-500 uppercase text-[10px] font-sans font-bold tracking-wider">1. Initial Input (\(h\))</span>
+                        <div id="wage-h-val" class="text-2xl font-bold text-slate-800">30 hrs</div>
+                        <span class="text-slate-500 text-[11px] font-sans block">Hours worked per week</span>
+                    </div>
+
+                    <!-- Step 2: Inner Function -->
+                    <div class="bg-indigo-50/70 p-4 rounded-xl border border-indigo-200 text-center space-y-2">
+                        <span class="text-indigo-700 uppercase text-[10px] font-sans font-bold tracking-wider">2. Inner Function \(g(h)\)</span>
+                        <div id="wage-g-val" class="text-2xl font-bold text-indigo-700">$750.00</div>
+                        <span class="text-indigo-900 text-[11px] font-sans block">Gross Earnings: \(g(h) = 25h\) ($25/hr)</span>
+                    </div>
+
+                    <!-- Step 3: Outer Function -->
+                    <div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-200 text-center space-y-2">
+                        <span class="text-emerald-700 uppercase text-[10px] font-sans font-bold tracking-wider">3. Outer Composite \((T \circ g)(h)\)</span>
+                        <div id="wage-t-val" class="text-2xl font-bold text-emerald-700">$112.50</div>
+                        <span class="text-emerald-900 text-[11px] font-sans block">Tax Owed (15%): \(T(g) = 0.15g\)</span>
+                    </div>
+                </div>
+
+                <!-- Formula Breakdown Box -->
+                <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 text-xs space-y-2 text-slate-700">
+                    <strong class="text-indigo-900 font-bold block text-sm">Direct Composite Formula:</strong>
+                    <div class="font-mono text-sm text-indigo-800 bg-white p-2.5 rounded-lg border border-indigo-200 inline-block">
+                        \((T \circ g)(h) = T(g(h)) = 0.15 \times (25h) = 3.75h \text{ dollars}\)
+                    </div>
+                    <p class="text-slate-600 text-xs">
+                        Instead of performing two calculations (first calculating gross pay, then taking 15%), the composite function \((T \circ g)(h) = 3.75h\) tells you directly that you pay <strong>$3.75 in tax for every hour worked</strong>!
                     </p>
                 </div>
-            </div>
 
-            <div class="lg:col-span-7 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <div class="relative w-full h-[450px]">
-                    <canvas id="hookCanvas"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 3: PHARMACOKINETICS MODEL -->
-        <div id="view-pharma" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                <div class="inline-block px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">
-                    Medicine & Science Connection
-                </div>
-                <h2 class="text-2xl font-bold text-slate-900">Drug Concentration in Blood</h2>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    When a patient takes medication, the concentration C(t) in mg/L in their bloodstream t hours after ingestion can be modeled by a rational function.
-                </p>
-
-                <div class="p-4 bg-purple-50 border border-purple-100 rounded-lg text-sm text-purple-900 space-y-2">
-                    <h4 class="font-bold">Concentration Function:</h4>
-                    <p class="font-mono text-base font-bold text-purple-700">C(t) = 6t / (t² + 4)</p>
-                    <ul class="list-disc list-inside text-xs space-y-1 text-purple-800">
-                        <li><strong>Initial state (t = 0):</strong> C(0) = 0 mg/L</li>
-                        <li><strong>Peak time:</strong> t = 2 hours (C = 1.5 mg/L)</li>
-                        <li><strong>Long-term (t → ∞):</strong> C(t) → 0 mg/L (Horizontal Asymptote y = 0)</li>
-                    </ul>
-                </div>
-
-                <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg text-xs text-amber-800">
-                    <strong>IB Reflection Prompt:</strong> Why is the horizontal asymptote y = 0 biologically necessary for this model? What would happen to the patient if y = 2?
+                <!-- Domain & Practical Input Analysis -->
+                <div class="bg-amber-50 rounded-xl p-5 border border-amber-200 text-xs space-y-3">
+                    <div class="flex items-center space-x-2 text-amber-900 font-bold text-sm">
+                        <i class="fa-solid fa-compass text-amber-600 text-base"></i>
+                        <span>Practical Domain & Input Discussion</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Mathematical Domain vs. Physical Domain:</strong>
+                            <p>Mathematically, the expression \(3.75h\) accepts any real number \(h \in \mathbb{R}\). However, in real life:</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li>Negative hours are impossible (\(h \ge 0\)).</li>
+                                <li>A human cannot work more than 168 hours in a week (\(h \le 168\)).</li>
+                                <li><strong>Practical Domain:</strong> \(0 \le h \le 60\) (or \(80\) max).</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Corresponding Practical Range:</strong>
+                            <p>The output represents Tax Owed in dollars:</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li>At minimum input \(h = 0\text{ hrs}\), Tax = \(\$0.00\).</li>
+                                <li>At full week \(h = 40\text{ hrs}\), Tax = \(\$150.00\).</li>
+                                <li><strong>Practical Range:</strong> \([\$0, \$225]\) for up to 60 hours.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-7 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <div class="relative w-full h-[450px]">
-                    <canvas id="pharmaCanvas"></canvas>
+            <!-- SCENARIO WORKSPACE B: RIPPLES IN A POND -->
+            <div id="workspace-ripple" class="scenario-workspace hidden bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-4 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-water text-cyan-600"></i>
+                            Expanding Ripple: Time \(\rightarrow\) Radius \(\rightarrow\) Area
+                        </h3>
+                        <p class="text-xs text-slate-500">Calculate surface area affected by a water ripple over time.</p>
+                    </div>
+
+                    <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <label class="text-xs font-semibold text-slate-700">Time elapsed (\(t\)):</label>
+                        <input type="range" id="timeInput" min="0" max="10" step="0.5" value="4" oninput="updateRippleScenario()" class="w-32 accent-cyan-600">
+                        <span id="timeDisplay" class="font-mono text-sm font-bold text-cyan-600 min-w-[50px]">4.0 s</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                    <!-- Canvas Drawing -->
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col items-center justify-center relative min-h-[250px]">
+                        <canvas id="rippleCanvas" width="280" height="220" class="rounded-lg"></canvas>
+                        <span class="absolute bottom-3 text-[11px] text-cyan-300 font-mono">Dynamic Water Ripple Simulation</span>
+                    </div>
+
+                    <!-- Formulas & Values -->
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                            <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider">Individual Functions</h4>
+                            <div class="text-xs space-y-2 font-mono">
+                                <p class="p-2.5 bg-white rounded border border-slate-200 text-cyan-700">
+                                    Radius from time: \(r(t) = 2t \text{ meters}\)
+                                </p>
+                                <p class="p-2.5 bg-white rounded border border-slate-200 text-teal-700">
+                                    Area from radius: \(A(r) = \pi r^2 \text{ m}^2\)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-cyan-50 p-4 rounded-xl border border-cyan-200 space-y-2">
+                            <h4 class="text-xs font-bold uppercase text-cyan-900 tracking-wider">Composite Function: Area over Time \((A \circ r)(t)\)</h4>
+                            <p class="text-xs text-slate-700">
+                                Area directly as a function of time:
+                                <span class="block text-cyan-900 font-mono font-bold text-sm my-1">
+                                    \((A \circ r)(t) = A(r(t)) = \pi (2t)^2 = 4\pi t^2 \text{ m}^2\)
+                                </span>
+                            </p>
+                            <div class="bg-white p-2.5 rounded border border-cyan-200 font-mono text-xs flex justify-between items-center">
+                                <span>Area at \(t = \)<span id="r-time-val">4.0</span>\(\text{s}\):</span>
+                                <span id="r-area-val" class="font-bold text-cyan-700 text-sm">201.1 m²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Domain & Range Analysis -->
+                <div class="bg-amber-50 rounded-xl p-5 border border-amber-200 text-xs space-y-3">
+                    <div class="flex items-center space-x-2 text-amber-900 font-bold text-sm">
+                        <i class="fa-solid fa-compass text-amber-600 text-base"></i>
+                        <span>Practical Domain & Input Discussion</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Allowed Inputs (Domain):</strong>
+                            <p>Time cannot be negative (\(t < 0\)) prior to dropping the stone.</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li><strong>Mathematical Domain:</strong> \(t \in \mathbb{R}\)</li>
+                                <li><strong>Physical Domain:</strong> \(t \ge 0\) (seconds)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Possible Outputs (Range):</strong>
+                            <p>Area must be non-negative because radius \(r(t) \ge 0\).</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li><strong>Physical Range:</strong> \(A \ge 0 \text{ m}^2\)</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- SCENARIO WORKSPACE C: ALTITUDE TO BOILING POINT -->
+            <div id="workspace-altitude" class="scenario-workspace hidden bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-4 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-mountain text-emerald-600"></i>
+                            Mountain Altitude \(\rightarrow\) Atmospheric Temp \(\rightarrow\) Water Boiling Point
+                        </h3>
+                        <p class="text-xs text-slate-500">Why water boils at lower temperatures at higher elevations!</p>
+                    </div>
+
+                    <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <label class="text-xs font-semibold text-slate-700">Altitude (\(a\)):</label>
+                        <input type="range" id="altInput" min="0" max="8" step="0.5" value="2" oninput="updateAltitudeScenario()" class="w-32 accent-emerald-600">
+                        <span id="altDisplay" class="font-mono text-sm font-bold text-emerald-600 min-w-[55px]">2.0 km</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+                        <span class="text-slate-500 uppercase text-[10px] font-sans font-bold tracking-wider">1. Altitude Input (\(a\))</span>
+                        <div id="alt-a-val" class="text-2xl font-bold text-slate-800">2.0 km</div>
+                        <span class="text-slate-500 text-[11px] font-sans block">Elevation above sea level</span>
+                    </div>
+
+                    <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-center space-y-2">
+                        <span class="text-emerald-700 uppercase text-[10px] font-sans font-bold tracking-wider">2. Temperature \(T(a)\)</span>
+                        <div id="alt-t-val" class="text-2xl font-bold text-emerald-700">7.0 °C</div>
+                        <span class="text-slate-600 text-[11px] font-sans block">Temp drops 6.5°C per km: \(20 - 6.5a\)</span>
+                    </div>
+
+                    <div class="bg-teal-50 p-4 rounded-xl border border-teal-200 text-center space-y-2">
+                        <span class="text-teal-700 uppercase text-[10px] font-sans font-bold tracking-wider">3. Boiling Point \((B \circ T)(a)\)</span>
+                        <div id="alt-b-val" class="text-2xl font-bold text-teal-700">93.3 °C</div>
+                        <span class="text-slate-600 text-[11px] font-sans block">Boiling point: \(100 - 3.35a\)</span>
+                    </div>
+                </div>
+
+                <!-- Domain & Range Analysis -->
+                <div class="bg-amber-50 rounded-xl p-5 border border-amber-200 text-xs space-y-3">
+                    <div class="flex items-center space-x-2 text-amber-900 font-bold text-sm">
+                        <i class="fa-solid fa-compass text-amber-600 text-base"></i>
+                        <span>Practical Domain & Input Constraints</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Physical Domain Restriction:</strong>
+                            <p>Altitude \(a\) cannot be lower than sea level (\(0\text{ km}\)) or higher than Mount Everest (\(\approx 8.8\text{ km}\)).</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li><strong>Practical Domain:</strong> \(0 \le a \le 8.8 \text{ km}\)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 block font-semibold">Practical Range:</strong>
+                            <p>At Everest peak (\(a = 8.85\text{ km}\)), water boils at roughly \(70^\circ\text{C}\)!</p>
+                            <ul class="list-disc list-inside space-y-1 mt-1 text-slate-600 font-mono text-[11px]">
+                                <li><strong>Practical Range:</strong> \([70^\circ\text{C}, 100^\circ\text{C}]\)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: FUNCTION MACHINE & GRAPH SIMULATOR ==================== -->
+        <section id="section-visualizer" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <!-- Header & Preset Controls -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-gears text-indigo-600"></i>
+                            Function Machine & Interactive Grapher
+                        </h2>
+                        <p class="text-xs text-slate-500">Explore how inputs flow through inner machine \(g(x)\) into outer machine \(f(u)\).</p>
+                    </div>
+
+                    <!-- Preset Selector -->
+                    <div class="flex items-center space-x-2">
+                        <label class="text-xs font-semibold text-slate-700">Real-World Presets:</label>
+                        <select id="functionPreset" onchange="loadFunctionPreset()" class="bg-slate-50 text-slate-800 border border-slate-300 text-xs rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 font-medium">
+                            <option value="p1">1. Earnings to Tax: g(x) = 25x , f(u) = 0.15u</option>
+                            <option value="p2">2. Ripple Radius to Area: g(x) = 2x , f(u) = 3.14 · u^2</option>
+                            <option value="p3">3. Altitude to Temp: g(x) = 20 - 6.5x , f(u) = 100 - 0.51·(20 - u)</option>
+                            <option value="p4">4. Restricted Domain: g(x) = x - 3 , f(u) = sqrt(u)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Custom Function Inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div>
+                        <label class="block text-xs font-bold text-cyan-700 mb-1">Inner Machine \(g(x)\):</label>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-mono text-slate-500 text-sm">g(x) =</span>
+                            <input type="text" id="gInput" value="25x" onchange="updateGrapher()" class="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-indigo-700 mb-1">Outer Machine \(f(u)\):</label>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-mono text-slate-500 text-sm">f(u) =</span>
+                            <input type="text" id="fInput" value="0.15u" onchange="updateGrapher()" class="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Machine Flow Display -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Interactive Input Machine</span>
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <label class="text-xs text-slate-700 font-mono">Input x = </label>
+                            <input type="range" id="xSlider" min="0" max="10" step="0.5" value="4" oninput="updateGrapher()" class="flex-1 sm:w-48 accent-indigo-600">
+                            <span id="xValDisplay" class="font-mono text-sm font-bold text-indigo-600 min-w-[35px]">4.0</span>
+                        </div>
+                    </div>
+
+                    <!-- Flow Blocks -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-center text-xs font-mono items-center">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-[10px] text-slate-500 block font-sans font-semibold">1. Input Value</span>
+                            <span class="text-slate-800 font-bold">x = </span>
+                            <span id="p-x" class="text-indigo-600 font-bold">4.0</span>
+                        </div>
+
+                        <div class="bg-cyan-50 p-3 rounded-xl border border-cyan-200 animate-flow shadow-sm">
+                            <span class="text-[10px] text-cyan-800 block font-sans font-semibold">2. Inner Output \(g(x)\)</span>
+                            <span id="p-gx" class="text-cyan-800 font-bold">g(4.0) = 100.0</span>
+                        </div>
+
+                        <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200 animate-flow shadow-sm">
+                            <span class="text-[10px] text-indigo-800 block font-sans font-semibold">3. Outer Output \(f(u)\)</span>
+                            <span id="p-fgx" class="text-indigo-800 font-bold">f(100.0) = 15.0</span>
+                        </div>
+
+                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 shadow-sm">
+                            <span class="text-[10px] text-emerald-800 block font-sans font-semibold">Composite Final</span>
+                            <span id="p-out" class="text-emerald-800 font-bold">(f ∘ g)(4.0) = 15.0</span>
+                        </div>
+                    </div>
+
+                    <!-- Domain Status Warning Box -->
+                    <div id="domainStatusBox" class="hidden p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center space-x-2">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500 text-sm"></i>
+                        <span id="domainStatusText">Value is outside the valid physical domain!</span>
+                    </div>
+                </div>
+
+                <!-- Canvas Graph Plotter -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
+                        <h3 class="text-xs font-bold uppercase text-slate-500 tracking-wider">Curves & Domain Plotter</h3>
+                        <div class="flex flex-wrap gap-4 text-xs font-mono">
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded-full bg-cyan-500 inline-block"></span>
+                                <span class="text-slate-700">Inner g(x)</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span>
+                                <span class="text-slate-700">Outer f(x)</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded-full bg-emerald-600 inline-block"></span>
+                                <span class="text-slate-900 font-bold">Composite (f ∘ g)(x)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full overflow-hidden flex justify-center bg-slate-50 rounded-xl p-3 border border-slate-200">
+                        <canvas id="mainGraphCanvas" width="700" height="360" class="w-full max-w-2xl h-auto rounded bg-white border border-slate-200 shadow-inner cursor-crosshair"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
+    <!-- JavaScript Logic Engine -->
     <script>
-        let mainChart, hookChart, pharmaChart, discoveryChart;
+        // State variables
+        let currentTab = 'realworld';
+        let currentScenario = 'wages';
 
-        // Initialize Charts on Load
+        // Canvas context pointers
+        let rippleCanvas, rippleCtx;
+        let graphCanvas, graphCtx;
+
+        // Initialize on page load
         window.onload = function() {
-            initDiscoveryGraph();
-            initMainGraph();
-            initHookGraph();
-            initPharmaGraph();
+            rippleCanvas = document.getElementById('rippleCanvas');
+            if (rippleCanvas) rippleCtx = rippleCanvas.getContext('2d');
+
+            graphCanvas = document.getElementById('mainGraphCanvas');
+            if (graphCanvas) graphCtx = graphCanvas.getContext('2d');
+
+            // Initialize scenario states
+            updateWagesScenario();
+            updateRippleScenario();
+            updateAltitudeScenario();
+            updateGrapher();
+
+            // Re-render LaTeX math
+            triggerMathJax();
         };
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active', 'font-semibold', 'text-indigo-700', 'border-b-2', 'border-indigo-600');
-                btn.classList.add('text-slate-600');
+        // MathJax helper
+        function triggerMathJax() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.log(err));
+            }
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            currentTab = tabId;
+
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const targetSection = document.getElementById(`section-${tabId}`);
+            if (targetSection) targetSection.classList.remove('hidden');
+
+            // Nav styling
+            document.querySelectorAll('#mainTabNav .nav-tab').forEach(btn => {
+                btn.classList.remove('text-indigo-700', 'bg-white', 'shadow-sm', 'border', 'border-slate-200/60');
+                btn.classList.add('text-slate-600', 'hover:text-slate-900');
             });
-            document.getElementById('view-discovery').classList.add('hidden');
-            document.getElementById('view-explorer').classList.add('hidden');
-            document.getElementById('view-hook').classList.add('hidden');
-            document.getElementById('view-pharma').classList.add('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-indigo-700', 'bg-white', 'shadow-sm', 'border', 'border-slate-200/60');
+                activeBtn.classList.remove('text-slate-600');
+            }
 
-            const activeBtn = document.getElementById('tab-' + tab);
-            activeBtn.classList.add('active', 'font-semibold', 'text-indigo-700', 'border-b-2', 'border-indigo-600');
-            activeBtn.classList.remove('text-slate-600');
+            // Sync Mobile dropdown
+            const mobileSelect = document.getElementById('mobileTabSelect');
+            if (mobileSelect) mobileSelect.value = tabId;
 
-            document.getElementById('view-' + tab).classList.remove('hidden');
+            // Redraw graphs
+            if (tabId === 'visualizer') {
+                setTimeout(updateGrapher, 50);
+            } else if (tabId === 'realworld' && currentScenario === 'ripple') {
+                setTimeout(updateRippleScenario, 50);
+            }
+
+            triggerMathJax();
         }
 
-        // --- DISCOVERY LAB LOGIC ---
-        function initDiscoveryGraph() {
-            const ctx = document.getElementById('discoveryCanvas').getContext('2d');
-            discoveryChart = new Chart(ctx, {
-                type: 'line',
-                data: { datasets: [] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { type: 'linear', min: -10, max: 10, title: { display: true, text: 'x' } },
-                        y: { type: 'linear', min: -10, max: 10, title: { display: true, text: 'f(x)' } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
+        /* ==================== REAL-WORLD SCENARIOS LOGIC ==================== */
+        function setScenario(scenario) {
+            currentScenario = scenario;
+            document.querySelectorAll('.scenario-workspace').forEach(el => el.classList.add('hidden'));
+            const targetWorkspace = document.getElementById(`workspace-${scenario}`);
+            if (targetWorkspace) targetWorkspace.classList.remove('hidden');
+
+            // Update card borders
+            document.querySelectorAll('.scenario-card').forEach(card => {
+                card.classList.remove('border-indigo-600');
+                card.classList.add('border-slate-200');
             });
-            updateDiscoveryGraph();
-        }
-
-        function syncDiscoverySliders() {
-            const a = parseFloat(document.getElementById('d-a').value);
-            const b = parseFloat(document.getElementById('d-b').value);
-            const c = parseFloat(document.getElementById('d-c').value);
-            const d = parseFloat(document.getElementById('d-d').value);
-
-            document.getElementById('d-a-num').innerText = a;
-            document.getElementById('d-b-num').innerText = b;
-            document.getElementById('d-c-num').innerText = c;
-            document.getElementById('d-d-num').innerText = d;
-
-            document.getElementById('disc-val-a').innerText = a;
-            document.getElementById('disc-val-b').innerText = b;
-            document.getElementById('disc-val-c').innerText = c;
-            document.getElementById('disc-val-d').innerText = d;
-
-            // Sync with main explorer sliders too
-            document.getElementById('param-a').value = a;
-            document.getElementById('param-b').value = b;
-            document.getElementById('param-c').value = c;
-            document.getElementById('param-d').value = d;
-
-            updateDiscoveryGraph();
-            updateGraph();
-        }
-
-        function updateDiscoveryGraph() {
-            const a = parseFloat(document.getElementById('d-a').value);
-            const b = parseFloat(document.getElementById('d-b').value);
-            const c = parseFloat(document.getElementById('d-c').value);
-            const d = parseFloat(document.getElementById('d-d').value);
-
-            const va = c !== 0 ? -d / c : null;
-            const ha = c !== 0 ? a / c : null;
-
-            const branch1 = [];
-            const branch2 = [];
-
-            for (let x = -10; x <= 10; x += 0.05) {
-                if (va !== null && Math.abs(x - va) < 0.08) continue;
-                const y = (a * x + b) / (c * x + d);
-                if (Math.abs(y) > 20) continue;
-
-                if (va !== null && x < va) {
-                    branch1.push({ x: x, y: y });
-                } else {
-                    branch2.push({ x: x, y: y });
-                }
+            const activeCard = document.getElementById(`btn-scenario-${scenario}`);
+            if (activeCard) {
+                activeCard.classList.add('border-indigo-600');
+                activeCard.classList.remove('border-slate-200');
             }
 
-            const datasets = [
-                { data: branch1, borderColor: '#4f46e5', borderWidth: 2.5, pointRadius: 0, showLine: true },
-                { data: branch2, borderColor: '#4f46e5', borderWidth: 2.5, pointRadius: 0, showLine: true }
-            ];
-
-            if (va !== null && va >= -10 && va <= 10) {
-                datasets.push({
-                    data: [{ x: va, y: -10 }, { x: va, y: 10 }],
-                    borderColor: '#dc2626', borderWidth: 2, borderDash: [6, 6], pointRadius: 0
-                });
-            }
-
-            if (ha !== null) {
-                datasets.push({
-                    data: [{ x: -10, y: ha }, { x: 10, y: ha }],
-                    borderColor: '#2563eb', borderWidth: 2, borderDash: [6, 6], pointRadius: 0
-                });
-            }
-
-            discoveryChart.data.datasets = datasets;
-            discoveryChart.update();
+            if (scenario === 'ripple') updateRippleScenario();
+            triggerMathJax();
         }
 
-        function toggleHint(id) {
-            const el = document.getElementById(id);
-            el.classList.toggle('hidden');
+        function updateWagesScenario() {
+            const h = parseFloat(document.getElementById('wageHoursInput').value);
+            document.getElementById('wageHoursDisplay').innerText = `${h} hrs`;
+
+            const gross = h * 25;
+            const tax = gross * 0.15;
+
+            document.getElementById('wage-h-val').innerText = `${h} hrs`;
+            document.getElementById('wage-g-val').innerText = `$${gross.toFixed(2)}`;
+            document.getElementById('wage-t-val').innerText = `$${tax.toFixed(2)}`;
         }
 
-        function testTargetValue(val) {
-            const fb = document.getElementById('target-feedback');
-            if (val === 2) {
-                fb.innerText = "Correct! As x gets huge, (2x + 4) / (1x - 2) gets closer and closer to y = 2!";
-                fb.className = "text-xs font-semibold text-emerald-700 mt-1";
+        function updateRippleScenario() {
+            const t = parseFloat(document.getElementById('timeInput').value);
+            document.getElementById('timeDisplay').innerText = `${t.toFixed(1)} s`;
+
+            const r = 2 * t;
+            const area = Math.PI * r * r;
+
+            document.getElementById('r-time-val').innerText = t.toFixed(1);
+            document.getElementById('r-area-val').innerText = `${area.toFixed(1)} m²`;
+
+            if (!rippleCtx) return;
+            rippleCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
+
+            const centerX = rippleCanvas.width / 2;
+            const centerY = rippleCanvas.height / 2;
+            const maxRadiusPx = 95;
+            const radiusPx = (r / 20) * maxRadiusPx;
+
+            // Outer expanding circle
+            rippleCtx.beginPath();
+            rippleCtx.arc(centerX, centerY, Math.min(radiusPx, 100), 0, 2 * Math.PI);
+            rippleCtx.fillStyle = 'rgba(6, 182, 212, 0.25)';
+            rippleCtx.fill();
+            rippleCtx.strokeStyle = '#0891b2';
+            rippleCtx.lineWidth = 2;
+            rippleCtx.stroke();
+
+            // Center droplet
+            rippleCtx.beginPath();
+            rippleCtx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
+            rippleCtx.fillStyle = '#0891b2';
+            rippleCtx.fill();
+
+            // Radius vector
+            if (radiusPx > 2) {
+                rippleCtx.beginPath();
+                rippleCtx.moveTo(centerX, centerY);
+                rippleCtx.lineTo(centerX + radiusPx, centerY);
+                rippleCtx.strokeStyle = '#0284c7';
+                rippleCtx.lineWidth = 1.5;
+                rippleCtx.setLineDash([3, 3]);
+                rippleCtx.stroke();
+                rippleCtx.setLineDash([]);
+
+                rippleCtx.fillStyle = '#0284c7';
+                rippleCtx.font = '11px JetBrains Mono, monospace';
+                rippleCtx.fillText(`r = ${r.toFixed(1)}m`, centerX + radiusPx / 2 - 15, centerY - 6);
+            }
+        }
+
+        function updateAltitudeScenario() {
+            const a = parseFloat(document.getElementById('altInput').value);
+            document.getElementById('altDisplay').innerText = `${a.toFixed(1)} km`;
+
+            const temp = 20 - 6.5 * a;
+            const boiling = 100 - 3.35 * a;
+
+            document.getElementById('alt-a-val').innerText = `${a.toFixed(1)} km`;
+            document.getElementById('alt-t-val').innerText = `${temp.toFixed(1)} °C`;
+            document.getElementById('alt-b-val').innerText = `${boiling.toFixed(1)} °C`;
+        }
+
+        /* ==================== TAB 2: FUNCTION PIPELINE & GRAPHER ==================== */
+        function formatExpression(expr) {
+            // Replace common patterns with math-friendly eval patterns
+            // Allow implicit multiplication like '2x' or '0.15u'
+            return expr
+                .replace(/·/g, '*') // Allow user to type dot
+                .replace(/(\d)([x|u])/g, '$1*$2') // e.g., 25x -> 25*x
+                .replace(/([x|u])(\d)/g, '$1*$2') // just in case
+                .replace(/(\))([x|u])/g, '$1*$2')
+                .replace(/(\d)(\()/g, '$1*$2'); 
+        }
+
+        function safeEval(expr, xVal) {
+            try {
+                let formattedExpr = formatExpression(expr);
+                let sanitized = formattedExpr
+                    .replace(/x/g, `(${xVal})`)
+                    .replace(/u/g, `(${xVal})`)
+                    .replace(/sqrt/g, 'Math.sqrt')
+                    .replace(/abs/g, 'Math.abs')
+                    .replace(/sin/g, 'Math.sin')
+                    .replace(/cos/g, 'Math.cos')
+                    .replace(/\^/g, '**');
+
+                const val = Function(`'use strict'; return (${sanitized})`)();
+                return isNaN(val) || !isFinite(val) ? null : val;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function loadFunctionPreset() {
+            const preset = document.getElementById('functionPreset').value;
+            if (preset === 'p1') {
+                document.getElementById('gInput').value = '25x';
+                document.getElementById('fInput').value = '0.15u';
+                document.getElementById('xSlider').value = '4';
+            } else if (preset === 'p2') {
+                document.getElementById('gInput').value = '2x';
+                document.getElementById('fInput').value = '3.14159 · u^2';
+                document.getElementById('xSlider').value = '3';
+            } else if (preset === 'p3') {
+                document.getElementById('gInput').value = '20 - 6.5x';
+                document.getElementById('fInput').value = '100 - 0.51·(20 - u)';
+                document.getElementById('xSlider').value = '2';
+            } else if (preset === 'p4') {
+                document.getElementById('gInput').value = 'x - 3';
+                document.getElementById('fInput').value = 'sqrt(u)';
+                document.getElementById('xSlider').value = '5';
+            }
+            updateGrapher();
+        }
+
+        function updateGrapher() {
+            const gExpr = document.getElementById('gInput').value;
+            const fExpr = document.getElementById('fInput').value;
+            const xVal = parseFloat(document.getElementById('xSlider').value);
+
+            document.getElementById('xValDisplay').innerText = xVal.toFixed(1);
+            document.getElementById('p-x').innerText = xVal.toFixed(1);
+
+            const gxVal = safeEval(gExpr, xVal);
+            const domainBox = document.getElementById('domainStatusBox');
+            const domainText = document.getElementById('domainStatusText');
+
+            if (gxVal === null) {
+                document.getElementById('p-gx').innerText = 'Undefined!';
+                document.getElementById('p-fgx').innerText = 'Undefined!';
+                document.getElementById('p-out').innerText = 'Undefined!';
+                domainBox.classList.remove('hidden');
+                domainText.innerText = `Domain Exception: Input x = ${xVal} produces an undefined inner output g(x).`;
+                drawMainGraph(gExpr, fExpr, xVal, null, null);
+                return;
             } else {
-                fb.innerText = "Not quite! Look at x = 10 on the graph above. The blue line is right at y = 2.";
-                fb.className = "text-xs font-semibold text-rose-600 mt-1";
+                document.getElementById('p-gx').innerText = `g(${xVal.toFixed(1)}) = ${gxVal.toFixed(1)}`;
             }
-        }
 
-        function answerBusiness(isYes) {
-            const fb = document.getElementById('biz-feedback');
-            if (!isYes) {
-                fb.innerText = "Bingo! Raw materials cost 15 USD per item, so average cost can NEVER drop below 15 USD, no matter how many you make!";
-                fb.className = "text-xs font-semibold text-emerald-800 mt-1";
+            const fgxVal = safeEval(fExpr, gxVal);
+            if (fgxVal === null) {
+                document.getElementById('p-fgx').innerText = 'Undefined!';
+                document.getElementById('p-out').innerText = 'Undefined!';
+                domainBox.classList.remove('hidden');
+                domainText.innerText = `Domain Restriction: Inner result g(${xVal.toFixed(1)}) = ${gxVal.toFixed(1)} is outside outer function domain f(u)!`;
             } else {
-                fb.innerText = "Think again! Even if overhead cost (1200 / x) drops to 0, you still pay 15 USD for fabric on each hoodie!";
-                fb.className = "text-xs font-semibold text-rose-600 mt-1";
+                domainBox.classList.add('hidden');
+                document.getElementById('p-fgx').innerText = `f(${gxVal.toFixed(1)}) = ${fgxVal.toFixed(1)}`;
+                document.getElementById('p-out').innerText = `(f ∘ g)(${xVal.toFixed(1)}) = ${fgxVal.toFixed(1)}`;
             }
+
+            drawMainGraph(gExpr, fExpr, xVal, gxVal, fgxVal);
         }
 
-        // --- MAIN GRAPHING LOGIC ---
-        function initMainGraph() {
-            const ctx = document.getElementById('graphCanvas').getContext('2d');
-            mainChart = new Chart(ctx, {
-                type: 'line',
-                data: { datasets: [] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { type: 'linear', min: -10, max: 10, title: { display: true, text: 'x' } },
-                        y: { type: 'linear', min: -10, max: 10, title: { display: true, text: 'f(x)' } }
-                    },
-                    plugins: {
-                        legend: { position: 'top' },
-                        tooltip: { enabled: true }
-                    }
-                }
-            });
-            updateGraph();
-        }
+        function drawMainGraph(gExpr, fExpr, currentX, currentGx, currentFgx) {
+            if (!graphCtx) return;
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
 
-        function updateGraph() {
-            const a = parseFloat(document.getElementById('param-a').value);
-            const b = parseFloat(document.getElementById('param-b').value);
-            const c = parseFloat(document.getElementById('param-c').value);
-            const d = parseFloat(document.getElementById('param-d').value);
+            graphCtx.clearRect(0, 0, w, h);
 
-            document.getElementById('val-a').innerText = a;
-            document.getElementById('val-b').innerText = b;
-            document.getElementById('val-c').innerText = c;
-            document.getElementById('val-d').innerText = d;
+            const originX = 50;
+            const originY = h - 40;
+            const scaleX = 55; 
+            const scaleY = 4; // Auto-scaling grid
 
-            // Formatted LaTeX-like string
-            document.getElementById('eq-display').innerText = `(${a}x + ${b}) / (${c}x + ${d})`;
+            // Draw Grid Lines
+            graphCtx.strokeStyle = '#f1f5f9';
+            graphCtx.lineWidth = 1;
 
-            // Vertical & Horizontal Asymptotes
-            const va = c !== 0 ? -d / c : null;
-            const ha = c !== 0 ? a / c : null;
+            for (let x = originX; x < w; x += 50) {
+                graphCtx.beginPath();
+                graphCtx.moveTo(x, 0);
+                graphCtx.lineTo(x, originY);
+                graphCtx.stroke();
+            }
+            for (let y = originY; y > 0; y -= 40) {
+                graphCtx.beginPath();
+                graphCtx.moveTo(originX, y);
+                graphCtx.lineTo(w, y);
+                graphCtx.stroke();
+            }
 
-            // Update Info Panel
-            document.getElementById('info-va').innerText = va !== null ? `x = ${va.toFixed(2)}` : 'None';
-            document.getElementById('info-ha').innerText = ha !== null ? `y = ${ha.toFixed(2)}` : 'None';
+            // Draw Axes
+            graphCtx.strokeStyle = '#64748b';
+            graphCtx.lineWidth = 1.5;
+            // X-Axis
+            graphCtx.beginPath();
+            graphCtx.moveTo(originX, originY);
+            graphCtx.lineTo(w - 10, originY);
+            graphCtx.stroke();
+            // X-Axis Label
+            graphCtx.fillStyle = '#64748b';
+            graphCtx.font = '12px Inter, sans-serif';
+            graphCtx.fillText('x (Input)', w - 50, originY + 15);
             
-            const xInt = a !== 0 ? (-b / a).toFixed(2) : 'None';
-            const yInt = d !== 0 ? (b / d).toFixed(2) : 'Undefined';
+            // Y-Axis
+            graphCtx.beginPath();
+            graphCtx.moveTo(originX, originY);
+            graphCtx.lineTo(originX, 10);
+            graphCtx.stroke();
+            // Y-Axis Label
+            graphCtx.fillText('y (Output)', originX + 10, 20);
 
-            document.getElementById('info-xint').innerText = xInt !== 'None' ? `(${xInt}, 0)` : 'None';
-            document.getElementById('info-yint').innerText = yInt !== 'Undefined' ? `(0, ${yInt})` : 'Undefined';
-            document.getElementById('info-domain').innerText = va !== null ? `x in R, x ≠ ${va.toFixed(2)}` : 'x in R';
+            // Draw axis ticks & numbers
+            graphCtx.fillStyle = '#94a3b8';
+            graphCtx.font = '10px Inter, sans-serif';
+            for (let x = originX + 50; x < w; x += 50) {
+                const val = (x - originX) / scaleX;
+                graphCtx.fillText(val.toFixed(1), x - 10, originY + 15);
+            }
+            for (let y = originY - 40; y > 0; y -= 40) {
+                const val = (originY - y) / scaleY;
+                graphCtx.fillText(val.toFixed(0), originX - 25, y + 4);
+            }
 
-            // Generate Curve Points
-            const showAsymptotes = document.getElementById('show-asymptotes').checked;
-            const showIntercepts = document.getElementById('show-intercepts').checked;
 
-            const branch1 = [];
-            const branch2 = [];
+            // Plot curves
+            plotCurve(gExpr, '#06b6d4', 2);
+            plotCurve(fExpr, '#6366f1', 2);
+            plotCompositeCurve(gExpr, fExpr, '#059669', 3);
 
-            for (let x = -10; x <= 10; x += 0.05) {
-                if (va !== null && Math.abs(x - va) < 0.08) continue;
-                
-                const y = (a * x + b) / (c * x + d);
-                if (Math.abs(y) > 20) continue;
+            // Highlight active point and show coordinates
+            if (currentX !== null && currentFgx !== null) {
+                const px = originX + currentX * scaleX;
+                const py = originY - currentFgx * scaleY;
 
-                if (va !== null && x < va) {
-                    branch1.push({ x: x, y: y });
-                } else {
-                    branch2.push({ x: x, y: y });
+                if (px >= originX && px <= w && py >= 0 && py <= originY) {
+                    graphCtx.beginPath();
+                    graphCtx.moveTo(px, originY);
+                    graphCtx.lineTo(px, py);
+                    graphCtx.strokeStyle = '#10b981';
+                    graphCtx.setLineDash([3, 3]);
+                    graphCtx.stroke();
+                    graphCtx.setLineDash([]);
+
+                    graphCtx.beginPath();
+                    graphCtx.arc(px, py, 6, 0, 2 * Math.PI);
+                    graphCtx.fillStyle = '#059669';
+                    graphCtx.fill();
+                    graphCtx.strokeStyle = '#ffffff';
+                    graphCtx.lineWidth = 2;
+                    graphCtx.stroke();
+                    
+                    // Draw Coordinate Box
+                    const coordText = `(${currentX.toFixed(1)}, ${currentFgx.toFixed(1)})`;
+                    graphCtx.font = 'bold 11px JetBrains Mono, monospace';
+                    const textWidth = graphCtx.measureText(coordText).width;
+                    
+                    // Box background
+                    graphCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    graphCtx.fillRect(px + 10, py - 20, textWidth + 10, 20);
+                    graphCtx.strokeStyle = '#059669';
+                    graphCtx.lineWidth = 1;
+                    graphCtx.strokeRect(px + 10, py - 20, textWidth + 10, 20);
+                    
+                    // Text
+                    graphCtx.fillStyle = '#047857';
+                    graphCtx.fillText(coordText, px + 15, py - 6);
                 }
             }
 
-            const datasets = [
-                {
-                    label: 'f(x)',
-                    data: branch1,
-                    borderColor: '#4f46e5',
-                    borderWidth: 2.5,
-                    pointRadius: 0,
-                    showLine: true
-                },
-                {
-                    label: 'f(x) (cont.)',
-                    data: branch2,
-                    borderColor: '#4f46e5',
-                    borderWidth: 2.5,
-                    pointRadius: 0,
-                    showLine: true
-                }
-            ];
+            function plotCurve(expr, color, lineWidth) {
+                graphCtx.beginPath();
+                graphCtx.strokeStyle = color;
+                graphCtx.lineWidth = lineWidth;
+                let started = false;
 
-            if (showAsymptotes && va !== null && va >= -10 && va <= 10) {
-                datasets.push({
-                    label: `VA: x = ${va.toFixed(2)}`,
-                    data: [{ x: va, y: -10 }, { x: va, y: 10 }],
-                    borderColor: '#dc2626',
-                    borderWidth: 2,
-                    borderDash: [6, 6],
-                    pointRadius: 0
-                });
-            }
+                for (let px = originX; px <= w; px += 2) {
+                    const mathX = (px - originX) / scaleX;
+                    const mathY = safeEval(expr, mathX);
 
-            if (showAsymptotes && ha !== null) {
-                datasets.push({
-                    label: `HA: y = ${ha.toFixed(2)}`,
-                    data: [{ x: -10, y: ha }, { x: 10, y: ha }],
-                    borderColor: '#2563eb',
-                    borderWidth: 2,
-                    borderDash: [6, 6],
-                    pointRadius: 0
-                });
-            }
-
-            if (showIntercepts) {
-                if (a !== 0) {
-                    const xval = -b / a;
-                    if (xval >= -10 && xval <= 10) {
-                        datasets.push({
-                            label: 'x-intercept',
-                            data: [{ x: xval, y: 0 }],
-                            backgroundColor: '#10b981',
-                            pointRadius: 6
-                        });
-                    }
-                }
-                if (d !== 0) {
-                    const yval = b / d;
-                    if (yval >= -10 && yval <= 10) {
-                        datasets.push({
-                            label: 'y-intercept',
-                            data: [{ x: 0, y: yval }],
-                            backgroundColor: '#9333ea',
-                            pointRadius: 6
-                        });
-                    }
-                }
-            }
-
-            mainChart.data.datasets = datasets;
-            mainChart.update();
-        }
-
-        // --- HOOK GRAPH LOGIC ---
-        function initHookGraph() {
-            const ctx = document.getElementById('hookCanvas').getContext('2d');
-            hookChart = new Chart(ctx, {
-                type: 'line',
-                data: { datasets: [] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { type: 'linear', min: 0, max: 200, title: { display: true, text: 'Number of Hoodies Produced (x)' } },
-                        y: { type: 'linear', min: 0, max: 150, title: { display: true, text: 'Average Cost per Hoodie ($)' } }
-                    }
-                }
-            });
-            updateHookGraph();
-        }
-
-        function updateHookGraph() {
-            const fixed = parseFloat(document.getElementById('cost-fixed').value) || 0;
-            const variable = parseFloat(document.getElementById('cost-var').value) || 0;
-
-            const curveData = [];
-            for (let x = 1; x <= 200; x += 1) {
-                const y = (fixed + variable * x) / x;
-                curveData.push({ x: x, y: y });
-            }
-
-            hookChart.data.datasets = [
-                {
-                    label: 'Average Cost C̄(x)',
-                    data: curveData,
-                    borderColor: '#059669',
-                    borderWidth: 3,
-                    pointRadius: 0
-                },
-                {
-                    label: `Min Material Cost / HA (y = $${variable})`,
-                    data: [{ x: 0, y: variable }, { x: 200, y: variable }],
-                    borderColor: '#dc2626',
-                    borderDash: [5, 5],
-                    borderWidth: 2,
-                    pointRadius: 0
-                }
-            ];
-            hookChart.update();
-        }
-
-        // --- PHARMACOKINETICS GRAPH LOGIC ---
-        function initPharmaGraph() {
-            const ctx = document.getElementById('pharmaCanvas').getContext('2d');
-            
-            const curveData = [];
-            for (let t = 0; t <= 24; t += 0.2) {
-                const c = (6 * t) / (t * t + 4);
-                curveData.push({ x: t, y: c });
-            }
-
-            pharmaChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    datasets: [
-                        {
-                            label: 'Blood Concentration C(t) mg/L',
-                            data: curveData,
-                            borderColor: '#8b5cf6',
-                            borderWidth: 3,
-                            pointRadius: 0
-                        },
-                        {
-                            label: 'Horizontal Asymptote (y = 0)',
-                            data: [{ x: 0, y: 0 }, { x: 24, y: 0 }],
-                            borderColor: '#3b82f6',
-                            borderDash: [4, 4],
-                            borderWidth: 2,
-                            pointRadius: 0
+                    if (mathY !== null) {
+                        const canvasY = originY - mathY * scaleY;
+                        if (canvasY >= -50 && canvasY <= originY + 50) {
+                            if (!started) {
+                                graphCtx.moveTo(px, canvasY);
+                                started = true;
+                            } else {
+                                graphCtx.lineTo(px, canvasY);
+                            }
+                        } else {
+                            started = false;
                         }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { type: 'linear', min: 0, max: 24, title: { display: true, text: 'Time after dosage (Hours)' } },
-                        y: { type: 'linear', min: 0, max: 2, title: { display: true, text: 'Concentration (mg/L)' } }
+                    } else {
+                        started = false;
                     }
                 }
-            });
+                graphCtx.stroke();
+            }
+
+            function plotCompositeCurve(gExp, fExp, color, lineWidth) {
+                graphCtx.beginPath();
+                graphCtx.strokeStyle = color;
+                graphCtx.lineWidth = lineWidth;
+                let started = false;
+
+                for (let px = originX; px <= w; px += 2) {
+                    const mathX = (px - originX) / scaleX;
+                    const innerY = safeEval(gExp, mathX);
+
+                    if (innerY !== null) {
+                        const compY = safeEval(fExp, innerY);
+                        if (compY !== null) {
+                            const canvasY = originY - compY * scaleY;
+                            if (canvasY >= -50 && canvasY <= originY + 50) {
+                                if (!started) {
+                                    graphCtx.moveTo(px, canvasY);
+                                    started = true;
+                                } else {
+                                    graphCtx.lineTo(px, canvasY);
+                                }
+                            } else {
+                                started = false;
+                            }
+                        } else {
+                            started = false;
+                        }
+                    } else {
+                        started = false;
+                    }
+                }
+                graphCtx.stroke();
+            }
         }
     </script>
 </body>
 </html>
-Displaying interactive_rational_functions_visualizer.html.
