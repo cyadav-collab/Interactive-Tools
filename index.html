@@ -105,13 +105,53 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        
+        /* Topic & Section Styling */
+        .unit-section {
+            width: 100%;
+            max-width: 950px;
+            margin-bottom: 60px;
+        }
+        .unit-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .unit-number {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
         .cards-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 30px;
             width: 100%;
-            max-width: 950px;
         }
+        
+        /* Coming Soon Placeholder */
+        .coming-soon {
+            grid-column: 1 / -1;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px dashed rgba(148, 163, 184, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            color: #64748b;
+            font-size: 1.05rem;
+            font-style: italic;
+        }
+
         .card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(16px);
@@ -220,7 +260,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
         footer {
-            margin-top: 70px;
+            margin-top: 20px;
             color: #64748b;
             font-size: 0.9rem;
             text-align: center;
@@ -251,68 +291,84 @@
         </div>
     </div>
 
-    <div class="cards-container">
-        <!-- Card 1: Rational Functions Explorer -->
-        <div class="card">
-            <div>
-                <div class="card-header">
-                    <span class="topic-tag">Topic 2.8</span>
-                </div>
-                <h2 class="card-title">Rational Functions Explorer</h2>
-                <p class="card-desc">
-                    Investigate asymptotes, holes, domain restrictions, and real-world mathematical applications including drug concentration models and average business costs.
-                </p>
-                <ul class="features-list">
-                    <li>15-Minute Pre-Lesson Discovery Lab Task</li>
-                    <li>Real-time dynamic graph sandbox (a, b, c, d sliders)</li>
-                    <li>Interactive Asymptote Detector & Business Models</li>
-                </ul>
-            </div>
-            <!-- NOTE: Make sure this link matches your exact filename in GitHub -->
-            <a href="interactive_rational_functions_visualizer.html" class="sim-btn">
-                Launch Simulation →
-            </a>
+    <!-- UNIT 1 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 1</span> Number and Algebra</h2>
+        <div class="cards-container">
+            <div class="coming-soon">New simulations for Number and Algebra currently in development...</div>
         </div>
-
-        <!-- Card 2: Composite Functions Visualizer -->
-        <div class="card">
-            <div>
-                <div class="card-header">
-                    <span class="topic-tag">Topic 2.5</span>
-                </div>
-                <h2 class="card-title">Composite Functions Visualizer</h2>
-                <p class="card-desc">
-                    Visualize how inputs pass through inner and outer function pipelines f(g(x)) vs g(f(x)), with step-by-step mapping diagrams and domain constraint checkers.
-                </p>
-                <ul class="features-list">
-                    <li>Visual function machine pipeline builder</li>
-                    <li>Non-commutative property checker f(g(x)) ≠ g(f(x))</li>
-                    <li>Interactive domain and range constraint explorer</li>
-                </ul>
-            </div>
-            <!-- NOTE: Change "composite.html" below if your uploaded file has a different name -->
-            <a href="composite.html" class="sim-btn">
-                Launch Simulation →
-            </a>
-        </div>
-        <div class="card">
-    <div>
-        <div class="card-header">
-            <span class="topic-tag">Topic 2.6</span>
-        </div>
-        <h2 class="card-title">Quadratic Functions</h2>
-        <p class="card-desc">
-            Explore differnt form, graphs and applictions.
-        </p>
-        <ul class="features-list">
-            <li>Dynamic quadratic function generator</li>
-            <li>vertex and intercepts</li>
-        </ul>
     </div>
-    <a href="quadratics.html" class="sim-btn">
-        Launch Simulation →
-    </a>
-</div>
+
+    <!-- UNIT 2 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 2</span> Functions</h2>
+        <div class="cards-container">
+            <!-- Card 1: Rational Functions Explorer -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.8</span>
+                    </div>
+                    <h2 class="card-title">Rational Functions Explorer</h2>
+                    <p class="card-desc">
+                        Investigate asymptotes, holes, domain restrictions, and real-world mathematical applications including drug concentration models and average business costs.
+                    </p>
+                    <ul class="features-list">
+                        <li>15-Minute Pre-Lesson Discovery Lab Task</li>
+                        <li>Real-time dynamic graph sandbox (a, b, c, d sliders)</li>
+                        <li>Interactive Asymptote Detector & Business Models</li>
+                    </ul>
+                </div>
+                <a href="interactive_rational_functions_visualizer.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+
+            <!-- Card 2: Composite Functions Visualizer -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.5</span>
+                    </div>
+                    <h2 class="card-title">Composite Functions Visualizer</h2>
+                    <p class="card-desc">
+                        Visualize how inputs pass through inner and outer function pipelines f(g(x)) vs g(f(x)), with step-by-step mapping diagrams and domain constraint checkers.
+                    </p>
+                    <ul class="features-list">
+                        <li>Visual function machine pipeline builder</li>
+                        <li>Non-commutative property checker f(g(x)) ≠ g(f(x))</li>
+                        <li>Interactive domain and range constraint explorer</li>
+                    </ul>
+                </div>
+                <a href="composite.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- UNIT 3 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 3</span> Geometry and Trigonometry</h2>
+        <div class="cards-container">
+            <div class="coming-soon">New simulations for Geometry and Trigonometry currently in development...</div>
+        </div>
+    </div>
+
+    <!-- UNIT 4 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 4</span> Statistics and Probability</h2>
+        <div class="cards-container">
+            <div class="coming-soon">New simulations for Statistics and Probability currently in development...</div>
+        </div>
+    </div>
+
+    <!-- UNIT 5 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 5</span> Calculus</h2>
+        <div class="cards-container">
+            <div class="coming-soon">New simulations for Calculus currently in development...</div>
+        </div>
     </div>
 
     <footer>
