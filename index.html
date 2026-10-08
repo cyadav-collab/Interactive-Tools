@@ -3,388 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBDP Mathematics Interactive Lab Portal</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <title>IBDP Mathematics Hub | Chandrabhan</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: #0f172a;
             color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        .heading-font {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        /* Math Grid Background Pattern */
-        .math-grid-bg {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px;
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-            background-size: 32px 32px;
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
         }
-
-        /* Floating Math Symbol Animations */
-        @keyframes float-slow {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-18px) rotate(6deg); }
+        .header {
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 45px;
         }
-        @keyframes float-reverse {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(18px) rotate(-6deg); }
+        .badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #818cf8;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
         }
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.35; transform: scale(1); }
-            50% { opacity: 0.75; transform: scale(1.08); }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
         }
-
-        .float-1 { animation: float-slow 7s ease-in-out infinite; }
-        .float-2 { animation: float-reverse 9s ease-in-out infinite; }
-        .float-3 { animation: float-slow 11s ease-in-out infinite 2s; }
-        .pulse-bg { animation: pulse-glow 8s ease-in-out infinite; }
-
-        /* Glassmorphism Cards */
-        .glass-card {
-            background: rgba(30, 41, 59, 0.75);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
         }
-
-        .glass-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(168, 85, 247, 0.45);
-            box-shadow: 0 20px 35px -10px rgba(124, 58, 237, 0.25);
+        .curator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #334155;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            color: #cbd5e1;
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .curator-name {
+            color: #38bdf8;
+            font-weight: 700;
         }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 28px;
+            width: 100%;
+            max-width: 900px;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+        .card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 12px 24px -10px rgba(99, 102, 241, 0.3);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .topic-tag {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 12px;
+        }
+        .card-desc {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .features-list {
+            list-style: none;
+            margin-bottom: 28px;
+        }
+        .features-list li {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .features-list li::before {
+            content: "✓";
+            color: #34d399;
+            font-weight: bold;
+        }
+        .sim-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .sim-btn:hover {
+            opacity: 0.95;
+            transform: scale(1.02);
+        }
+        footer {
+            margin-top: 60px;
+            color: #64748b;
+            font-size: 0.85rem;
+            text-align: center;
         }
     </style>
 </head>
-<body class="min-h-screen math-grid-bg relative selection:bg-purple-500 selection:text-white pb-16">
+<body>
 
-    <!-- Background Floating Math Symbols -->
-    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-16 left-[8%] text-purple-500/20 text-6xl font-serif float-1">∫</div>
-        <div class="absolute top-48 right-[12%] text-indigo-500/20 text-5xl font-mono float-2">f(x)</div>
-        <div class="absolute bottom-32 left-[15%] text-cyan-500/20 text-7xl font-bold float-3">∑</div>
-        <div class="absolute top-1/3 right-[22%] text-pink-500/20 text-6xl float-1">π</div>
-        <div class="absolute bottom-1/4 right-[8%] text-amber-500/20 text-5xl font-mono float-2">lim x→∞</div>
-        <div class="absolute top-2/3 left-[5%] text-emerald-500/20 text-6xl float-3">√x</div>
-        <div class="absolute top-20 right-[40%] text-teal-500/15 text-5xl float-2">θ</div>
-        <div class="absolute bottom-12 left-[45%] text-purple-400/15 text-6xl float-1">∞</div>
-        
-        <!-- Ambient Radial Glows -->
-        <div class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[650px] h-[650px] bg-indigo-600/15 rounded-full blur-[130px] pulse-bg pointer-events-none"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[550px] h-[550px] bg-purple-600/15 rounded-full blur-[110px] pulse-bg pointer-events-none"></div>
-    </div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-
-        <!-- Hero Header -->
-        <header class="text-center max-w-3xl mx-auto mb-12">
-            <!-- IBDP Subject Badges -->
-            <div class="inline-flex flex-wrap items-center justify-center gap-2 mb-5">
-                <span class="px-3.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-300 flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-graduation-cap text-indigo-400"></i> IBDP Mathematics Portal
-                </span>
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/20 text-blue-400">
-                    AA SL & HL
-                </span>
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                    AI SL & HL
-                </span>
-            </div>
-
-            <!-- Main Heading -->
-            <h1 class="heading-font text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-4">
-                Interactive Math <br>
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
-                    Exploration Hub
-                </span>
-            </h1>
-
-            <p class="text-slate-300 text-base sm:text-lg mb-7 leading-relaxed">
-                Dynamic visual tools and inquiry lab simulations crafted specifically for IB Diploma Programme Mathematics students.
-            </p>
-
-            <!-- Permanent Creator Badge (No Customizer Bar) -->
-            <div class="inline-flex items-center gap-3.5 bg-slate-800/90 border border-purple-500/30 rounded-2xl px-6 py-3 shadow-xl shadow-purple-950/20 backdrop-blur-md">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
-                    <i class="fa-solid fa-user-gear"></i>
-                </div>
-                <div class="text-left">
-                    <p class="text-[10px] uppercase tracking-wider text-purple-300 font-bold">Curated & Designed By</p>
-                    <p class="text-lg font-bold text-white leading-snug">Chandrabhan</p>
-                </div>
-                <span class="ml-2 pl-3.5 border-l border-slate-700 text-xs text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle-check text-emerald-400"></i> IB Math Educator
-                </span>
-            </div>
-        </header>
-
-        <!-- Topic Filter & Search Bar -->
-        <section class="mb-10">
-            <div class="glass-card rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                
-                <!-- Filter Buttons -->
-                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto" id="filterContainer">
-                    <button data-filter="all" class="filter-btn active-filter px-4 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md transition-all">
-                        All Simulations (2)
-                    </button>
-                    <button data-filter="topic2" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all">
-                        Topic 2: Functions
-                    </button>
-                </div>
-
-                <!-- Search Input -->
-                <div class="relative w-full md:w-72">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="searchInput" placeholder="Search simulations..." 
-                        class="w-full bg-slate-900/90 border border-slate-700 focus:border-purple-500 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none transition-all">
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Simulation Cards Grid (Only active modules) -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-8" id="simulationsGrid">
-
-            <!-- Card 1: Rational Functions Visualizer -->
-            <div class="sim-card glass-card rounded-3xl overflow-hidden flex flex-col group" data-topic="topic2" data-keywords="rational functions asymptote domain range vertical horizontal drug model business cost 2.8">
-                <!-- Banner Accent -->
-                <div class="h-3 bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-400"></div>
-                
-                <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
-                    <div>
-                        <!-- Topic Badge & IB Standard -->
-                        <div class="flex items-center justify-between gap-2 mb-4">
-                            <span class="px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider bg-purple-500/10 border border-purple-500/20 text-purple-300">
-                                Topic 2.8 • Rational Functions
-                            </span>
-                            <span class="text-xs font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded-md border border-cyan-500/20">
-                                AA SL / HL
-                            </span>
-                        </div>
-
-                        <!-- Card Title -->
-                        <h3 class="heading-font text-2xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors flex items-center justify-between">
-                            <span>Rational Functions Explorer</span>
-                            <i class="fa-solid fa-chart-line text-purple-400 text-xl group-hover:scale-110 transition-transform"></i>
-                        </h3>
-
-                        <!-- Description -->
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                            Investigate asymptotes, holes, domain restrictions, and real-world mathematical applications including drug concentration models and average business costs.
-                        </p>
-
-                        <!-- Highlight Bullet Points -->
-                        <div class="space-y-2.5 mb-8">
-                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
-                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
-                                <span>15-Minute Pre-Lesson Discovery Lab Task</span>
-                            </div>
-                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
-                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
-                                <span>Real-time dynamic graph sandbox ($a, b, c, d$ sliders)</span>
-                            </div>
-                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
-                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
-                                <span>Interactive Asymptote Detector & Business Models</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Link & Direct Share -->
-                    <div class="pt-5 border-t border-slate-800 flex items-center justify-between gap-3">
-                        <a href="interactive_rational_functions_visualizer.html" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-600/25 transition-all transform active:scale-95">
-                            <span>Launch Simulation</span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </a>
-                        <button onclick="copyLink('interactive_rational_functions_visualizer.html')" title="Copy Direct Link" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all">
-                            <i class="fa-solid fa-link text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 2: Composite Functions Simulation -->
-            <div class="sim-card glass-card rounded-3xl overflow-hidden flex flex-col group" data-topic="topic2" data-keywords="composite functions mapping domain range inverse f(g(x)) g(f(x)) 2.5 pipeline">
-                <!-- Banner Accent -->
-                <div class="h-3 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400"></div>
-                
-                <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
-                    <div>
-                        <!-- Topic Badge & IB Standard -->
-                        <div class="flex items-center justify-between gap-2 mb-4">
-                            <span class="px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider bg-pink-500/10 border border-pink-500/20 text-pink-300">
-                                Topic 2.5 • Composite Functions
-                            </span>
-                            <span class="text-xs font-bold text-pink-400 bg-pink-500/10 px-2.5 py-0.5 rounded-md border border-pink-500/20">
-                                AA & AI SL/HL
-                            </span>
-                        </div>
-
-                        <!-- Card Title -->
-                        <h3 class="heading-font text-2xl font-bold text-white mb-3 group-hover:text-pink-300 transition-colors flex items-center justify-between">
-                            <span>Composite Functions Lab</span>
-                            <i class="fa-solid fa-diagram-project text-pink-400 text-xl group-hover:scale-110 transition-transform"></i>
-                        </h3>
-
-                        <!-- Description -->
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                            Visualize how inputs pass through inner and outer function pipelines $f(g(x))$ vs $g(f(x))$, with step-by-step mapping diagrams and domain constraint checkers.
-                        </p>
-
-                        <!-- Highlight Bullet Points -->
-                        <div class="space-y-2.5 mb-8">
-                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
-                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
-                                <span>Visual function machine pipeline builder</span>
-                            </div>
-                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
-                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
-                                <span>Non-commutative property checker $f(g(x)) \neq g(f(x))$</span>
-                            </div>
-                            <div class="flex items-center gap-2.5 text-xs text-slate-300">
-                                <i class="fa-solid fa-check-circle text-emerald-400 text-sm"></i>
-                                <span>Interactive domain and range constraint explorer</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Link & Direct Share -->
-                    <div class="pt-5 border-t border-slate-800 flex items-center justify-between gap-3">
-                        <a href="composite_functions.html" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white shadow-lg shadow-pink-600/25 transition-all transform active:scale-95">
-                            <span>Launch Simulation</span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </a>
-                        <button onclick="copyLink('composite_functions.html')" title="Copy Direct Link" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all">
-                            <i class="fa-solid fa-link text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- Footer -->
-        <footer class="mt-16 text-center text-slate-500 text-xs py-4 border-t border-slate-800/60">
-            <p>© IBDP Mathematics Learning Resources • Curated & Designed by Chandrabhan</p>
-        </footer>
-
-    </div>
-
-    <!-- Toast Popup Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-slate-800 border border-purple-500/50 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5">
-            <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
-            <span id="toastMsg">Link copied to clipboard!</span>
+    <div class="header">
+        <span class="badge">IBDP MATHEMATICS</span>
+        <h1>Interactive Simulations Hub</h1>
+        <p class="subtitle">Interactive visual tools for Analysis & Approaches (AA) and Applications & Interpretation (AI)</p>
+        <div class="curator">
+            <span>Curated and designed by:</span>
+            <span class="curator-name">Chandrabhan</span>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            initFiltersAndSearch();
-        });
+    <div class="cards-container">
+        <!-- Card 1: Rational Functions Explorer -->
+        <div class="card">
+            <div>
+                <div class="card-header">
+                    <span class="topic-tag">Topic 2.8</span>
+                </div>
+                <h2 class="card-title">Rational Functions Explorer</h2>
+                <p class="card-desc">
+                    Investigate asymptotes, holes, domain restrictions, and real-world mathematical applications including drug concentration models and average business costs.
+                </p>
+                <ul class="features-list">
+                    <li>15-Minute Pre-Lesson Discovery Lab Task</li>
+                    <li>Real-time dynamic graph sandbox (a, b, c, d sliders)</li>
+                    <li>Interactive Asymptote Detector & Business Models</li>
+                </ul>
+            </div>
+            <!-- NOTE: Make sure this link matches your exact filename in GitHub -->
+            <a href="interactive_rational_functions_visualizer.html" class="sim-btn">
+                Launch Simulation →
+            </a>
+        </div>
 
-        /* Filter and Search Event Handlers */
-        function initFiltersAndSearch() {
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const searchInput = document.getElementById('searchInput');
-            const cards = document.querySelectorAll('.sim-card');
+        <!-- Card 2: Composite Functions Visualizer -->
+        <div class="card">
+            <div>
+                <div class="card-header">
+                    <span class="topic-tag">Topic 2.5</span>
+                </div>
+                <h2 class="card-title">Composite Functions Visualizer</h2>
+                <p class="card-desc">
+                    Visualize how inputs pass through inner and outer function pipelines f(g(x)) vs g(f(x)), with step-by-step mapping diagrams and domain constraint checkers.
+                </p>
+                <ul class="features-list">
+                    <li>Visual function machine pipeline builder</li>
+                    <li>Non-commutative property checker f(g(x)) ≠ g(f(x))</li>
+                    <li>Interactive domain and range constraint explorer</li>
+                </ul>
+            </div>
+            <!-- NOTE: Change "composite.html" below if your uploaded file has a different name -->
+            <a href="composite.html" class="sim-btn">
+                Launch Simulation →
+            </a>
+        </div>
+    </div>
 
-            let currentFilter = 'all';
-            let currentQuery = '';
+    <footer>
+        <p>© IBDP Mathematics Hub • Curated and designed by Chandrabhan</p>
+    </footer>
 
-            function updateVisibility() {
-                cards.forEach(card => {
-                    const cardTopic = card.getAttribute('data-topic');
-                    const keywords = card.getAttribute('data-keywords').toLowerCase();
-                    const titleText = card.querySelector('h3').textContent.toLowerCase();
-
-                    const matchesTopic = (currentFilter === 'all') || (cardTopic === currentFilter);
-                    const matchesSearch = !currentQuery || keywords.includes(currentQuery) || titleText.includes(currentQuery);
-
-                    if (matchesTopic && matchesSearch) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            }
-
-            // Category filter click handler
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => {
-                        b.classList.remove('bg-purple-600', 'text-white', 'font-bold');
-                        b.classList.add('bg-slate-800', 'text-slate-300', 'font-semibold');
-                    });
-                    btn.classList.remove('bg-slate-800', 'text-slate-300', 'font-semibold');
-                    btn.classList.add('bg-purple-600', 'text-white', 'font-bold');
-
-                    currentFilter = btn.getAttribute('data-filter');
-                    updateVisibility();
-                });
-            });
-
-            // Search input handler
-            searchInput.addEventListener('input', (e) => {
-                currentQuery = e.target.value.toLowerCase().trim();
-                updateVisibility();
-            });
-        }
-
-        /* Clipboard Copy Link Utility */
-        function copyLink(filename) {
-            const currentPath = window.location.pathname;
-            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-            const fullURL = window.location.origin + basePath + filename;
-            
-            const tempInput = document.createElement('input');
-            tempInput.value = fullURL;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-
-            showToast(`Copied URL for ${filename}`);
-        }
-
-        /* Toast Popup Renderer */
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            toastMsg.textContent = message;
-            
-            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-            }, 3000);
-        }
-    </script>
 </body>
 </html>
