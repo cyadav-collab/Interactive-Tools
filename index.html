@@ -168,6 +168,7 @@
         /* Vibrant tops for the cards */
         .card:nth-child(1) { border-top: 4px solid #818cf8; }
         .card:nth-child(2) { border-top: 4px solid #f472b6; }
+        .card:nth-child(3) { border-top: 4px solid #34d399; }
         
         .card:hover {
             transform: translateY(-6px);
@@ -194,6 +195,11 @@
             background: rgba(236, 72, 153, 0.15);
             color: #f472b6;
             border-color: rgba(236, 72, 153, 0.4);
+        }
+        .card:nth-child(3) .topic-tag {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.4);
         }
         .card-title {
             font-size: 1.5rem;
@@ -242,6 +248,7 @@
             font-weight: 700;
             font-size: 1rem;
             transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%); /* Default Grey-Blue */
         }
         /* Card 1 Button Colors */
         .card:nth-child(1) .sim-btn {
@@ -252,6 +259,11 @@
         .card:nth-child(2) .sim-btn {
             background: linear-gradient(135deg, #db2777 0%, #ec4899 100%);
             box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+        /* Card 3 Button Colors */
+        .card:nth-child(3) .sim-btn {
+            background: linear-gradient(135deg, #059669 0%, #34d399 100%);
+            box-shadow: 0 4px 15px rgba(52, 211, 153, 0.4);
         }
         
         .sim-btn:hover {
@@ -345,7 +357,7 @@
                 </a>
             </div>
 
-    <!-- Card 3: Quadratic Functions -->
+            <!-- Card 3: Quadratic Functions -->
             <div class="card">
                 <div>
                     <div class="card-header">
