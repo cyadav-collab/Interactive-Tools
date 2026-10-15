@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBDP Math AASL - Inverse Functions Exploration Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400;1,600&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            font-size: 16px; 
+            color: #1e293b;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-math { font-family: 'Lora', Georgia, serif; }
+        .canvas-container { position: relative; width: 100%; height: 100%; min-height: 460px; }
+        canvas { touch-action: none; }
+        input[type=range] { accent-color: #2563eb; height: 6px; }
+        
+        /* Custom scrollbar for clean UI */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3.5">
+                <div class="bg-blue-600 text-white p-2.5 rounded-xl font-extrabold text-xl shadow-sm tracking-wide">
+                    IB
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+                        Inverse Functions Interactive Tool
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-blue-100 text-blue-800 border border-blue-300">AASL 2.2 & 2.5</span>
+                    </h1>
+                    <p class="text-sm font-medium text-slate-500">Conceptual understanding, real-life modeling & graph behavior</p>
+                </div>
+            </div>
+
+            <!-- Main Navigation Tabs -->
+            <nav class="flex flex-wrap justify-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 text-base font-semibold">
+                <button onclick="switchTab('lab')" id="tab-lab" class="px-4 py-2 rounded-xl transition-all flex items-center gap-2 bg-blue-600 text-white shadow-sm">
+                    <i class="fa-solid fa-chart-line text-lg"></i> Graph Lab
+                </button>
+                <button onclick="switchTab('app1')" id="tab-app1" class="px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-200/60">
+                    <i class="fa-solid fa-temperature-half text-lg text-amber-600"></i> Thermostat (°C ↔ °F)
+                </button>
+                <button onclick="switchTab('app2')" id="tab-app2" class="px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-200/60">
+                    <i class="fa-solid fa-car-burst text-lg text-emerald-600"></i> Forensic Skids
+                </button>
+                <button onclick="switchTab('guide')" id="tab-guide" class="px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-200/60">
+                    <i class="fa-solid fa-graduation-cap text-lg text-purple-600"></i> Notes & Practice
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: GRAPH & DOMAIN/RANGE INVESTIGATION LAB -->
+        <!-- ========================================== -->
+        <section id="content-lab" class="space-y-6">
+            
+            <!-- Quick Function Category Selector Bar -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <span class="text-xs uppercase font-extrabold tracking-wider text-slate-500">
+                        <i class="fa-solid fa-cubes-stacked text-blue-600 mr-1"></i> Select Function Family
+                    </span>
+                    <span class="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+                        Compare <span class="font-math italic">f</span>(<span class="font-math italic">x</span>) and <span class="font-math italic">f</span><sup>−1</sup>(<span class="font-math italic">x</span>) live
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 text-sm">
+                    <button onclick="selectFunctionType('linear')" id="btn-func-linear" class="p-3 rounded-xl border border-blue-500 bg-blue-50 font-bold text-blue-700 flex flex-col items-center justify-center transition shadow-sm">
+                        <span class="text-base"><i class="fa-solid fa-slash-forward"></i> Linear</span>
+                        <span class="text-xs font-math italic text-slate-600 mt-0.5">f(x) = mx + c</span>
+                    </button>
+                    <button onclick="selectFunctionType('quadratic')" id="btn-func-quadratic" class="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 font-bold text-slate-700 flex flex-col items-center justify-center transition">
+                        <span class="text-base"><i class="fa-solid fa-chart-area"></i> Quadratic</span>
+                        <span class="text-xs font-math italic text-slate-600 mt-0.5">f(x) = a(x − h)² + k</span>
+                    </button>
+                    <button onclick="selectFunctionType('exponential')" id="btn-func-exponential" class="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 font-bold text-slate-700 flex flex-col items-center justify-center transition">
+                        <span class="text-base"><i class="fa-solid fa-arrow-trend-up"></i> Exponential</span>
+                        <span class="text-xs font-math italic text-slate-600 mt-0.5">f(x) = a · 2ᵇˣ + k</span>
+                    </button>
+                    <button onclick="selectFunctionType('rational')" id="btn-func-rational" class="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 font-bold text-slate-700 flex flex-col items-center justify-center transition">
+                        <span class="text-base"><i class="fa-solid fa-arrows-left-right-to-line"></i> Rational</span>
+                        <span class="text-xs font-math italic text-slate-600 mt-0.5">f(x) = (ax + b)/(cx + d)</span>
+                    </button>
+                    <button onclick="selectFunctionType('cubic')" id="btn-func-cubic" class="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 font-bold text-slate-700 flex flex-col items-center justify-center transition">
+                        <span class="text-base"><i class="fa-solid fa-wave-square"></i> Cubic</span>
+                        <span class="text-xs font-math italic text-slate-600 mt-0.5">f(x) = a(x − h)³ + k</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Controls Sidebar -->
+                <div class="lg:col-span-4 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5">
+                    <div class="border-b border-slate-200 pb-3 flex justify-between items-center">
+                        <h2 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-blue-600"></i> Function Parameters
+                        </h2>
+                        <span id="badge-func-type" class="text-xs font-bold uppercase bg-blue-100 text-blue-800 px-2.5 py-1 rounded-md font-mono">Linear</span>
+                    </div>
+
+                    <!-- Dynamic Sliders Container -->
+                    <div id="parameters-container" class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <!-- Sliders injected dynamically via JS -->
+                    </div>
+
+                    <!-- Domain Restriction & Display Toggles -->
+                    <div class="space-y-3 pt-1">
+                        <!-- Restricted Domain Banner (For Quadratics) -->
+                        <div id="domain-restriction-wrapper" class="hidden bg-amber-50 border border-amber-300 p-3.5 rounded-xl text-sm space-y-2">
+                            <div class="flex items-center justify-between text-amber-900 font-bold">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Restrict Domain (<span class="font-math italic">x</span> ≥ <span class="font-math italic">h</span>)</span>
+                                <input type="checkbox" id="restrict-domain" checked onchange="drawGraph()" class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
+                            </div>
+                            <p class="text-amber-800 text-xs leading-relaxed">
+                                Unchecking shows full parabola. Observe how it fails the <strong>Horizontal Line Test</strong> unless restricted to <span class="font-math italic">x</span> ≥ <span class="font-math italic">h</span>!
+                            </p>
+                        </div>
+
+                        <!-- Symmetry Line Toggle -->
+                        <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm">
+                            <span class="text-slate-800 font-medium">Show Reflection Line <span class="font-math italic font-semibold text-amber-700">(y = x)</span></span>
+                            <input type="checkbox" id="show-yx" checked onchange="drawGraph()" class="w-5 h-5 rounded text-blue-600 cursor-pointer">
+                        </div>
+
+                        <!-- Point Reflection Toggle -->
+                        <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm">
+                            <span class="text-slate-800 font-medium">Show Mapping Point <span class="font-mono text-xs font-bold text-slate-700">(a, b) → (b, a)</span></span>
+                            <input type="checkbox" id="show-points" checked onchange="drawGraph()" class="w-5 h-5 rounded text-blue-600 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Interactive Slider for Point Tracking -->
+                    <div class="space-y-2 pt-2 border-t border-slate-200">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-700 font-bold">Test Point Input <span class="font-math italic">x = a</span>:</span>
+                            <span id="point-x-val" class="font-mono text-base font-extrabold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">2.0</span>
+                        </div>
+                        <input type="range" id="slider-x" min="-7" max="7" step="0.1" value="2" oninput="updatePointX(this.value)" class="w-full cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Canvas Graph Visualization -->
+                <div class="lg:col-span-8 space-y-4 flex flex-col justify-between">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col h-full">
+                        
+                        <!-- Graph Legend Bar -->
+                        <div class="flex flex-wrap items-center justify-between gap-3 mb-3 pb-2.5 border-b border-slate-200 text-sm font-semibold">
+                            <div class="flex items-center gap-4 flex-wrap">
+                                <span class="flex items-center gap-2 text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-blue-600 inline-block shadow-sm"></span>
+                                    Original: <span class="font-math italic font-bold">f</span>(<span class="font-math italic font-bold">x</span>)
+                                </span>
+                                <span class="flex items-center gap-2 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-emerald-600 inline-block shadow-sm"></span>
+                                    Inverse: <span class="font-math italic font-bold">f</span><sup>−1</sup>(<span class="font-math italic font-bold">x</span>)
+                                </span>
+                                <span class="flex items-center gap-2 text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
+                                    <span class="w-4 h-0.5 border-t-2 border-dashed border-amber-600 inline-block"></span>
+                                    Mirror Line: <span class="font-math italic font-bold">y = x</span>
+                                </span>
+                            </div>
+                            <span class="text-xs text-slate-500 font-medium"><i class="fa-solid fa-hand-pointer text-slate-400"></i> Tap/Drag graph to shift test point</span>
+                        </div>
+
+                        <!-- Canvas Container -->
+                        <div class="canvas-container bg-slate-50 rounded-xl overflow-hidden border border-slate-300 flex-1 shadow-inner">
+                            <canvas id="graphCanvas" class="w-full h-full cursor-crosshair"></canvas>
+                        </div>
+
+                        <!-- Formatted Dynamic Math Callout Boxes -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                            <div class="bg-blue-50 border border-blue-200 p-3.5 rounded-xl shadow-sm">
+                                <span class="text-blue-800 font-extrabold uppercase text-xs tracking-wider block mb-1">
+                                    Original Function Expression
+                                </span>
+                                <div id="math-fx" class="text-slate-900 font-mono text-base font-bold">
+                                    f(x) = ...
+                                </div>
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl shadow-sm">
+                                <span class="text-emerald-800 font-extrabold uppercase text-xs tracking-wider block mb-1">
+                                    Inverse Function Expression
+                                </span>
+                                <div id="math-finv" class="text-slate-900 font-mono text-base font-bold">
+                                    f⁻¹(x) = ...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Investigation Table: Domain & Range Mapping -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-arrows-split-up-and-left text-amber-600"></i>
+                    Domain, Range & Asymptote Reflection Analysis
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Domain & Range Card -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2.5">
+                        <div class="text-xs font-extrabold uppercase text-slate-500 tracking-wider">Domain & Range Swap</div>
+                        <div class="text-sm space-y-1.5">
+                            <p class="flex justify-between border-b border-slate-200 pb-1">
+                                <span class="text-blue-700 font-bold">Domain of f:</span> 
+                                <span id="dom-f" class="font-mono text-slate-900 font-bold">x ∈ ℝ</span>
+                            </p>
+                            <p class="flex justify-between border-b border-slate-200 pb-1">
+                                <span class="text-blue-700 font-bold">Range of f:</span> 
+                                <span id="rng-f" class="font-mono text-slate-900 font-bold">y ∈ ℝ</span>
+                            </p>
+                            <p class="flex justify-between pt-1">
+                                <span class="text-emerald-700 font-bold">Domain of f⁻¹:</span> 
+                                <span id="dom-finv" class="font-mono text-slate-900 font-bold">x ∈ ℝ</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-emerald-700 font-bold">Range of f⁻¹:</span> 
+                                <span id="rng-finv" class="font-mono text-slate-900 font-bold">y ∈ ℝ</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Asymptotes & Features Card -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <div class="text-xs font-extrabold uppercase text-slate-500 tracking-wider">Asymptotes & Features</div>
+                        <div id="asymptote-info" class="text-xs text-slate-700 space-y-1.5 leading-relaxed">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Key IB Concept Insight Card -->
+                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-2">
+                        <div class="text-xs font-extrabold uppercase text-amber-900 tracking-wider">IB Syllabus Core Takeaway</div>
+                        <p class="text-xs text-amber-900 leading-relaxed font-medium">
+                            The graph of <span class="font-math italic">y = f<sup>−1</sup>(x)</span> is a <strong>reflection</strong> of <span class="font-math italic">y = f(x)</span> in the line <span class="font-math italic">y = x</span>. 
+                            If point <span class="font-mono text-xs">(a, b)</span> lies on <span class="font-math italic">f</span>, then <span class="font-mono text-xs">(b, a)</span> must lie on <span class="font-math italic">f<sup>−1</sup></span>. Consequently, <span class="font-math italic">f(f<sup>−1</sup>(x)) = x</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: REAL-LIFE APP 1 - THERMOSTAT (C ↔ F)-->
+        <!-- ========================================== -->
+        <section id="content-app1" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 pb-4">
+                    <div>
+                        <span class="text-xs font-extrabold text-amber-700 uppercase tracking-wider bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
+                            Real-Life Application 1 (Linear Modeling)
+                        </span>
+                        <h2 class="text-2xl font-extrabold text-slate-900 mt-2 flex items-center gap-2">
+                            <i class="fa-solid fa-temperature-arrow-up text-amber-600"></i> Smart Thermostat & Weather Sensor Calibration
+                        </h2>
+                    </div>
+                    <div class="bg-slate-100 text-slate-700 text-xs px-3.5 py-2 rounded-xl border border-slate-300 font-mono font-bold">
+                        Linear Mapping: °C ↔ °F
+                    </div>
+                </div>
+
+                <!-- Explanation -->
+                <p class="text-base text-slate-700 leading-relaxed">
+                    A digital weather station's internal sensor records physical temperature in <strong>Celsius (<span class="font-math italic font-bold">C</span>)</strong>, but standard displays output readings in <strong>Fahrenheit (<span class="font-math italic font-bold">F</span>)</strong>. 
+                    The <strong>forward function <span class="font-math italic font-bold">F = f(C)</span></strong> converts Celsius to Fahrenheit. When a user dials in a preferred target in Fahrenheit, the smart microcontroller uses the <strong>inverse function <span class="font-math italic font-bold">C = f<sup>−1</sup>(F)</span></strong> to set the physical heating coil in Celsius!
+                </p>
+
+                <!-- Interactive App Dual Calculator -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Forward Calculator -->
+                    <div class="bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-2xl p-5 space-y-4 shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-extrabold text-blue-800 text-base uppercase tracking-wide">Forward Function <span class="font-math italic">f(C)</span></h3>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2.5 py-1 rounded-md font-mono font-bold">Celsius → Fahrenheit</span>
+                        </div>
+
+                        <div class="text-sm font-mono text-slate-800 bg-white p-3 rounded-xl border border-blue-200 font-bold shadow-sm">
+                            F(C) = <span class="text-blue-700">(9/5)·C + 32</span>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-base">
+                                <label class="text-slate-800 font-bold">Input Hardware Sensor Temp (<span class="font-math italic">C</span>):</label>
+                                <span id="app1-c-val" class="font-mono text-blue-700 font-extrabold text-lg">25.0 °C</span>
+                            </div>
+                            <input type="range" id="app1-slider-c" min="-20" max="50" step="0.5" value="25" oninput="updateApp1FromC(this.value)" class="w-full cursor-pointer">
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-blue-200 flex items-center justify-between shadow-sm">
+                            <span class="text-xs font-bold uppercase text-slate-500">Calculated Display Output:</span>
+                            <span id="app1-f-out" class="text-2xl font-extrabold font-mono text-blue-700">77.0 °F</span>
+                        </div>
+                    </div>
+
+                    <!-- Inverse Calculator -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-200 rounded-2xl p-5 space-y-4 shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-extrabold text-emerald-800 text-base uppercase tracking-wide">Inverse Function <span class="font-math italic">f<sup>−1</sup>(F)</span></h3>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-md font-mono font-bold">Fahrenheit → Celsius</span>
+                        </div>
+
+                        <div class="text-sm font-mono text-slate-800 bg-white p-3 rounded-xl border border-emerald-200 font-bold shadow-sm">
+                            C(F) = <span class="text-emerald-700">(5/9)·(F − 32)</span>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-base">
+                                <label class="text-slate-800 font-bold">Input Target Room Setting (<span class="font-math italic">F</span>):</label>
+                                <span id="app1-f-val" class="font-mono text-emerald-700 font-extrabold text-lg">77.0 °F</span>
+                            </div>
+                            <input type="range" id="app1-slider-f" min="-4" max="122" step="0.9" value="77" oninput="updateApp1FromF(this.value)" class="w-full cursor-pointer">
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-emerald-200 flex items-center justify-between shadow-sm">
+                            <span class="text-xs font-bold uppercase text-slate-500">Reconstructed Sensor Signal:</span>
+                            <span id="app1-c-out" class="text-2xl font-extrabold font-mono text-emerald-700">25.0 °C</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Algebraic Steps Card -->
+                <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3">
+                    <h4 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-square-root-variable text-blue-600"></i> Step-by-Step IB Algebraic Method: Reversing the Relationship
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-sm font-mono text-slate-800">
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-slate-500 block text-xs font-sans font-bold">STEP 1: State relationship</span>
+                            y = (9/5)x + 32
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-slate-500 block text-xs font-sans font-bold">STEP 2: Interchange x and y</span>
+                            x = (9/5)y + 32
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-slate-500 block text-xs font-sans font-bold">STEP 3: Rearrange for y</span>
+                            x − 32 = (9/5)y ⇒ y = (5/9)(x − 32)
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-slate-500 block text-xs font-sans font-bold">STEP 4: Write f⁻¹(x)</span>
+                            f⁻¹(x) = (5/9)(x − 32)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: REAL-LIFE APP 2 - FORENSIC SKIDS    -->
+        <!-- ========================================== -->
+        <section id="content-app2" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 pb-4">
+                    <div>
+                        <span class="text-xs font-extrabold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                            Real-Life Application 2 (Quadratic & Square Root Modeling)
+                        </span>
+                        <h2 class="text-2xl font-extrabold text-slate-900 mt-2 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-emerald-600"></i> Forensic Crash Reconstruction: Skid Marks vs. Vehicle Speed
+                        </h2>
+                    </div>
+                    <div class="bg-slate-100 text-slate-700 text-xs px-3.5 py-2 rounded-xl border border-slate-300 font-mono font-bold">
+                        Quadratic / Root Mapping: v ↔ d
+                    </div>
+                </div>
+
+                <!-- Explanation -->
+                <p class="text-base text-slate-700 leading-relaxed">
+                    Automotive engineers express emergency braking distance <span class="font-math italic font-bold">d</span> (in meters) as a quadratic function of initial speed <span class="font-math italic font-bold">v</span> (in km/h): 
+                    <span class="font-math italic font-bold">d(v) = k · v²</span> (where <span class="font-math italic">k</span> depends on surface friction). 
+                    When responding to a crash scene, police officers measure the <strong>skid mark length <span class="font-math italic font-bold">d</span></strong> with a measuring tape and apply the <strong>inverse function <span class="font-math italic font-bold">v(d) = √(d / k)</span></strong> to determine if the vehicle was speeding!
+                </p>
+
+                <!-- Interactive Simulator -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-5">
+                        <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wide border-b border-slate-200 pb-2">
+                            Road Parameters & Mode Select
+                        </h3>
+
+                        <!-- Road Condition Friction Dropdown -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-800 block">Road Surface Condition (Friction Factor <span class="font-math italic">k</span>):</label>
+                            <select id="app2-select-k" onchange="updateApp2K(this.value)" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-sm font-semibold text-slate-800 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="0.006">Dry Asphalt Road (k = 0.006)</option>
+                                <option value="0.010">Wet / Rain Asphalt (k = 0.010)</option>
+                                <option value="0.018">Icy Road Surface (k = 0.018)</option>
+                            </select>
+                        </div>
+
+                        <!-- Perspective Mode Toggle -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-800 block">Calculation Perspective:</label>
+                            <div class="grid grid-cols-2 gap-2.5 text-sm">
+                                <button id="btn-mode-forward" onclick="setApp2Mode('forward')" class="p-3 rounded-xl border font-bold transition bg-blue-600 border-blue-600 text-white shadow-sm">
+                                    Forward: d = f(v)<br><span class="text-xs font-normal text-blue-100">Speed → Skid Length</span>
+                                </button>
+                                <button id="btn-mode-inverse" onclick="setApp2Mode('inverse')" class="p-3 rounded-xl border font-bold transition bg-white border-slate-300 text-slate-700 hover:bg-slate-100">
+                                    Inverse: v = f⁻¹(d)<br><span class="text-xs font-normal text-slate-500">Skid Length → Speed</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Slider Container -->
+                        <div id="app2-slider-box" class="space-y-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Output & Graphic Visualizer -->
+                    <div class="lg:col-span-7 bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+                                <span class="text-xs font-extrabold uppercase text-slate-500">Investigation Result</span>
+                                <span id="app2-tag" class="text-xs font-extrabold px-2.5 py-1 rounded-md bg-blue-100 text-blue-800">Forward Mode</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white p-4 rounded-xl text-center border border-slate-200 shadow-sm">
+                                    <span class="text-xs font-bold uppercase text-slate-500 block mb-1">Vehicle Speed (<span class="font-math italic">v</span>)</span>
+                                    <span id="app2-res-v" class="text-2xl font-extrabold font-mono text-blue-700">80 km/h</span>
+                                </div>
+                                <div class="bg-white p-4 rounded-xl text-center border border-slate-200 shadow-sm">
+                                    <span class="text-xs font-bold uppercase text-slate-500 block mb-1">Skid Mark Length (<span class="font-math italic">d</span>)</span>
+                                    <span id="app2-res-d" class="text-2xl font-extrabold font-mono text-emerald-700">38.4 m</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skid Track Visualizer Graphic -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 relative space-y-2 shadow-sm">
+                            <div class="text-xs font-bold text-slate-600 flex justify-between">
+                                <span><i class="fa-solid fa-car text-slate-800"></i> Emergency Brakes Applied</span>
+                                <span id="app2-road-length-text" class="text-emerald-700 font-mono font-extrabold">Skid: 38.4 meters</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-6 rounded-full overflow-hidden relative flex items-center p-1">
+                                <div id="app2-skid-bar" class="bg-gradient-to-r from-amber-500 to-red-600 h-4 rounded-full transition-all duration-300" style="width: 40%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Domain Restriction Physics Note -->
+                        <div class="bg-amber-50 border border-amber-300 p-3.5 rounded-xl text-xs text-amber-900 font-medium leading-relaxed">
+                            <strong><i class="fa-solid fa-triangle-exclamation text-amber-700"></i> Physics Domain Restriction:</strong> 
+                            Since <span class="font-math italic font-bold">d = k · v²</span> is quadratic, standard algebra gives <span class="font-math italic font-bold">v = ±√(d/k)</span>. However, vehicle speed cannot be negative in physical space (<span class="font-math italic font-bold">v ≥ 0</span>). Restricting the domain of <span class="font-math italic">f(v)</span> to <span class="font-mono text-xs">[0, ∞)</span> guarantees a valid one-to-one function that possesses an inverse!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: IB NOTES & EXAM PRACTICE            -->
+        <!-- ========================================== -->
+        <section id="content-guide" class="hidden space-y-6">
+            <!-- Teacher Pedagogy Guide -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-200 pb-3">
+                    <i class="fa-solid fa-chalkboard-user text-purple-600"></i> Teacher Lesson Strategy & IB Pedagogy
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-slate-700">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <span class="text-blue-700 font-extrabold uppercase text-xs tracking-wider block">1. Inquiry & Real-World Hook</span>
+                        <p>Begin with the <strong>Thermostat</strong> or <strong>Skid Mark</strong> scenario. Ask: <em>"If a function turns an input into an output, how do we reverse engineer the input from an observed result?"</em></p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <span class="text-emerald-700 font-extrabold uppercase text-xs tracking-wider block">2. Visual Symmetry & Domain Swap</span>
+                        <p>Use the <strong>Graph Lab</strong>. Have students observe reflection across <span class="font-math italic">y = x</span>. Show why quadratic <span class="font-math italic">f(x) = x²</span> requires domain restriction <span class="font-math italic">x ≥ 0</span> to pass the Horizontal Line Test.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <span class="text-purple-700 font-extrabold uppercase text-xs tracking-wider block">3. Rational Asymptote Reflection</span>
+                        <p>Select Rational <span class="font-math italic">f(x) = (2x + 1)/(x − 3)</span>. Point out how the vertical asymptote of <span class="font-math italic">f</span> (<span class="font-math italic">x = 3</span>) becomes the horizontal asymptote of <span class="font-math italic">f<sup>−1</sup></span> (<span class="font-math italic">y = 3</span>).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IB Exam Practice Questions -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+                <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-200 pb-3">
+                    <i class="fa-solid fa-pen-to-square text-emerald-600"></i> IB Exam-Style Questions with Markschemes
+                </h2>
+
+                <!-- Question 1 -->
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3.5">
+                    <div class="flex justify-between items-start flex-wrap gap-2">
+                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-md font-mono font-bold border border-blue-200">[4 Marks] SL Paper 1 Style</span>
+                        <span class="text-xs font-semibold text-slate-500">Topic 2.5: Rational Inverses</span>
+                    </div>
+                    <p class="text-base text-slate-800 font-medium">
+                        Let <span class="font-math italic">f(x) = (2x + 1) / (x − 3)</span>, for <span class="font-math italic">x ∈ ℝ, x ≠ 3</span>.
+                    </p>
+                    <ol class="list-alpha list-inside text-sm text-slate-700 space-y-1.5 pl-2 font-medium">
+                        <li>Find an expression for <span class="font-math italic">f<sup>−1</sup>(x)</span>.</li>
+                        <li>State the domain and range of <span class="font-math italic">f<sup>−1</sup></span>.</li>
+                    </ol>
+
+                    <button onclick="toggleSolution('sol-q1')" class="text-sm text-blue-700 font-bold hover:underline flex items-center gap-1.5 pt-1">
+                        <i class="fa-solid fa-eye"></i> Toggle Markscheme & Solution
+                    </button>
+
+                    <div id="sol-q1" class="hidden bg-white p-4 rounded-xl border border-slate-300 text-sm text-slate-800 font-mono space-y-2 shadow-inner">
+                        <p class="text-emerald-700 font-sans font-bold">(a) Markscheme:</p>
+                        <p>Let y = (2x + 1)/(x − 3) ⇒ x = (2y + 1)/(y − 3) <span class="text-slate-500 font-sans">(M1: swap x and y)</span></p>
+                        <p>x(y − 3) = 2y + 1 ⇒ xy − 3x = 2y + 1 <span class="text-slate-500 font-sans">(M1: expand)</span></p>
+                        <p>xy − 2y = 3x + 1 ⇒ y(x − 2) = 3x + 1 <span class="text-slate-500 font-sans">(A1: factorize y)</span></p>
+                        <p class="text-blue-700 font-bold">f⁻¹(x) = (3x + 1) / (x − 2) <span class="text-slate-500 font-sans">(A1)</span></p>
+                        <hr class="border-slate-200 my-2">
+                        <p class="text-emerald-700 font-sans font-bold">(b) Markscheme:</p>
+                        <p>Domain of f⁻¹ = Range of f: <strong>x ∈ ℝ, x ≠ 2</strong> <span class="text-slate-500 font-sans">(A1)</span></p>
+                        <p>Range of f⁻¹ = Domain of f: <strong>y ∈ ℝ, y ≠ 3</strong> <span class="text-slate-500 font-sans">(A1)</span></p>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3.5">
+                    <div class="flex justify-between items-start flex-wrap gap-2">
+                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-md font-mono font-bold border border-blue-200">[5 Marks] SL Paper 2 Style</span>
+                        <span class="text-xs font-semibold text-slate-500">Topic 2.2: Restricted Domain Quadratic</span>
+                    </div>
+                    <p class="text-base text-slate-800 font-medium">
+                        Consider <span class="font-math italic">g(x) = 2(x − 1)² + 3</span>, for <span class="font-math italic">x ≥ 1</span>.
+                    </p>
+                    <ol class="list-alpha list-inside text-sm text-slate-700 space-y-1.5 pl-2 font-medium">
+                        <li>Explain why <span class="font-math italic">g(x)</span> possesses an inverse function for <span class="font-math italic">x ≥ 1</span>.</li>
+                        <li>Find <span class="font-math italic">g<sup>−1</sup>(x)</span> and state its domain.</li>
+                    </ol>
+
+                    <button onclick="toggleSolution('sol-q2')" class="text-sm text-blue-700 font-bold hover:underline flex items-center gap-1.5 pt-1">
+                        <i class="fa-solid fa-eye"></i> Toggle Markscheme & Solution
+                    </button>
+
+                    <div id="sol-q2" class="hidden bg-white p-4 rounded-xl border border-slate-300 text-sm text-slate-800 font-mono space-y-2 shadow-inner">
+                        <p class="text-emerald-700 font-sans font-bold">(a) Markscheme:</p>
+                        <p>For x ≥ 1, g(x) is strictly increasing and thus one-to-one (passes the Horizontal Line Test). <span class="text-slate-500 font-sans">(R1)</span></p>
+                        <hr class="border-slate-200 my-2">
+                        <p class="text-emerald-700 font-sans font-bold">(b) Markscheme:</p>
+                        <p>Set y = 2(x − 1)² + 3 ⇒ x = 2(y − 1)² + 3 <span class="text-slate-500 font-sans">(M1)</span></p>
+                        <p>(x − 3) / 2 = (y − 1)² <span class="text-slate-500 font-sans">(M1)</span></p>
+                        <p>y − 1 = √((x − 3)/2) <span class="text-slate-500 font-sans">(A1: take positive root since y ≥ 1)</span></p>
+                        <p class="text-blue-700 font-bold">g⁻¹(x) = 1 + √((x − 3) / 2) <span class="text-slate-500 font-sans">(A1)</span></p>
+                        <p><strong>Domain of g⁻¹: x ≥ 3</strong> (since Range of g is y ≥ 3) <span class="text-slate-500 font-sans">(A1)</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /* State Variables for Investigation Lab */
+        let state = {
+            funcType: 'linear',
+            params: { m: 1.5, c: -1, a: 1, h: 2, k: -1, b: 0.5, d: 1 },
+            testX: 2.0,
+            restrictDomain: true,
+            showYX: true,
+            showPoints: true
+        };
+
+        /* State for App 1 (Temp) */
+        let app1State = { c: 25.0, f: 77.0 };
+
+        /* State for App 2 (Forensic) */
+        let app2State = { mode: 'forward', k: 0.006, v: 80, d: 38.4 };
+
+        // Canvas context
+        let canvas, ctx;
+
+        /* Initialize App on Load */
+        window.onload = function() {
+            canvas = document.getElementById('graphCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Resize listener
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // Canvas drag/click interaction
+            canvas.addEventListener('pointerdown', handleCanvasPointer);
+            canvas.addEventListener('pointermove', function(e) {
+                if (e.buttons === 1) handleCanvasPointer(e);
+            });
+
+            // Initialize function selection and app controls
+            selectFunctionType('linear');
+            updateApp1FromC(25);
+            updateApp2Visuals();
+        };
+
+        function switchTab(tabId) {
+            ['lab', 'app1', 'app2', 'guide'].forEach(id => {
+                const content = document.getElementById(`content-${id}`);
+                const tab = document.getElementById(`tab-${id}`);
+                if (id === tabId) {
+                    content.classList.remove('hidden');
+                    tab.className = "px-4 py-2 rounded-xl transition-all flex items-center gap-2 bg-blue-600 text-white shadow-sm font-semibold";
+                } else {
+                    content.classList.add('hidden');
+                    tab.className = "px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-semibold";
+                }
+            });
+            if (tabId === 'lab') {
+                setTimeout(resizeCanvas, 50);
+            }
+        }
+
+        function resizeCanvas() {
+            if (!canvas) return;
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            drawGraph();
+        }
+
+        /* Function Selection and Parameter Controls Generator */
+        function selectFunctionType(type) {
+            state.funcType = type;
+
+            // Highlight active button in selector bar
+            ['linear', 'quadratic', 'exponential', 'rational', 'cubic'].forEach(t => {
+                const btn = document.getElementById(`btn-func-${t}`);
+                if (t === type) {
+                    btn.className = "p-3 rounded-xl border border-blue-500 bg-blue-50 font-bold text-blue-700 flex flex-col items-center justify-center transition shadow-sm";
+                } else {
+                    btn.className = "p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 font-bold text-slate-700 flex flex-col items-center justify-center transition";
+                }
+            });
+
+            const badge = document.getElementById('badge-func-type');
+            badge.textContent = type.toUpperCase();
+
+            const container = document.getElementById('parameters-container');
+            const domainWrapper = document.getElementById('domain-restriction-wrapper');
+            domainWrapper.classList.add('hidden');
+
+            let html = '';
+
+            if (type === 'linear') {
+                state.params.m = state.params.m || 1.5;
+                state.params.c = state.params.c || -1;
+                html = `
+                    ${createSlider('m', 'Slope (m)', -4, 4, 0.1, state.params.m)}
+                    ${createSlider('c', 'Y-Intercept (c)', -5, 5, 0.5, state.params.c)}
+                `;
+            } else if (type === 'quadratic') {
+                domainWrapper.classList.remove('hidden');
+                state.params.a = state.params.a || 1;
+                state.params.h = state.params.h || 2;
+                state.params.k = state.params.k || -1;
+                html = `
+                    ${createSlider('a', 'Vertical Stretch (a)', 0.2, 3, 0.1, state.params.a)}
+                    ${createSlider('h', 'Vertex Shift X (h)', -4, 4, 0.5, state.params.h)}
+                    ${createSlider('k', 'Vertex Shift Y (k)', -5, 5, 0.5, state.params.k)}
+                `;
+            } else if (type === 'exponential') {
+                state.params.a = state.params.a || 1;
+                state.params.b = state.params.b || 0.5;
+                state.params.k = state.params.k || -3;
+                html = `
+                    ${createSlider('a', 'Scale Factor (a)', 0.5, 3, 0.1, state.params.a)}
+                    ${createSlider('b', 'Exponent Factor (b)', 0.2, 1.5, 0.1, state.params.b)}
+                    ${createSlider('k', 'Vertical Shift / Asymptote (k)', -5, 5, 0.5, state.params.k)}
+                `;
+            } else if (type === 'rational') {
+                state.params.a = 2; state.params.b = 1; state.params.c = 1; state.params.d = -2;
+                html = `
+                    ${createSlider('a', 'Numerator Coeff (a)', -3, 3, 0.5, state.params.a)}
+                    ${createSlider('b', 'Numerator Const (b)', -5, 5, 0.5, state.params.b)}
+                    ${createSlider('c', 'Denom Coeff (c)', 0.5, 3, 0.5, state.params.c)}
+                    ${createSlider('d', 'Denom Const (d)', -5, 5, 0.5, state.params.d)}
+                `;
+            } else if (type === 'cubic') {
+                state.params.a = 0.5; state.params.h = 1; state.params.k = -1;
+                html = `
+                    ${createSlider('a', 'Scale Factor (a)', 0.2, 2, 0.1, state.params.a)}
+                    ${createSlider('h', 'Inflection Point X (h)', -3, 3, 0.5, state.params.h)}
+                    ${createSlider('k', 'Inflection Point Y (k)', -4, 4, 0.5, state.params.k)}
+                `;
+            }
+
+            container.innerHTML = html;
+            drawGraph();
+        }
+
+        function createSlider(key, label, min, max, step, val) {
+            return `
+                <div class="space-y-1">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-800 font-bold">${label}:</span>
+                        <span id="val-${key}" class="font-mono text-blue-700 font-extrabold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">${val}</span>
+                    </div>
+                    <input type="range" min="${min}" max="${max}" step="${step}" value="${val}"
+                        oninput="updateParam('${key}', parseFloat(this.value))" class="w-full cursor-pointer">
+                </div>
+            `;
+        }
+
+        function updateParam(key, val) {
+            state.params[key] = val;
+            const labelEl = document.getElementById(`val-${key}`);
+            if (labelEl) labelEl.textContent = val;
+            drawGraph();
+        }
+
+        function updatePointX(val) {
+            state.testX = parseFloat(val);
+            document.getElementById('point-x-val').textContent = state.testX.toFixed(1);
+            drawGraph();
+        }
+
+        /* Mathematical Evaluator Functions */
+        function evalF(x) {
+            const { m, c, a, h, k, b, d } = state.params;
+            if (state.funcType === 'linear') {
+                return m * x + c;
+            } else if (state.funcType === 'quadratic') {
+                const isRestricted = document.getElementById('restrict-domain').checked;
+                if (isRestricted && x < h) return null; // Domain restriction x >= h
+                return a * Math.pow(x - h, 2) + k;
+            } else if (state.funcType === 'exponential') {
+                return a * Math.pow(2, b * x) + k;
+            } else if (state.funcType === 'rational') {
+                const denom = c * x + d;
+                if (Math.abs(denom) < 0.001) return null; // Asymptote
+                return (a * x + b) / denom;
+            } else if (state.funcType === 'cubic') {
+                return a * Math.pow(x - h, 3) + k;
+            }
+            return null;
+        }
+
+        function evalFinv(x) {
+            const { m, c, a, h, k, b, d } = state.params;
+            if (state.funcType === 'linear') {
+                return (x - c) / m;
+            } else if (state.funcType === 'quadratic') {
+                if (x < k) return null; // Domain of inverse is x >= k
+                return h + Math.sqrt((x - k) / a);
+            } else if (state.funcType === 'exponential') {
+                if (x <= k) return null; // Log argument must be positive
+                return Math.log2((x - k) / a) / b;
+            } else if (state.funcType === 'rational') {
+                const denom = c * x - a;
+                if (Math.abs(denom) < 0.001) return null;
+                return (-d * x + b) / denom;
+            } else if (state.funcType === 'cubic') {
+                return h + Math.cbrt((x - k) / a);
+            }
+            return null;
+        }
+
+        /* Graph Canvas Rendering Engine */
+        function drawGraph() {
+            if (!ctx) return;
+
+            const width = canvas.width;
+            const height = canvas.height;
+            ctx.clearRect(0, 0, width, height);
+
+            // Light mode canvas background
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(0, 0, width, height);
+
+            const scale = 36; // 36 pixels per mathematical unit
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            function toScreenX(x) { return centerX + x * scale; }
+            function toScreenY(y) { return centerY - y * scale; }
+            function toMathX(px) { return (px - centerX) / scale; }
+
+            // Secondary Grid lines
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#e2e8f0'; // Slate-200
+            for (let x = -20; x <= 20; x++) {
+                ctx.beginPath();
+                ctx.moveTo(toScreenX(x), 0);
+                ctx.lineTo(toScreenX(x), height);
+                ctx.stroke();
+            }
+            for (let y = -20; y <= 20; y++) {
+                ctx.beginPath();
+                ctx.moveTo(0, toScreenY(y));
+                ctx.lineTo(width, toScreenY(y));
+                ctx.stroke();
+            }
+
+            // Main Axes
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#475569'; // Slate-600
+            ctx.beginPath();
+            ctx.moveTo(0, centerY); ctx.lineTo(width, centerY); // X Axis
+            ctx.moveTo(centerX, 0); ctx.lineTo(centerX, height); // Y Axis
+            ctx.stroke();
+
+            // Axis Number Labels
+            ctx.fillStyle = '#64748b';
+            ctx.font = 'bold 11px Inter, sans-serif';
+            for (let x = -10; x <= 10; x += 2) {
+                if (x !== 0) ctx.fillText(x, toScreenX(x) - 4, centerY + 16);
+            }
+            for (let y = -10; y <= 10; y += 2) {
+                if (y !== 0) ctx.fillText(y, centerX + 6, toScreenY(y) + 4);
+            }
+
+            // Draw Mirror Reflection Line y = x
+            const showYX = document.getElementById('show-yx').checked;
+            if (showYX) {
+                ctx.beginPath();
+                ctx.setLineDash([6, 6]);
+                ctx.strokeStyle = '#d97706'; // Amber-600
+                ctx.lineWidth = 2;
+                ctx.moveTo(toScreenX(-15), toScreenY(-15));
+                ctx.lineTo(toScreenX(15), toScreenY(15));
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Plot Original Function f(x) - BLUE
+            plotCurve(evalF, '#2563eb', 3);
+
+            // Plot Inverse Function f⁻¹(x) - EMERALD
+            plotCurve(evalFinv, '#059669', 3);
+
+            // Plotting helper
+            function plotCurve(fn, color, lineWidth) {
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = lineWidth;
+                let started = false;
+
+                for (let px = 0; px <= width; px += 2) {
+                    const x = toMathX(px);
+                    const y = fn(x);
+
+                    if (y !== null && !isNaN(y) && isFinite(y) && Math.abs(y) < 25) {
+                        const py = toScreenY(y);
+                        if (!started) {
+                            ctx.moveTo(px, py);
+                            started = true;
+                        } else {
+                            ctx.lineTo(px, py);
+                        }
+                    } else {
+                        started = false;
+                    }
+                }
+                ctx.stroke();
+            }
+
+            // Plot Points & Symmetry Connection Line
+            const showPoints = document.getElementById('show-points').checked;
+            if (showPoints) {
+                const a = state.testX;
+                const b = evalF(a);
+
+                if (b !== null && !isNaN(b) && isFinite(b)) {
+                    const ptA_screen = { x: toScreenX(a), y: toScreenY(b) };
+                    const ptB_screen = { x: toScreenX(b), y: toScreenY(a) };
+
+                    // Perpendicular connecting line between reflected points
+                    ctx.beginPath();
+                    ctx.setLineDash([4, 4]);
+                    ctx.strokeStyle = '#64748b';
+                    ctx.lineWidth = 1.5;
+                    ctx.moveTo(ptA_screen.x, ptA_screen.y);
+                    ctx.lineTo(ptB_screen.x, ptB_screen.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Point (a, b) on f(x)
+                    ctx.fillStyle = '#2563eb';
+                    ctx.beginPath();
+                    ctx.arc(ptA_screen.x, ptA_screen.y, 7, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+                    // Point (b, a) on f⁻¹(x)
+                    ctx.fillStyle = '#059669';
+                    ctx.beginPath();
+                    ctx.arc(ptB_screen.x, ptB_screen.y, 7, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+                    // Coordinate labels
+                    ctx.font = 'bold 12px JetBrains Mono, monospace';
+                    ctx.fillStyle = '#1e3a8a';
+                    ctx.fillText(`(${a.toFixed(1)}, ${b.toFixed(1)})`, ptA_screen.x + 10, ptA_screen.y - 10);
+
+                    ctx.fillStyle = '#064e3b';
+                    ctx.fillText(`(${b.toFixed(1)}, ${a.toFixed(1)})`, ptB_screen.x + 10, ptB_screen.y - 10);
+                }
+            }
+
+            // Update Math Equations & Domain/Range Display
+            updateMathDisplays();
+        }
+
+        function handleCanvasPointer(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const mathX = (clickX - (canvas.width / 2)) / 36;
+            state.testX = Math.min(7, Math.max(-7, mathX));
+            document.getElementById('slider-x').value = state.testX;
+            document.getElementById('point-x-val').textContent = state.testX.toFixed(1);
+            drawGraph();
+        }
+
+        function updateMathDisplays() {
+            const { m, c, a, h, k, b, d } = state.params;
+            const mathFx = document.getElementById('math-fx');
+            const mathFinv = document.getElementById('math-finv');
+            const domF = document.getElementById('dom-f');
+            const rngF = document.getElementById('rng-f');
+            const domFinv = document.getElementById('dom-finv');
+            const rngFinv = document.getElementById('rng-finv');
+            const asymptotesInfo = document.getElementById('asymptote-info');
+
+            if (state.funcType === 'linear') {
+                mathFx.innerHTML = `f(x) = ${m}x ${c >= 0 ? '+ ' + c : '− ' + Math.abs(c)}`;
+                mathFinv.innerHTML = `f⁻¹(x) = (x ${c >= 0 ? '− ' + c : '+ ' + Math.abs(c)}) / ${m}`;
+                domF.textContent = "x ∈ ℝ"; rngF.textContent = "y ∈ ℝ";
+                domFinv.textContent = "x ∈ ℝ"; rngFinv.textContent = "y ∈ ℝ";
+                asymptotesInfo.innerHTML = `
+                    <p class="text-slate-800 font-medium">• Continuous linear function defined for all real numbers.</p>
+                    <p class="text-slate-800 font-medium">• No asymptotes.</p>
+                    <p class="text-blue-700 font-bold">• Gradient of f: m = ${m}; Gradient of f⁻¹: 1/m = ${(1/m).toFixed(2)}.</p>
+                `;
+            } else if (state.funcType === 'quadratic') {
+                const isRestricted = document.getElementById('restrict-domain').checked;
+                mathFx.innerHTML = `f(x) = ${a === 1 ? '' : a}(x ${h >= 0 ? '− ' + h : '+ ' + Math.abs(h)})² ${k >= 0 ? '+ ' + k : '− ' + Math.abs(k)}`;
+                mathFinv.innerHTML = `f⁻¹(x) = ${h} + √((x ${k >= 0 ? '− ' + k : '+ ' + Math.abs(k)}) / ${a})`;
+
+                if (isRestricted) {
+                    domF.textContent = `x ∈ ℝ, x ≥ ${h}`;
+                    rngF.textContent = `y ∈ ℝ, y ≥ ${k}`;
+                    domFinv.textContent = `x ∈ ℝ, x ≥ ${k}`;
+                    rngFinv.textContent = `y ∈ ℝ, y ≥ ${h}`;
+                    asymptotesInfo.innerHTML = `
+                        <p class="text-emerald-700 font-bold">• Domain restricted (x ≥ ${h}) so f(x) is one-to-one!</p>
+                        <p class="text-slate-800 font-medium">• Vertex of f: (${h}, ${k}).</p>
+                        <p class="text-slate-800 font-medium">• Starting endpoint of f⁻¹: (${k}, ${h}).</p>
+                    `;
+                } else {
+                    domF.textContent = "x ∈ ℝ (Full parabola)";
+                    rngF.textContent = `y ∈ ℝ, y ≥ ${k}`;
+                    domFinv.textContent = "UNDEFINED over ℝ";
+                    rngFinv.textContent = "Fails Horizontal Line Test!";
+                    asymptotesInfo.innerHTML = `
+                        <p class="text-red-600 font-bold">• NOT a one-to-one function!</p>
+                        <p class="text-slate-800 font-medium">• Fails Horizontal Line Test (two x-values mapped to the same y-value).</p>
+                    `;
+                }
+            } else if (state.funcType === 'exponential') {
+                mathFx.innerHTML = `f(x) = ${a} · 2<sup>${b}x</sup> ${k >= 0 ? '+ ' + k : '− ' + Math.abs(k)}`;
+                mathFinv.innerHTML = `f⁻¹(x) = (1/${b}) · log₂((x ${k >= 0 ? '− ' + k : '+ ' + Math.abs(k)}) / ${a})`;
+
+                domF.textContent = "x ∈ ℝ";
+                rngF.textContent = `y ∈ ℝ, y > ${k}`;
+                domFinv.textContent = `x ∈ ℝ, x > ${k}`;
+                rngFinv.textContent = "y ∈ ℝ";
+
+                asymptotesInfo.innerHTML = `
+                    <p class="text-blue-700 font-bold">• Horizontal asymptote for f(x): y = ${k}</p>
+                    <p class="text-emerald-700 font-bold">• Vertical asymptote for f⁻¹(x): x = ${k}</p>
+                    <p class="text-slate-800 font-medium">• Logarithm base 2 reverses exponential growth.</p>
+                `;
+            } else if (state.funcType === 'rational') {
+                const vertAsymF = (-d / c).toFixed(1);
+                const horizAsymF = (a / c).toFixed(1);
+                mathFx.innerHTML = `f(x) = (${a}x ${b >= 0 ? '+ ' + b : '− ' + Math.abs(b)}) / (${c}x ${d >= 0 ? '+ ' + d : '− ' + Math.abs(d)})`;
+                mathFinv.innerHTML = `f⁻¹(x) = (${-d}x ${b >= 0 ? '+ ' + b : '− ' + Math.abs(b)}) / (${c}x ${-a >= 0 ? '+ ' + Math.abs(-a) : '− ' + a})`;
+
+                domF.textContent = `x ∈ ℝ, x ≠ ${vertAsymF}`;
+                rngF.textContent = `y ∈ ℝ, y ≠ ${horizAsymF}`;
+                domFinv.textContent = `x ∈ ℝ, x ≠ ${horizAsymF}`;
+                rngFinv.textContent = `y ∈ ℝ, y ≠ ${vertAsymF}`;
+
+                asymptotesInfo.innerHTML = `
+                    <p class="text-blue-700 font-bold">• f(x) Asymptotes: Vert: x = ${vertAsymF}, Horiz: y = ${horizAsymF}</p>
+                    <p class="text-emerald-700 font-bold">• f⁻¹(x) Asymptotes: Vert: x = ${horizAsymF}, Horiz: y = ${vertAsymF}</p>
+                    <p class="text-amber-800 font-semibold">Notice how vertical & horizontal asymptotes completely swap places!</p>
+                `;
+            } else if (state.funcType === 'cubic') {
+                mathFx.innerHTML = `f(x) = ${a}(x ${h >= 0 ? '− ' + h : '+ ' + Math.abs(h)})³ ${k >= 0 ? '+ ' + k : '− ' + Math.abs(k)}`;
+                mathFinv.innerHTML = `f⁻¹(x) = ${h} + ∛((x ${k >= 0 ? '− ' + k : '+ ' + Math.abs(k)}) / ${a})`;
+
+                domF.textContent = "x ∈ ℝ"; rngF.textContent = "y ∈ ℝ";
+                domFinv.textContent = "x ∈ ℝ"; rngFinv.textContent = "y ∈ ℝ";
+
+                asymptotesInfo.innerHTML = `
+                    <p class="text-slate-800 font-medium">• Strictly increasing cubic function (1-to-1 without domain restriction).</p>
+                    <p class="text-blue-700 font-bold">• Point of inflection on f: (${h}, ${k}).</p>
+                    <p class="text-emerald-700 font-bold">• Point of inflection on f⁻¹: (${k}, ${h}).</p>
+                `;
+            }
+        }
+
+        /* App 1 (Temperature) Interactive Calculations */
+        function updateApp1FromC(valC) {
+            valC = parseFloat(valC);
+            app1State.c = valC;
+            app1State.f = (valC * 9 / 5) + 32;
+
+            document.getElementById('app1-c-val').textContent = `${valC.toFixed(1)} °C`;
+            document.getElementById('app1-f-out').textContent = `${app1State.f.toFixed(1)} °F`;
+
+            document.getElementById('app1-slider-f').value = app1State.f;
+            document.getElementById('app1-f-val').textContent = `${app1State.f.toFixed(1)} °F`;
+            document.getElementById('app1-c-out').textContent = `${valC.toFixed(1)} °C`;
+        }
+
+        function updateApp1FromF(valF) {
+            valF = parseFloat(valF);
+            app1State.f = valF;
+            app1State.c = (valF - 32) * 5 / 9;
+
+            document.getElementById('app1-f-val').textContent = `${valF.toFixed(1)} °F`;
+            document.getElementById('app1-c-out').textContent = `${app1State.c.toFixed(1)} °C`;
+
+            document.getElementById('app1-slider-c').value = app1State.c;
+            document.getElementById('app1-c-val').textContent = `${app1State.c.toFixed(1)} °C`;
+            document.getElementById('app1-f-out').textContent = `${app1State.f.toFixed(1)} °F`;
+        }
+
+        /* App 2 (Forensic Crash) Calculations */
+        function setApp2Mode(mode) {
+            app2State.mode = mode;
+            const btnFwd = document.getElementById('btn-mode-forward');
+            const btnInv = document.getElementById('btn-mode-inverse');
+            const tag = document.getElementById('app2-tag');
+
+            if (mode === 'forward') {
+                btnFwd.className = "p-3 rounded-xl border font-bold transition bg-blue-600 border-blue-600 text-white shadow-sm";
+                btnInv.className = "p-3 rounded-xl border font-bold transition bg-white border-slate-300 text-slate-700 hover:bg-slate-100";
+                tag.textContent = "Forward Mode";
+                tag.className = "text-xs font-extrabold px-2.5 py-1 rounded-md bg-blue-100 text-blue-800";
+            } else {
+                btnInv.className = "p-3 rounded-xl border font-bold transition bg-emerald-600 border-emerald-600 text-white shadow-sm";
+                btnFwd.className = "p-3 rounded-xl border font-bold transition bg-white border-slate-300 text-slate-700 hover:bg-slate-100";
+                tag.textContent = "Inverse Forensic Mode";
+                tag.className = "text-xs font-extrabold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800";
+            }
+            updateApp2Visuals();
+        }
+
+        function updateApp2K(kVal) {
+            app2State.k = parseFloat(kVal);
+            updateApp2Visuals();
+        }
+
+        function updateApp2Visuals() {
+            const container = document.getElementById('app2-slider-box');
+            if (app2State.mode === 'forward') {
+                container.innerHTML = `
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-800 font-bold">Input Speed (v):</span>
+                        <span class="font-mono text-blue-700 font-extrabold text-base">${app2State.v} km/h</span>
+                    </div>
+                    <input type="range" min="10" max="160" step="5" value="${app2State.v}" oninput="onApp2SpeedChange(this.value)" class="w-full cursor-pointer">
+                `;
+                app2State.d = app2State.k * Math.pow(app2State.v, 2);
+            } else {
+                container.innerHTML = `
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-800 font-bold">Input Skid Mark Length (d):</span>
+                        <span class="font-mono text-emerald-700 font-extrabold text-base">${app2State.d.toFixed(1)} meters</span>
+                    </div>
+                    <input type="range" min="2" max="150" step="1" value="${app2State.d}" oninput="onApp2SkidChange(this.value)" class="w-full cursor-pointer">
+                `;
+                app2State.v = Math.sqrt(app2State.d / app2State.k);
+            }
+
+            document.getElementById('app2-res-v').textContent = `${app2State.v.toFixed(1)} km/h`;
+            document.getElementById('app2-res-d').textContent = `${app2State.d.toFixed(1)} m`;
+            document.getElementById('app2-road-length-text').textContent = `Skid Distance: ${app2State.d.toFixed(1)} meters`;
+
+            const maxSkid = 150;
+            const percentage = Math.min(100, (app2State.d / maxSkid) * 100);
+            document.getElementById('app2-skid-bar').style.width = `${percentage}%`;
+        }
+
+        function onApp2SpeedChange(val) {
+            app2State.v = parseFloat(val);
+            app2State.d = app2State.k * Math.pow(app2State.v, 2);
+            updateApp2Visuals();
+        }
+
+        function onApp2SkidChange(val) {
+            app2State.d = parseFloat(val);
+            app2State.v = Math.sqrt(app2State.d / app2State.k);
+            updateApp2Visuals();
+        }
+
+        function toggleSolution(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
