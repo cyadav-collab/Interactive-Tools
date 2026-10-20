@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus: Volume of Revolution Visualizer</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            min-height: 420px;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+        }
+
+        #canvas2d {
+            width: 100%;
+            height: 100%;
+            touch-action: none; /* Prevent scrolling while dragging */
+            cursor: crosshair;
+        }
+
+        #canvas3d {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .math-text {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-style: italic;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <header class="bg-indigo-600 text-white p-4 shadow-md shrink-0 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+                </svg>
+                Volume of Revolution: Disk Method
+            </h1>
+            <p class="text-indigo-200 text-sm mt-1">Design a 2D profile $y = f(x)$ and revolve it around the X-axis.</p>
+        </div>
+        <div class="bg-indigo-700/50 p-3 rounded-lg border border-indigo-500 hidden md:block">
+            <div class="text-sm text-indigo-100">Formula</div>
+            <div class="math-text text-xl">V = π ∫ [f(x)]² dx</div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col lg:flex-row p-4 gap-6 min-h-0">
+        
+        <!-- Left Panel: 2D Curve Editor -->
+        <section class="flex-1 flex flex-col min-h-[420px] lg:min-h-[550px] relative">
+            <div class="flex justify-between items-end mb-2">
+                <h2 class="text-lg font-semibold text-slate-700">1. Define 2D Profile (y = f(x))</h2>
+                <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Drag points to edit</span>
+            </div>
+            <div class="canvas-container flex-1">
+                <canvas id="canvas2d"></canvas>
+            </div>
+            
+            <div class="mt-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-medium text-slate-700">Calculated Volume</span>
+                    <span class="text-xs text-slate-500">Approximated using frustums</span>
+                </div>
+                <div class="text-3xl font-bold text-indigo-600 flex items-baseline gap-2">
+                    <span id="volumeDisplay">0.00</span>
+                    <span class="text-lg text-slate-500 font-normal">units³</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: 3D Visualization -->
+        <section class="flex-1 flex flex-col min-h-[420px] lg:min-h-[550px] relative">
+            <div class="flex justify-between items-end mb-2">
+                <h2 class="text-lg font-semibold text-slate-700">2. 3D Revolved Solid</h2>
+                <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Drag to rotate • Scroll to zoom</span>
+            </div>
+            <div class="canvas-container flex-1 relative">
+                <div id="canvas3d"></div>
+            </div>
+            
+            <!-- Controls moved outside canvas container -->
+            <div class="mt-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between">
+                        <label class="text-sm font-semibold text-slate-700">Angle of Revolution (θ)</label>
+                        <span id="angleValue" class="text-sm font-bold text-indigo-600">2π rad (360°)</span>
+                    </div>
+                    <input type="range" id="angleSlider" min="0" max="6.2831853" step="0.01" value="6.2831853" class="w-full accent-indigo-600">
+                    <div class="flex justify-between text-xs text-slate-500 mt-1">
+                        <span>0</span>
+                        <span>π</span>
+                        <span>2π</span>
+                    </div>
+                    <div class="mt-2 flex gap-4">
+                        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="wireframeToggle" class="rounded text-indigo-600 focus:ring-indigo-500">
+                            Show Wireframe
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="gridToggle" checked class="rounded text-indigo-600 focus:ring-indigo-500">
+                            Show Axes/Grid
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // State and Constants
+        const state = {
+            points: [
+                { x: 1, y: 1.5 },
+                { x: 3, y: 3.0 },
+                { x: 5, y: 2.0 },
+                { x: 7, y: 3.5 },
+                { x: 9, y: 1.2 }
+            ],
+            draggedPoint: null,
+            hoveredPoint: null,
+            revolutionAngle: Math.PI * 2,
+            showWireframe: false,
+            showGrid: true,
+            sampledPoints: [], // Will hold dense array of curve points
+            domain: { minX: 0, maxX: 10, minY: 0, maxY: 5 }
+        };
+
+        // 2D Canvas setup
+        const canvas = document.getElementById('canvas2d');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        const margin = 50;
+
+        function resize2D() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            // Handle high DPI displays for crisp rendering
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            width = rect.width;
+            height = rect.height;
+            draw2D();
+        }
+
+        // Coordinate transformations
+        function mapX(x) {
+            return margin + (x / state.domain.maxX) * (width - 2 * margin);
+        }
+        function mapY(y) {
+            return height - margin - (y / state.domain.maxY) * (height - 2 * margin);
+        }
+        function unmapX(cx) {
+            return ((cx - margin) / (width - 2 * margin)) * state.domain.maxX;
+        }
+        function unmapY(cy) {
+            return ((height - margin - cy) / (height - 2 * margin)) * state.domain.maxY;
+        }
+
+        // Catmull-Rom Spline Interpolation for smooth curve
+        function getSplinePoints(points, numSegments = 100) {
+            if (points.length < 2) return [];
+            
+            // Convert to THREE.Vector2 for easy spline generation using Three.js built-in tools
+            const vectors = points.map(p => new THREE.Vector2(p.x, p.y));
+            const curve = new THREE.SplineCurve(vectors);
+            const splinePoints = curve.getPoints(numSegments);
+            
+            return splinePoints.map(p => ({ x: p.x, y: p.y }));
+        }
+
+        // Main 2D drawing function
+        function draw2D() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Grid and Axes
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            
+            // Vertical grid lines
+            for(let i = 0; i <= state.domain.maxX; i++) {
+                const x = mapX(i);
+                ctx.beginPath(); ctx.moveTo(x, margin); ctx.lineTo(x, height - margin); ctx.stroke();
+                if(i % 2 === 0) {
+                    ctx.fillStyle = '#64748b';
+                    ctx.font = '10px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(i, x, height - margin + 15);
+                }
+            }
+            
+            // Horizontal grid lines
+            for(let i = 0; i <= state.domain.maxY; i++) {
+                const y = mapY(i);
+                ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(width - margin, y); ctx.stroke();
+                if(i > 0) {
+                    ctx.fillStyle = '#64748b';
+                    ctx.font = '10px Inter';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(i, margin - 10, y);
+                }
+            }
+
+            // Draw Axes
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin, height - margin); ctx.lineTo(width - margin, height - margin); // X-axis
+            ctx.moveTo(margin, margin); ctx.lineTo(margin, height - margin); // Y-axis
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#334155';
+            ctx.font = 'italic 14px Inter';
+            ctx.fillText('x', width - margin + 10, height - margin + 4);
+            ctx.fillText('y', margin - 4, margin - 10);
+
+            // Calculate and draw smooth curve
+            state.sampledPoints = getSplinePoints(state.points, 150);
+            
+            // Fill area under curve (to represent revolution slice)
+            ctx.fillStyle = 'rgba(79, 70, 229, 0.1)'; // Indigo tinted area
+            ctx.beginPath();
+            ctx.moveTo(mapX(state.sampledPoints[0].x), mapY(0));
+            state.sampledPoints.forEach(p => ctx.lineTo(mapX(p.x), mapY(p.y)));
+            ctx.lineTo(mapX(state.sampledPoints[state.sampledPoints.length-1].x), mapY(0));
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw continuous line
+            ctx.strokeStyle = '#4f46e5'; // Indigo-600
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            state.sampledPoints.forEach((p, idx) => {
+                if(idx === 0) ctx.moveTo(mapX(p.x), mapY(p.y));
+                else ctx.lineTo(mapX(p.x), mapY(p.y));
+            });
+            ctx.stroke();
+
+            // Draw control points
+            state.points.forEach((p, i) => {
+                ctx.beginPath();
+                ctx.arc(mapX(p.x), mapY(p.y), state.hoveredPoint === i ? 8 : 6, 0, Math.PI * 2);
+                ctx.fillStyle = (state.hoveredPoint === i || state.draggedPoint === i) ? '#ef4444' : '#ffffff';
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = (state.hoveredPoint === i || state.draggedPoint === i) ? '#991b1b' : '#4f46e5';
+                ctx.stroke();
+            });
+        }
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            // Handle touch as well
+            let clientX = e.clientX;
+            let clientY = e.clientY;
+            if(e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            }
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function handlePointerDown(e) {
+            e.preventDefault(); // Prevent scrolling on touch
+            const pos = getMousePos(e);
+            const cx = unmapX(pos.x);
+            const cy = unmapY(pos.y);
+
+            // Find closest point within threshold
+            let closestDist = Infinity;
+            let closestIdx = -1;
+            const threshold = unmapX(margin + 15) - unmapX(margin); // ~15px threshold in domain units
+
+            state.points.forEach((p, i) => {
+                const dist = Math.hypot(p.x - cx, p.y - cy);
+                if(dist < threshold && dist < closestDist) {
+                    closestDist = dist;
+                    closestIdx = i;
+                }
+            });
+
+            if(closestIdx !== -1) {
+                state.draggedPoint = closestIdx;
+            }
+        }
+
+        function handlePointerMove(e) {
+            e.preventDefault();
+            const pos = getMousePos(e);
+            
+            // Hover logic
+            if (state.draggedPoint === null) {
+                const cx = unmapX(pos.x);
+                const cy = unmapY(pos.y);
+                let closestDist = Infinity;
+                let closestIdx = null;
+                const threshold = unmapX(margin + 10) - unmapX(margin);
+                
+                state.points.forEach((p, i) => {
+                    const dist = Math.hypot(p.x - cx, p.y - cy);
+                    if(dist < threshold && dist < closestDist) {
+                        closestDist = dist;
+                        closestIdx = i;
+                    }
+                });
+                
+                if (state.hoveredPoint !== closestIdx) {
+                    state.hoveredPoint = closestIdx;
+                    draw2D();
+                    canvas.style.cursor = closestIdx !== null ? 'pointer' : 'crosshair';
+                }
+                return;
+            }
+
+            // Drag logic
+            let newX = unmapX(pos.x);
+            let newY = Math.max(0.1, Math.min(state.domain.maxY, unmapY(pos.y))); // Clamp Y above 0
+            
+            // Maintain order of points based on X coordinate
+            const minBoundX = state.draggedPoint > 0 ? state.points[state.draggedPoint - 1].x + 0.1 : 0;
+            const maxBoundX = state.draggedPoint < state.points.length - 1 ? state.points[state.draggedPoint + 1].x - 0.1 : state.domain.maxX;
+            newX = Math.max(minBoundX, Math.min(maxBoundX, newX));
+
+            state.points[state.draggedPoint].x = newX;
+            state.points[state.draggedPoint].y = newY;
+            
+            draw2D();
+            update3D();
+        }
+
+        function handlePointerUp() {
+            if (state.draggedPoint !== null) {
+                state.draggedPoint = null;
+                draw2D();
+            }
+        }
+
+        canvas.addEventListener('mousedown', handlePointerDown);
+        canvas.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('mouseup', handlePointerUp);
+        
+        canvas.addEventListener('touchstart', handlePointerDown, {passive: false});
+        canvas.addEventListener('touchmove', handlePointerMove, {passive: false});
+        window.addEventListener('touchend', handlePointerUp);
+
+        let scene, camera, renderer, controls;
+        let latheMesh, gridHelper, axesHelper;
+        const container3d = document.getElementById('canvas3d');
+
+        function init3D() {
+            try {
+                if (!container3d) return;
+
+                // Scene setup
+                scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xf8fafc); // Match Tailwind background
+
+                // Camera setup
+                camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+                camera.position.set(10, 8, 15);
+
+                // Renderer setup
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                container3d.innerHTML = '';
+                container3d.appendChild(renderer.domElement);
+
+                // Controls
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+                controls.target.set(5, 0, 0); // Center around x=5
+
+                // Lighting
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+                scene.add(ambientLight);
+                
+                const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+                dirLight1.position.set(10, 20, 10);
+                scene.add(dirLight1);
+
+                const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+                dirLight2.position.set(-10, -10, -10);
+                scene.add(dirLight2);
+
+                // Helpers (Grid and Axes)
+                gridHelper = new THREE.GridHelper(20, 20, 0x94a3b8, 0xcbd5e1);
+                gridHelper.position.set(5, 0, 0);
+                scene.add(gridHelper);
+
+                axesHelper = new THREE.AxesHelper(8);
+                axesHelper.position.set(0, 0, 0);
+                scene.add(axesHelper);
+
+                // ResizeObserver ensures canvas updates instantly on container changes
+                const resizeObserver = new ResizeObserver(() => {
+                    onWindowResize();
+                });
+                resizeObserver.observe(container3d);
+
+                // Trigger initial sizing and mesh build
+                onWindowResize();
+                update3D();
+
+                // Animation Loop
+                const animate = function () {
+                    requestAnimationFrame(animate);
+                    controls.update();
+                    renderer.render(scene, camera);
+                };
+                animate();
+
+            } catch (error) {
+                console.error("Error initializing 3D context:", error);
+                container3d.innerHTML = '<div class="flex items-center justify-center h-full text-red-500 p-4 text-center">Failed to load 3D renderer. Please ensure your browser supports WebGL.</div>';
+            }
+        }
+
+        function onWindowResize() {
+            resize2D();
+            
+            if (camera && renderer && container3d) {
+                const width = container3d.clientWidth || container3d.offsetWidth || 400;
+                const height = container3d.clientHeight || container3d.offsetHeight || 400;
+                
+                if (width > 0 && height > 0) {
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(width, height);
+                }
+            }
+        }
+
+        function calculateVolume() {
+            // Volume using the frustum of a cone method (exact for piecewise linear segments)
+            // V = π/3 * h * (R1^2 + R1*R2 + R2^2)
+            let volume = 0;
+            const pts = state.sampledPoints;
+            for (let i = 0; i < pts.length - 1; i++) {
+                const h = pts[i+1].x - pts[i].x;
+                const r1 = pts[i].y;
+                const r2 = pts[i+1].y;
+                volume += (Math.PI / 3) * h * (r1 * r1 + r1 * r2 + r2 * r2);
+            }
+            
+            // Adjust calculated volume if angle is not full 2π
+            const ratio = state.revolutionAngle / (2 * Math.PI);
+            const actualVolume = volume * ratio;
+            
+            document.getElementById('volumeDisplay').innerText = actualVolume.toFixed(2);
+        }
+
+        function update3D() {
+            if (!scene) return;
+
+            // Remove old mesh
+            if (latheMesh) {
+                scene.remove(latheMesh);
+                if (latheMesh.geometry) latheMesh.geometry.dispose();
+                if (latheMesh.material) latheMesh.material.dispose();
+            }
+
+            if (!state.sampledPoints || state.sampledPoints.length < 2) return;
+
+            // Map 2D points to Three.js Lathe geometry points
+            const vectorPoints = state.sampledPoints.map(p => new THREE.Vector2(Math.max(0.05, p.y), p.x));
+
+            // Geometry
+            const segments = 64;
+            const phiStart = 0;
+            const phiLength = Math.max(0.01, state.revolutionAngle); 
+            
+            const geometry = new THREE.LatheGeometry(vectorPoints, segments, phiStart, phiLength);
+            
+            // Rotate the geometry so its local Y axis aligns with global X axis
+            geometry.rotateZ(-Math.PI / 2);
+
+            // Physical material with vibrant semi-transparent orange tone
+            const material = new THREE.MeshPhysicalMaterial({
+                color: 0xf97316,
+                emissive: 0x431407,
+                metalness: 0.1,
+                roughness: 0.25,
+                transparent: true,
+                opacity: 0.65,
+                depthWrite: false,
+                side: THREE.DoubleSide,
+                wireframe: state.showWireframe,
+                clearcoat: 0.8,
+                clearcoatRoughness: 0.2
+            });
+
+            latheMesh = new THREE.Mesh(geometry, material);
+            scene.add(latheMesh);
+            
+            // Update visibility of helpers
+            if (gridHelper) gridHelper.visible = state.showGrid;
+            if (axesHelper) axesHelper.visible = state.showGrid;
+
+            // Update Volume calculus
+            calculateVolume();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial canvas setup
+            resize2D();
+            
+            // Ensure font loads before drawing canvas
+            document.fonts.ready.then(() => {
+                draw2D(); 
+            });
+
+            // Initialize 3D
+            init3D();
+
+            // Bind Angle Slider
+            const angleSlider = document.getElementById('angleSlider');
+            const angleValueDisplay = document.getElementById('angleValue');
+            
+            angleSlider.addEventListener('input', (e) => {
+                state.revolutionAngle = parseFloat(e.target.value);
+                
+                // Format display text
+                let fraction = (state.revolutionAngle / Math.PI).toFixed(2);
+                let degree = Math.round((state.revolutionAngle / Math.PI) * 180);
+                
+                if (state.revolutionAngle >= 6.28) {
+                    angleValueDisplay.innerText = "2π rad (360°)";
+                } else if (state.revolutionAngle <= 0.01) {
+                    angleValueDisplay.innerText = "0 rad (0°)";
+                } else {
+                    angleValueDisplay.innerText = `${fraction}π rad (${degree}°)`;
+                }
+                
+                update3D();
+            });
+
+            // Bind Toggles
+            document.getElementById('wireframeToggle').addEventListener('change', (e) => {
+                state.showWireframe = e.target.checked;
+                update3D();
+            });
+
+            document.getElementById('gridToggle').addEventListener('change', (e) => {
+                state.showGrid = e.target.checked;
+                update3D();
+            });
+            
+            // Fix layout bug by triggering resize after a small delay to account for UI shifts
+            setTimeout(() => {
+                onWindowResize();
+            }, 100);
+        });
+
+    </script>
+</body>
+</html>
