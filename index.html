@@ -12,8 +12,8 @@
         }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #f8fafc; /* Light background */
+            color: #0f172a; /* Dark text */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -21,13 +21,13 @@
             padding: 50px 20px;
             position: relative;
             z-index: 1;
-            /* Vibrant glowing background + Math grid */
+            /* Vibrant glowing background + Dark Math grid */
             background-image: 
-                radial-gradient(circle at 15% 30%, rgba(236, 72, 153, 0.25) 0%, transparent 40%),
-                radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.3) 0%, transparent 45%),
-                radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.25) 0%, transparent 50%),
-                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+                radial-gradient(circle at 15% 30%, rgba(236, 72, 153, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.2) 0%, transparent 45%),
+                radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.2) 0%, transparent 50%),
+                linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 100% 100%, 30px 30px, 30px 30px;
             background-attachment: fixed;
         }
@@ -42,7 +42,7 @@
         }
         .math-symbol {
             position: absolute;
-            color: rgba(255, 255, 255, 0.06);
+            color: rgba(0, 0, 0, 0.04); /* Faint dark symbols */
             font-family: 'Times New Roman', serif;
             font-weight: bold;
             user-select: none;
@@ -61,28 +61,29 @@
         }
         .badge {
             display: inline-block;
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(99, 102, 241, 0.2));
-            border: 1px solid rgba(236, 72, 153, 0.4);
-            color: #f472b6;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(99, 102, 241, 0.15));
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            color: #db2777; /* Darker pink for contrast */
             padding: 8px 20px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 16px;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 15px rgba(236, 72, 153, 0.2);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.1);
         }
         h1 {
             font-size: 2.8rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+            /* Colorful gradient for light mode */
+            background: linear-gradient(135deg, #1e3a8a 0%, #7e22ce 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 15px;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         .subtitle {
-            color: #94a3b8;
+            color: #475569; /* Darker grey */
             font-size: 1.15rem;
             margin-bottom: 25px;
         }
@@ -90,18 +91,17 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(99, 102, 241, 0.5);
+            background: rgba(255, 255, 255, 0.8); /* Light pill */
+            border: 1px solid rgba(99, 102, 241, 0.3);
             padding: 10px 24px;
             border-radius: 30px;
             font-size: 1rem;
-            color: #cbd5e1;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+            color: #334155;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
         }
         .curator-name {
-            color: #38bdf8;
             font-weight: 700;
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            background: linear-gradient(90deg, #2563eb, #6366f1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -115,21 +115,21 @@
         .unit-title {
             font-size: 1.6rem;
             font-weight: 700;
-            color: #e2e8f0;
+            color: #1e293b;
             margin-bottom: 25px;
             padding-bottom: 12px;
-            border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+            border-bottom: 2px solid rgba(99, 102, 241, 0.2);
             display: flex;
             align-items: center;
             gap: 12px;
         }
         .unit-number {
-            background: rgba(99, 102, 241, 0.2);
-            color: #818cf8;
+            background: rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
             padding: 6px 12px;
             border-radius: 8px;
             font-size: 1.1rem;
-            border: 1px solid rgba(99, 102, 241, 0.3);
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
         
         .cards-container {
@@ -142,8 +142,8 @@
         /* Coming Soon Placeholder */
         .coming-soon {
             grid-column: 1 / -1;
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px dashed rgba(148, 163, 184, 0.3);
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px dashed rgba(148, 163, 184, 0.6);
             border-radius: 16px;
             padding: 30px;
             text-align: center;
@@ -153,9 +153,9 @@
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(255, 255, 255, 0.85); /* Light translucent cards */
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 20px;
             padding: 30px;
             display: flex;
@@ -164,16 +164,18 @@
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
         }
         /* Vibrant tops for the cards */
-        .card:nth-child(1) { border-top: 4px solid #818cf8; }
-        .card:nth-child(2) { border-top: 4px solid #f472b6; }
-        .card:nth-child(3) { border-top: 4px solid #34d399; }
+        .card:nth-child(1) { border-top: 4px solid #6366f1; }
+        .card:nth-child(2) { border-top: 4px solid #ec4899; }
+        .card:nth-child(3) { border-top: 4px solid #10b981; }
+        .card:nth-child(4) { border-top: 4px solid #f97316; }
         
         .card:hover {
             transform: translateY(-6px);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
         }
         .card-header {
             display: flex;
@@ -187,28 +189,34 @@
             padding: 6px 12px;
             border-radius: 8px;
             text-transform: uppercase;
+            /* Adjusted colors for light mode contrast */
             background: rgba(56, 189, 248, 0.15);
-            color: #38bdf8;
-            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #0284c7;
+            border: 1px solid rgba(56, 189, 248, 0.3);
         }
         .card:nth-child(2) .topic-tag {
-            background: rgba(236, 72, 153, 0.15);
-            color: #f472b6;
-            border-color: rgba(236, 72, 153, 0.4);
+            background: rgba(236, 72, 153, 0.1);
+            color: #db2777;
+            border-color: rgba(236, 72, 153, 0.3);
         }
         .card:nth-child(3) .topic-tag {
-            background: rgba(52, 211, 153, 0.15);
-            color: #34d399;
-            border-color: rgba(52, 211, 153, 0.4);
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .card:nth-child(4) .topic-tag {
+            background: rgba(249, 115, 22, 0.1);
+            color: #ea580c;
+            border-color: rgba(249, 115, 22, 0.3);
         }
         .card-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #f8fafc;
+            color: #0f172a;
             margin-bottom: 12px;
         }
         .card-desc {
-            color: #94a3b8;
+            color: #475569;
             font-size: 0.95rem;
             line-height: 1.6;
             margin-bottom: 20px;
@@ -218,7 +226,7 @@
             margin-bottom: 28px;
         }
         .features-list li {
-            color: #cbd5e1;
+            color: #334155;
             font-size: 0.9rem;
             margin-bottom: 12px;
             display: flex;
@@ -232,8 +240,8 @@
             align-items: center;
             width: 20px;
             height: 20px;
-            background: rgba(52, 211, 153, 0.2);
-            color: #34d399;
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
             border-radius: 50%;
             font-size: 12px;
             font-weight: bold;
@@ -248,32 +256,32 @@
             font-weight: 700;
             font-size: 1rem;
             transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%); /* Default Grey-Blue */
+            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
         }
         /* Card 1 Button Colors */
         .card:nth-child(1) .sim-btn {
             background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
         /* Card 2 Button Colors */
         .card:nth-child(2) .sim-btn {
             background: linear-gradient(135deg, #db2777 0%, #ec4899 100%);
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
         }
         /* Card 3 Button Colors */
         .card:nth-child(3) .sim-btn {
-            background: linear-gradient(135deg, #059669 0%, #34d399 100%);
-            box-shadow: 0 4px 15px rgba(52, 211, 153, 0.4);
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
         /* Card 4 Button Colors */
         .card:nth-child(4) .sim-btn {
             background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
-            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4);
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
         }
         .sim-btn:hover {
             opacity: 0.95;
             transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         footer {
             margin-top: 20px;
@@ -382,23 +390,23 @@
             </div>
              <!-- Card 4: Inverse Functions -->
             <div class="card">
-    <div>
-        <div class="card-header">
-            <span class="topic-tag">Topic 2.2</span>
-        </div>
-        <h2 class="card-title">Inverse Functions</h2>
-        <p class="card-desc">
-            Explore graphs if inverse functions, real life context of inverse functions.
-        </p>
-        <ul class="features-list">
-            <li>Dynamic inverse function generator</li>
-            <li>Real-life application of inverse function</li>
-        </ul>
-    </div>
-    <a href="Inversefunctions.html" class="sim-btn">
-        Launch Simulation →
-    </a>
-</div>
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.2</span>
+                    </div>
+                    <h2 class="card-title">Inverse Functions</h2>
+                    <p class="card-desc">
+                        Explore graphs if inverse functions, real life context of inverse functions.
+                    </p>
+                    <ul class="features-list">
+                        <li>Dynamic inverse function generator</li>
+                        <li>Real-life application of inverse function</li>
+                    </ul>
+                </div>
+                <a href="Inversefunctions.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
          </div>
     </div>
 
