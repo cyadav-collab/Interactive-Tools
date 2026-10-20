@@ -74,3 +74,388 @@
         }
         h1 {
             font-size: 2.8rem;
+            font-weight: 800;
+            /* Colorful gradient for light mode */
+            background: linear-gradient(135deg, #1e3a8a 0%, #7e22ce 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .subtitle {
+            color: #475569; /* Darker grey */
+            font-size: 1.15rem;
+            margin-bottom: 25px;
+        }
+        .curator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.8); /* Light pill */
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 1rem;
+            color: #334155;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
+        }
+        .curator-name {
+            font-weight: 700;
+            background: linear-gradient(90deg, #2563eb, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Topic & Section Styling */
+        .unit-section {
+            width: 100%;
+            max-width: 950px;
+            margin-bottom: 60px;
+        }
+        .unit-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .unit-number {
+            background: rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+            width: 100%;
+        }
+        
+        /* Coming Soon Placeholder */
+        .coming-soon {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px dashed rgba(148, 163, 184, 0.6);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            color: #64748b;
+            font-size: 1.05rem;
+            font-style: italic;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.85); /* Light translucent cards */
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        }
+        /* Vibrant tops for the cards */
+        .card:nth-child(1) { border-top: 4px solid #6366f1; }
+        .card:nth-child(2) { border-top: 4px solid #ec4899; }
+        .card:nth-child(3) { border-top: 4px solid #10b981; }
+        .card:nth-child(4) { border-top: 4px solid #f97316; }
+        
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .topic-tag {
+            font-size: 13px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            /* Adjusted colors for light mode contrast */
+            background: rgba(56, 189, 248, 0.15);
+            color: #0284c7;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        .card:nth-child(2) .topic-tag {
+            background: rgba(236, 72, 153, 0.1);
+            color: #db2777;
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+        .card:nth-child(3) .topic-tag {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .card:nth-child(4) .topic-tag {
+            background: rgba(249, 115, 22, 0.1);
+            color: #ea580c;
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+        .card-desc {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .features-list {
+            list-style: none;
+            margin-bottom: 28px;
+        }
+        .features-list li {
+            color: #334155;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .features-list li::before {
+            content: "✓";
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 20px;
+            height: 20px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .sim-btn {
+            display: block;
+            text-align: center;
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+        }
+        /* Card 1 Button Colors */
+        .card:nth-child(1) .sim-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        /* Card 2 Button Colors */
+        .card:nth-child(2) .sim-btn {
+            background: linear-gradient(135deg, #db2777 0%, #ec4899 100%);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+        /* Card 3 Button Colors */
+        .card:nth-child(3) .sim-btn {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        /* Card 4 Button Colors */
+        .card:nth-child(4) .sim-btn {
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
+        }
+        .sim-btn:hover {
+            opacity: 0.95;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        footer {
+            margin-top: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+            text-align: center;
+            padding-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Math Symbols -->
+    <div class="math-bg">
+        <div class="math-symbol" style="top: 10%; left: 10%; font-size: 4rem; animation-delay: 0s;">∫</div>
+        <div class="math-symbol" style="top: 20%; left: 85%; font-size: 3rem; animation-delay: 1s;">∑</div>
+        <div class="math-symbol" style="top: 75%; left: 5%; font-size: 5rem; animation-delay: 2s;">π</div>
+        <div class="math-symbol" style="top: 80%; left: 80%; font-size: 3.5rem; animation-delay: 1.5s;">f(x)</div>
+        <div class="math-symbol" style="top: 40%; left: 90%; font-size: 2.5rem; animation-delay: 0.5s;">θ</div>
+        <div class="math-symbol" style="top: 60%; left: 15%; font-size: 4.5rem; animation-delay: 2.5s;">∞</div>
+        <div class="math-symbol" style="top: 15%; left: 50%; font-size: 3rem; animation-delay: 3s;">Δ</div>
+    </div>
+
+    <div class="header">
+        <span class="badge">IBDP MATHEMATICS</span>
+        <h1>Interactive Simulations Hub</h1>
+        <p class="subtitle">Interactive visual tools for Analysis & Approaches (AA) and Applications & Interpretation (AI)</p>
+        <div class="curator">
+            <span>Curated and designed by:</span>
+            <span class="curator-name">Chandrabhan</span>
+        </div>
+    </div>
+
+    <!-- UNIT 1 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 1</span> Number and Algebra</h2>
+        <div class="cards-container">
+            <div class="coming-soon">New simulations for Number and Algebra currently in development...</div>
+        </div>
+    </div>
+
+    <!-- UNIT 2 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 2</span> Functions</h2>
+        <div class="cards-container">
+            <!-- Card 1: Rational Functions Explorer -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.8</span>
+                    </div>
+                    <h2 class="card-title">Rational Functions Explorer</h2>
+                    <p class="card-desc">
+                        Investigate asymptotes, holes, domain restrictions, and real-world mathematical applications including drug concentration models and average business costs.
+                    </p>
+                    <ul class="features-list">
+                        <li>15-Minute Pre-Lesson Discovery Lab Task</li>
+                        <li>Real-time dynamic graph sandbox (a, b, c, d sliders)</li>
+                        <li>Interactive Asymptote Detector & Business Models</li>
+                    </ul>
+                </div>
+                <a href="interactive_rational_functions_visualizer.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+
+            <!-- Card 2: Composite Functions Visualizer -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.5</span>
+                    </div>
+                    <h2 class="card-title">Composite Functions Visualizer</h2>
+                    <p class="card-desc">
+                        Visualize how inputs pass through inner and outer function pipelines f(g(x)) vs g(f(x)), with step-by-step mapping diagrams and domain constraint checkers.
+                    </p>
+                    <ul class="features-list">
+                        <li>Visual function machine pipeline builder</li>
+                        <li>Non-commutative property checker f(g(x)) ≠ g(f(x))</li>
+                        <li>Interactive domain and range constraint explorer</li>
+                    </ul>
+                </div>
+                <a href="composite.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+
+            <!-- Card 3: Quadratic Functions -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.6</span>
+                    </div>
+                    <h2 class="card-title">Quadratic Functions</h2>
+                    <p class="card-desc">
+                        Explore roots, vertex form, axes of symmetry, and real-world parabolic trajectories.
+                    </p>
+                    <ul class="features-list">
+                        <li>Dynamic parameter sliders (a, b, c)</li>
+                        <li>Real-time vertex and x-intercept calculations</li>
+                    </ul>
+                </div>
+                <a href="quadratics.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+             <!-- Card 4: Inverse Functions -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.2</span>
+                    </div>
+                    <h2 class="card-title">Inverse Functions</h2>
+                    <p class="card-desc">
+                        Explore graphs if inverse functions, real life context of inverse functions.
+                    </p>
+                    <ul class="features-list">
+                        <li>Dynamic inverse function generator</li>
+                        <li>Real-life application of inverse function</li>
+                    </ul>
+                </div>
+                <a href="Inversefunctions.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+         </div>
+    </div>
+
+    <!-- UNIT 3 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 3</span> Geometry and Trigonometry</h2>
+        <div class="cards-container">
+            <div class="coming-soon">New simulations for Geometry and Trigonometry currently in development...</div>
+        </div>
+    </div>
+
+    <!-- UNIT 4 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 4</span> Statistics and Probability</h2>
+        <div class="cards-container">
+            <div class="coming-soon">New simulations for Statistics and Probability currently in development...</div>
+        </div>
+    </div>
+
+    <!-- UNIT 5 -->
+    <div class="unit-section">
+        <h2 class="unit-title"><span class="unit-number">Topic 5</span> Calculus</h2>
+        <div class="cards-container">
+            <!-- New Card: Volume of Revolution Visualizer -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 5.11</span>
+                    </div>
+                    <h2 class="card-title">Volume of Revolution Visualizer</h2>
+                    <p class="card-desc">
+                        Interactive 3D visualization of the solid formed when a function is rotated around an axis. Build an intuitive understanding of integration applied to volume.
+                    </p>
+                    <ul class="features-list">
+                        <li>Real-time 3D axis rotation rendering</li>
+                        <li>Dynamic slider controls for limits of integration</li>
+                        <li>Visualize cross-sectional disks and washers</li>
+                    </ul>
+                </div>
+                <a href="volume_of_revolution_visualizer.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© IBDP Mathematics Hub • Curated and designed by Chandrabhan</p>
+    </footer>
+
+</body>
+</html>
