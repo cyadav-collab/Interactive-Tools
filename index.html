@@ -172,6 +172,7 @@
         .card:nth-child(2) { border-top: 4px solid #ec4899; }
         .card:nth-child(3) { border-top: 4px solid #10b981; }
         .card:nth-child(4) { border-top: 4px solid #f97316; }
+        .card:nth-child(5) { border-top: 4px solid #8b5cf6; } /* New Purple for Card 5 */
         
         .card:hover {
             transform: translateY(-6px);
@@ -210,6 +211,12 @@
             color: #ea580c;
             border-color: rgba(249, 115, 22, 0.3);
         }
+        .card:nth-child(5) .topic-tag {
+            background: rgba(139, 92, 246, 0.1);
+            color: #7c3aed;
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+        
         .card-title {
             font-size: 1.5rem;
             font-weight: 700;
@@ -278,6 +285,11 @@
         .card:nth-child(4) .sim-btn {
             background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
             box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
+        }
+        /* Card 5 Button Colors */
+        .card:nth-child(5) .sim-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
         .sim-btn:hover {
             opacity: 0.95;
@@ -389,6 +401,7 @@
                     Launch Simulation →
                 </a>
             </div>
+             
              <!-- Card 4: Inverse Functions -->
             <div class="card">
                 <div>
@@ -405,6 +418,27 @@
                     </ul>
                 </div>
                 <a href="Inversefunctions.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+
+            <!-- Card 5: Transformations of Functions -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.3</span>
+                    </div>
+                    <h2 class="card-title">Transformations of Functions</h2>
+                    <p class="card-desc">
+                        Explore how translations, reflections, and stretches affect the graphs of various parent functions.
+                    </p>
+                    <ul class="features-list">
+                        <li>Interactive translation and scaling sliders</li>
+                        <li>Real-time visual updates of parent vs. transformed graphs</li>
+                        <li>Visualize combinations of horizontal and vertical shifts</li>
+                    </ul>
+                </div>
+                <a href="function_transformations.html" class="sim-btn">
                     Launch Simulation →
                 </a>
             </div>
