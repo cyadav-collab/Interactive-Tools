@@ -1,0 +1,3083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IB DP Math Lab: Exponential & Logarithmic Functions</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Font: Inter & JetBrains Mono for crisp math expressions -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            exp: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            log: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Smooth custom range inputs and typography refinements */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      border-radius: 9999px;
+      background: #e2e8f0;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 9999px;
+      background: #4f46e5;
+      cursor: pointer;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+      transition: transform 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+    }
+    input[type="range"].slider-teal::-webkit-slider-thumb {
+      background: #0d9488;
+    }
+    input[type="range"].slider-amber::-webkit-slider-thumb {
+      background: #d97706;
+    }
+
+    /* Mathematical expression styling */
+    .math-expr {
+      font-family: 'Inter', serif;
+      letter-spacing: 0.01em;
+    }
+    .math-var {
+      font-style: italic;
+      font-weight: 600;
+    }
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 0.18em;
+      font-size: 0.88em;
+      line-height: 1.1;
+    }
+    .frac > span:first-child {
+      border-bottom: 1.5px solid currentColor;
+      padding: 0 0.2em 0.08em;
+    }
+    .frac > span:last-child {
+      padding: 0.08em 0.2em 0;
+    }
+
+    /* Subtle fade animation for tab transitions */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-panel {
+      animation: fadeSlideIn 0.25s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- ==================== TOP HEADER & NAVIGATION ==================== -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between py-3.5 gap-3">
+        <!-- Brand & IB DP Course Badge -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-teal-500 flex items-center justify-center text-white font-extrabold text-lg shadow-md shrink-0">
+            e<sup class="text-xs">x</sup>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+                Exponential &amp; Logarithmic Lab
+              </h1>
+              <span class="px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                IB DP Math SL
+              </span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-500">
+              Investigate inverse forms, graphs, domain &amp; range, adaptive practice, and real-world models
+            </p>
+          </div>
+        </div>
+
+        <!-- Global Mastery Mini-Status -->
+        <div id="global-mastery-pill" class="flex items-center gap-2 bg-slate-100 px-3.5 py-2 rounded-xl border border-slate-200 self-start md:self-auto">
+          <span class="text-xs font-semibold text-slate-600">Practice Mastery:</span>
+          <div class="flex items-center gap-1.5">
+            <span id="badge-easy-mini" class="px-2 py-0.5 rounded-md text-xs font-bold bg-indigo-100 text-indigo-700">E: 0/5</span>
+            <span id="badge-medium-mini" class="px-2 py-0.5 rounded-md text-xs font-bold bg-slate-200 text-slate-500">M: Locked</span>
+            <span id="badge-hard-mini" class="px-2 py-0.5 rounded-md text-xs font-bold bg-slate-200 text-slate-500">H: Locked</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Tab Bar -->
+      <nav class="flex gap-1.5 overflow-x-auto pb-2.5 -mx-1 px-1" aria-label="Main Modules">
+        <button data-tab="bridge" class="nav-tab flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all bg-indigo-600 text-white shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          1. Algebraic Bridge
+        </button>
+        <button data-tab="graph" class="nav-tab flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all text-slate-600 hover:bg-slate-100">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 19V5m0 14h18M7 15c2-1 4-4 6-9m-2 9c4-1 7-2 9-3"/></svg>
+          2. Graphs, Domain &amp; Range
+        </button>
+        <button data-tab="practice" class="nav-tab flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all text-slate-600 hover:bg-slate-100">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          3. Level-Wise Practice
+        </button>
+        <button data-tab="applications" class="nav-tab flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all text-slate-600 hover:bg-slate-100">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          4. Real-World Applications
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================================================================ -->
+    <!-- TAB 1: ALGEBRAIC BRIDGE (EXPONENTIAL <-> LOGARITHMIC FORM)        -->
+    <!-- ================================================================ -->
+    <section id="tab-bridge" class="tab-panel animate-panel space-y-6">
+      <!-- IB Teacher Intro Banner -->
+      <div class="bg-gradient-to-r from-indigo-600 via-indigo-700 to-teal-600 rounded-2xl p-6 text-white shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1.5 max-w-3xl">
+            <span class="inline-block px-2.5 py-0.5 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wider">IB DP Core Insight</span>
+            <h2 class="text-2xl font-extrabold">A Logarithm Is Simply an Exponent!</h2>
+            <p class="text-indigo-100 text-sm sm:text-base leading-relaxed">
+              Every logarithmic statement is an exponential statement written from the perspective of the exponent.
+              Use the interactive converter below to see how the <strong class="text-amber-300">Base</strong>,
+              <strong class="text-indigo-200">Exponent</strong>, and <strong class="text-teal-200">Value (Argument)</strong>
+              correspond directly to each other.
+            </p>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-5 py-3.5 text-center shrink-0">
+            <div class="text-xs uppercase tracking-wider text-indigo-200 font-semibold mb-1">Equivalence Identity</div>
+            <div class="text-xl sm:text-2xl font-bold font-mono">
+              <span class="text-amber-300">b</span><sup class="text-indigo-200">y</sup> = <span class="text-teal-200">x</span>
+              <span class="mx-2 text-white/80">&harr;</span>
+              log<sub class="text-amber-300">b</sub>(<span class="text-teal-200">x</span>) = <span class="text-indigo-200">y</span>
+            </div>
+            <div class="text-xs text-indigo-100 mt-1">Valid for <span class="font-mono">b &gt; 0, b &ne; 1, x &gt; 0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Form Explorer Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left Controls Card -->
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">Adjust Parameters</h3>
+            <p class="text-sm text-slate-500">Pick a base and exponent, or choose an IB exam preset.</p>
+          </div>
+
+          <!-- Presets -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Quick IB Presets</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button class="bridge-preset px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold hover:border-indigo-400 hover:bg-indigo-50 transition" data-b="2" data-y="3">2<sup>3</sup> = 8</button>
+              <button class="bridge-preset px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold hover:border-indigo-400 hover:bg-indigo-50 transition" data-b="10" data-y="2">10<sup>2</sup> = 100</button>
+              <button class="bridge-preset px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold hover:border-indigo-400 hover:bg-indigo-50 transition" data-b="2" data-y="-3">2<sup>&minus;3</sup> = 1/8</button>
+              <button class="bridge-preset px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold hover:border-indigo-400 hover:bg-indigo-50 transition" data-b="9" data-y="0.5">9<sup>1/2</sup> = 3</button>
+              <button class="bridge-preset px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold hover:border-indigo-400 hover:bg-indigo-50 transition" data-b="5" data-y="0">5<sup>0</sup> = 1</button>
+              <button class="bridge-preset px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold hover:border-indigo-400 hover:bg-indigo-50 transition" data-b="e" data-y="2">e<sup>2</sup> &approx; 7.39</button>
+            </div>
+          </div>
+
+          <!-- Base Selector -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label for="bridge-base-select" class="text-sm font-bold text-amber-700 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                Base (<span class="math-var">b</span>)
+              </label>
+              <span id="bridge-base-display" class="font-mono font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-lg border border-amber-200">2</span>
+            </div>
+            <div class="grid grid-cols-4 sm:grid-cols-7 gap-1.5">
+              <button class="base-chip py-1.5 rounded-lg text-xs font-bold border border-slate-200 hover:bg-amber-50" data-base="0.5">&frac12;</button>
+              <button class="base-chip py-1.5 rounded-lg text-xs font-bold border-2 border-amber-500 bg-amber-50 text-amber-800" data-base="2">2</button>
+              <button class="base-chip py-1.5 rounded-lg text-xs font-bold border border-slate-200 hover:bg-amber-50" data-base="e">e</button>
+              <button class="base-chip py-1.5 rounded-lg text-xs font-bold border border-slate-200 hover:bg-amber-50" data-base="3">3</button>
+              <button class="base-chip py-1.5 rounded-lg text-xs font-bold border border-slate-200 hover:bg-amber-50" data-base="4">4</button>
+              <button class="base-chip py-1.5 rounded-lg text-xs font-bold border border-slate-200 hover:bg-amber-50" data-base="5">5</button>
+              <button class="base-chip py-1.5 rounded-lg text-xs font-bold border border-slate-200 hover:bg-amber-50" data-base="10">10</button>
+            </div>
+            <div class="flex items-center gap-2 pt-1">
+              <span class="text-xs text-slate-500">Custom base:</span>
+              <input id="bridge-custom-base" type="number" step="0.5" min="0.1" max="100" value="2" class="w-24 px-2.5 py-1 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none" />
+              <span id="bridge-base-error" class="text-xs text-rose-600 font-semibold hidden">Base must be &gt; 0 and &ne; 1!</span>
+            </div>
+          </div>
+
+          <!-- Exponent Slider -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label for="bridge-exp-slider" class="text-sm font-bold text-indigo-700 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-indigo-600 inline-block"></span>
+                Exponent (<span class="math-var">y</span>)
+              </label>
+              <span id="bridge-exp-display" class="font-mono font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-lg border border-indigo-200">3</span>
+            </div>
+            <input id="bridge-exp-slider" type="range" min="-4" max="5" step="0.5" value="3" class="w-full" />
+            <div class="flex justify-between text-xs text-slate-400 font-mono">
+              <span>-4</span><span>-2</span><span>0</span><span>2</span><span>5</span>
+            </div>
+          </div>
+
+          <!-- Domain Warning Insight Box -->
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-1.5">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-600">Why must <span class="font-mono text-teal-700">x &gt; 0</span>?</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Notice that even when you drag the exponent <span class="font-mono font-semibold text-indigo-700">y</span> to negative values (like <span class="font-mono">-4</span>), the resulting value <span class="font-mono font-semibold text-teal-700">x = b<sup>y</sup></span> stays strictly positive! A positive base raised to any real power can never be zero or negative.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Visual Side-by-Side Mapping Card -->
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between space-y-6">
+          <div>
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-4">
+              <h3 class="text-lg font-bold text-slate-900">Live Equivalence Mapping</h3>
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">Color-coded by role</span>
+            </div>
+
+            <!-- Two Big Cards Side by Side -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+              <!-- Exponential Form Card -->
+              <div class="rounded-2xl bg-indigo-50/70 border-2 border-indigo-200 p-5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">Exponential Form</span>
+                  <span class="text-xs font-mono text-indigo-500">b<sup>y</sup> = x</span>
+                </div>
+                <div id="bridge-exp-equation" class="my-6 text-center text-3xl sm:text-4xl font-extrabold font-mono tracking-tight text-slate-900 break-words">
+                  <span class="text-amber-600">2</span><sup class="text-indigo-600">3</sup> = <span class="text-teal-600">8</span>
+                </div>
+                <div class="text-xs text-slate-600 bg-white/80 rounded-xl p-3 border border-indigo-100">
+                  <strong>Reads as:</strong> "<span id="read-exp">2 raised to the power of 3 equals 8</span>."
+                </div>
+              </div>
+
+              <!-- Logarithmic Form Card -->
+              <div class="rounded-2xl bg-teal-50/70 border-2 border-teal-200 p-5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-teal-700">Logarithmic Form</span>
+                  <span class="text-xs font-mono text-teal-600">log<sub>b</sub>(x) = y</span>
+                </div>
+                <div id="bridge-log-equation" class="my-6 text-center text-3xl sm:text-4xl font-extrabold font-mono tracking-tight text-slate-900 break-words">
+                  log<sub class="text-amber-600">2</sub>(<span class="text-teal-600">8</span>) = <span class="text-indigo-600">3</span>
+                </div>
+                <div class="text-xs text-slate-600 bg-white/80 rounded-xl p-3 border border-teal-100">
+                  <strong>Reads as:</strong> "<span id="read-log">The power to which 2 must be raised to get 8 is 3</span>."
+                </div>
+              </div>
+            </div>
+
+            <!-- Role Breakdown Pills -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+              <div class="rounded-xl bg-amber-50 border border-amber-200 p-3.5 text-center">
+                <div class="text-xs font-bold uppercase text-amber-700">Base (b)</div>
+                <div id="role-base" class="text-xl font-extrabold font-mono text-amber-800 mt-0.5">2</div>
+                <div class="text-xs text-amber-700/80 mt-1">Stays the base in both forms</div>
+              </div>
+              <div class="rounded-xl bg-indigo-50 border border-indigo-200 p-3.5 text-center">
+                <div class="text-xs font-bold uppercase text-indigo-700">Exponent (y)</div>
+                <div id="role-exp" class="text-xl font-extrabold font-mono text-indigo-800 mt-0.5">3</div>
+                <div class="text-xs text-indigo-700/80 mt-1">Becomes the output of the log</div>
+              </div>
+              <div class="rounded-xl bg-teal-50 border border-teal-200 p-3.5 text-center">
+                <div class="text-xs font-bold uppercase text-teal-700">Argument / Value (x)</div>
+                <div id="role-val" class="text-xl font-extrabold font-mono text-teal-800 mt-0.5">8</div>
+                <div class="text-xs text-teal-700/80 mt-1">Input inside the logarithm (&gt; 0)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Special IB Notations & Laws Quick Strip -->
+          <div class="border-t border-slate-200 pt-5">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">Essential IB DP Identities &amp; Special Bases</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <div class="font-bold text-slate-800">Common Log</div>
+                <div class="font-mono text-teal-700 mt-0.5">log(x) = log<sub>10</sub>(x)</div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <div class="font-bold text-slate-800">Natural Log</div>
+                <div class="font-mono text-teal-700 mt-0.5">ln(x) = log<sub>e</sub>(x)</div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <div class="font-bold text-slate-800">Zero &amp; Identity</div>
+                <div class="font-mono text-indigo-700 mt-0.5">log<sub>b</sub>(1) = 0, log<sub>b</sub>(b) = 1</div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <div class="font-bold text-slate-800">Inverse Cancellation</div>
+                <div class="font-mono text-indigo-700 mt-0.5">b<sup>log<sub>b</sub>(x)</sup> = x, log<sub>b</sub>(b<sup>y</sup>) = y</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IB Laws of Logarithms Interactive Reference Card -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">IB DP Formula Booklet: Laws of Exponents &amp; Logarithms Side-by-Side</h3>
+            <p class="text-xs text-slate-500">Notice how every law of logarithms is the mirror image of an exponent law.</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
+          <div class="rounded-xl border border-slate-200 p-4 bg-slate-50/70">
+            <div class="text-xs font-bold uppercase text-indigo-600 mb-1">Product Law</div>
+            <div class="font-mono text-slate-800 font-semibold">b<sup>m</sup> &middot; b<sup>n</sup> = b<sup>m+n</sup></div>
+            <div class="my-1.5 border-t border-slate-200"></div>
+            <div class="font-mono text-teal-700 font-semibold">log<sub>b</sub>(xy) = log<sub>b</sub>x + log<sub>b</sub>y</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 p-4 bg-slate-50/70">
+            <div class="text-xs font-bold uppercase text-indigo-600 mb-1">Quotient Law</div>
+            <div class="font-mono text-slate-800 font-semibold">b<sup>m</sup> / b<sup>n</sup> = b<sup>m&minus;n</sup></div>
+            <div class="my-1.5 border-t border-slate-200"></div>
+            <div class="font-mono text-teal-700 font-semibold">log<sub>b</sub>(x/y) = log<sub>b</sub>x &minus; log<sub>b</sub>y</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 p-4 bg-slate-50/70">
+            <div class="text-xs font-bold uppercase text-indigo-600 mb-1">Power Law</div>
+            <div class="font-mono text-slate-800 font-semibold">(b<sup>m</sup>)<sup>k</sup> = b<sup>km</sup></div>
+            <div class="my-1.5 border-t border-slate-200"></div>
+            <div class="font-mono text-teal-700 font-semibold">log<sub>b</sub>(x<sup>k</sup>) = k &middot; log<sub>b</sub>x</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 p-4 bg-slate-50/70">
+            <div class="text-xs font-bold uppercase text-indigo-600 mb-1">Change of Base</div>
+            <div class="font-mono text-slate-800 font-semibold">b<sup>x</sup> = e<sup>x ln(b)</sup></div>
+            <div class="my-1.5 border-t border-slate-200"></div>
+            <div class="font-mono text-teal-700 font-semibold">log<sub>b</sub>(x) = ln(x) / ln(b)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- TAB 2: INTERACTIVE GRAPH, DOMAIN & RANGE LAB                     -->
+    <!-- ================================================================ -->
+    <section id="tab-graph" class="tab-panel hidden animate-panel space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Left Canvas Graph Area -->
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-lg font-extrabold text-slate-900">Inverse Graph Visualizer</h2>
+              <p class="text-xs text-slate-500">Drag the indigo point on the graph (or use the slider) to watch reflection across <span class="font-mono font-semibold text-amber-600">y = x</span>.</p>
+            </div>
+            <!-- Legend Pills -->
+            <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span> f(x) Exp
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-600"></span> f<sup>&minus;1</sup>(x) Log
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                <span class="w-3 border-t-2 border-dashed border-amber-500"></span> y = x
+              </span>
+            </div>
+          </div>
+
+          <!-- Responsive HiDPI Canvas Wrapper -->
+          <div id="graph-canvas-wrapper" class="relative w-full aspect-square max-h-[540px] rounded-xl overflow-hidden border border-slate-200 bg-slate-50 touch-none select-none cursor-crosshair">
+            <canvas id="inverse-canvas" class="block w-full h-full"></canvas>
+            <!-- Floating Point Coordinates Overlay -->
+            <div class="absolute bottom-3 left-3 right-3 flex flex-wrap justify-between gap-2 pointer-events-none">
+              <div id="coord-exp-pill" class="bg-white/95 backdrop-blur-sm border border-indigo-200 shadow-sm rounded-lg px-3 py-1.5 text-xs font-mono font-bold text-indigo-700">
+                P on f: (1.00, 2.00)
+              </div>
+              <div id="coord-log-pill" class="bg-white/95 backdrop-blur-sm border border-teal-200 shadow-sm rounded-lg px-3 py-1.5 text-xs font-mono font-bold text-teal-700">
+                P&prime; on f&minus;1: (2.00, 1.00)
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Toggles beneath canvas -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-700">
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input id="toggle-mirror" type="checkbox" checked class="w-4 h-4 accent-amber-500 rounded" />
+                Show mirror line <span class="font-mono">y = x</span>
+              </label>
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input id="toggle-asymptotes" type="checkbox" checked class="w-4 h-4 accent-rose-500 rounded" />
+                Show asymptotes
+              </label>
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input id="toggle-reflection-seg" type="checkbox" checked class="w-4 h-4 accent-indigo-600 rounded" />
+                Show reflection segment
+              </label>
+            </div>
+            <button id="btn-reset-graph" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+              Reset Defaults
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Controls + Live Domain/Range Comparison -->
+        <div class="lg:col-span-5 space-y-5">
+          <!-- Controls Card -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-slate-900">Function Parameters</h3>
+              <div class="flex gap-1.5">
+                <button class="graph-base-preset px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-700" data-a="0.5">a = 0.5</button>
+                <button class="graph-base-preset px-2.5 py-1 text-xs font-bold rounded-lg bg-indigo-100 text-indigo-700" data-a="2">a = 2</button>
+                <button class="graph-base-preset px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-700" data-a="2.7183">a = e</button>
+                <button class="graph-base-preset px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-700" data-a="3">a = 3</button>
+              </div>
+            </div>
+
+            <!-- Base a slider -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs font-bold">
+                <span class="text-slate-700">Base <span class="math-var">a</span> (try <span class="font-mono">0 &lt; a &lt; 1</span> vs <span class="font-mono">a &gt; 1</span>)</span>
+                <span id="graph-a-val" class="font-mono text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">2.00</span>
+              </div>
+              <input id="graph-a-slider" type="range" min="0.2" max="5" step="0.05" value="2" class="w-full" />
+              <div id="graph-a-note" class="text-xs text-slate-500">Growth case (a &gt; 1): both functions are strictly increasing.</div>
+            </div>
+
+            <!-- Point P slider -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs font-bold">
+                <span class="text-slate-700">Trace Point <span class="font-mono">x<sub>0</sub></span> on <span class="font-mono text-indigo-600">f(x)</span></span>
+                <span id="graph-x0-val" class="font-mono text-teal-700 bg-teal-50 px-2 py-0.5 rounded">1.00</span>
+              </div>
+              <input id="graph-x0-slider" type="range" min="-4" max="3.5" step="0.1" value="1" class="w-full slider-teal" />
+            </div>
+
+            <!-- Collapsible IB Transformations (h, k) -->
+            <div class="pt-2 border-t border-slate-100">
+              <button id="toggle-shifts-btn" class="w-full flex items-center justify-between text-xs font-bold text-slate-700 hover:text-indigo-700 py-1">
+                <span>Explore Shifts (IB Transformations: h, k)</span>
+                <span id="shifts-chevron" class="text-slate-400 transition-transform">&#9662;</span>
+              </button>
+              <div id="shifts-panel" class="hidden mt-3 space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <div class="space-y-1">
+                  <div class="flex justify-between text-xs font-semibold">
+                    <span>Horizontal shift <span class="font-mono">h</span> (in exp)</span>
+                    <span id="graph-h-val" class="font-mono text-slate-700">0</span>
+                  </div>
+                  <input id="graph-h-slider" type="range" min="-3" max="3" step="0.5" value="0" class="w-full slider-amber" />
+                </div>
+                <div class="space-y-1">
+                  <div class="flex justify-between text-xs font-semibold">
+                    <span>Vertical shift <span class="font-mono">k</span> (asymptote shift)</span>
+                    <span id="graph-k-val" class="font-mono text-slate-700">0</span>
+                  </div>
+                  <input id="graph-k-slider" type="range" min="-3" max="3" step="0.5" value="0" class="w-full slider-amber" />
+                </div>
+                <p class="text-[11px] text-slate-500">
+                  Watch how shifting <span class="font-mono">f(x)</span> vertically by <span class="font-mono">k</span> moves its horizontal asymptote to <span class="font-mono">y = k</span>, and simultaneously shifts the inverse's vertical asymptote to <span class="font-mono">x = k</span>!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Equations & Domain/Range Swap Table -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <h3 class="text-base font-bold text-slate-900">Domain, Range &amp; Key Features Swap</h3>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="rounded-xl bg-indigo-50 border border-indigo-200 p-3">
+                <div class="font-bold text-indigo-800 uppercase tracking-wider text-[10px]">Exponential Function</div>
+                <div id="eq-exp-display" class="font-mono font-bold text-sm text-indigo-950 mt-1">f(x) = 2<sup>x</sup></div>
+              </div>
+              <div class="rounded-xl bg-teal-50 border border-teal-200 p-3">
+                <div class="font-bold text-teal-800 uppercase tracking-wider text-[10px]">Inverse Logarithmic</div>
+                <div id="eq-log-display" class="font-mono font-bold text-sm text-teal-950 mt-1">f<sup>&minus;1</sup>(x) = log<sub>2</sub>(x)</div>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 text-slate-500">
+                    <th class="py-2 pr-2 font-bold">Property</th>
+                    <th class="py-2 px-2 font-bold text-indigo-700">f(x) Exp</th>
+                    <th class="py-2 pl-2 font-bold text-teal-700">f<sup>&minus;1</sup>(x) Log</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-mono">
+                  <tr>
+                    <td class="py-2.5 pr-2 font-sans font-semibold text-slate-700">Domain</td>
+                    <td id="prop-exp-dom" class="py-2.5 px-2 text-indigo-800 bg-indigo-50/40 rounded-l">x &isin; &Ropf;</td>
+                    <td id="prop-log-dom" class="py-2.5 pl-2 text-teal-800 bg-teal-50/40 rounded-r">x &gt; 0</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 pr-2 font-sans font-semibold text-slate-700">Range</td>
+                    <td id="prop-exp-ran" class="py-2.5 px-2 text-indigo-800 bg-indigo-50/40">y &gt; 0</td>
+                    <td id="prop-log-ran" class="py-2.5 pl-2 text-teal-800 bg-teal-50/40">y &isin; &Ropf;</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 pr-2 font-sans font-semibold text-slate-700">Asymptote</td>
+                    <td id="prop-exp-asy" class="py-2.5 px-2 text-rose-700 font-bold">y = 0 (Horiz.)</td>
+                    <td id="prop-log-asy" class="py-2.5 pl-2 text-rose-700 font-bold">x = 0 (Vert.)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 pr-2 font-sans font-semibold text-slate-700">Key Point</td>
+                    <td id="prop-exp-pt" class="py-2.5 px-2 text-slate-800">(0, 1)</td>
+                    <td id="prop-log-pt" class="py-2.5 pl-2 text-slate-800">(1, 0)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 pr-2 font-sans font-semibold text-slate-700">Monotonicity</td>
+                    <td id="prop-exp-mono" class="py-2.5 px-2 font-sans text-slate-700">Increasing</td>
+                    <td id="prop-log-mono" class="py-2.5 pl-2 font-sans text-slate-700">Increasing</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Golden Rule Callout -->
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-900 leading-relaxed">
+              <strong>IB Exam Golden Rule:</strong> Because <span class="font-mono">f</span> and <span class="font-mono">f<sup>&minus;1</sup></span> are reflections in <span class="font-mono">y = x</span>, every <span class="font-mono">x</span> and <span class="font-mono">y</span> swaps:
+              <br />
+              &bull; <strong>Domain of f</strong> = <strong>Range of f<sup>&minus;1</sup></strong>
+              <br />
+              &bull; <strong>Range of f</strong> = <strong>Domain of f<sup>&minus;1</sup></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- TAB 3: LEVEL-WISE ADAPTIVE PRACTICE (EASY, MEDIUM, HARD)         -->
+    <!-- ================================================================ -->
+    <section id="tab-practice" class="tab-panel hidden animate-panel space-y-6">
+      <!-- Level Selector Stepper -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-900">Adaptive Mastery Practice</h2>
+            <p class="text-sm text-slate-500">
+              Score <strong>5 correct answers</strong> in a level to unlock the next tier. Missed a question? Review the worked solution and receive a fresh similar-level question until you master it!
+            </p>
+          </div>
+          <button id="btn-reset-practice" class="self-start md:self-auto px-3.5 py-2 rounded-xl text-xs font-bold border border-slate-200 text-slate-600 hover:bg-slate-100 transition">
+            Reset All Progress
+          </button>
+        </div>
+
+        <!-- 3 Level Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Easy Card -->
+          <button id="lvl-btn-easy" data-level="easy" class="level-card text-left p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/60 transition-all relative">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase bg-emerald-100 text-emerald-800">Level 1: Easy</span>
+              <span id="status-easy" class="text-xs font-bold text-indigo-700">0 / 5 Correct</span>
+            </div>
+            <div class="text-sm font-bold text-slate-900">Forms, Exact Logs &amp; Basic Features</div>
+            <p class="text-xs text-slate-500 mt-0.5">Exp &harr; Log conversion, basic domain/range, asymptotes.</p>
+            <div id="dots-easy" class="flex gap-1.5 mt-3"></div>
+          </button>
+
+          <!-- Medium Card -->
+          <button id="lvl-btn-medium" data-level="medium" class="level-card text-left p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 opacity-75 cursor-not-allowed transition-all relative">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase bg-amber-100 text-amber-800">Level 2: Medium</span>
+              <span id="status-medium" class="text-xs font-bold text-slate-500 flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                Locked
+              </span>
+            </div>
+            <div class="text-sm font-bold text-slate-900">Transformations, Neg/Frac Logs &amp; Inverses</div>
+            <p class="text-xs text-slate-500 mt-0.5">Shifted asymptotes, negative exponents, solving equations.</p>
+            <div id="dots-medium" class="flex gap-1.5 mt-3"></div>
+          </button>
+
+          <!-- Hard Card -->
+          <button id="lvl-btn-hard" data-level="hard" class="level-card text-left p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 opacity-75 cursor-not-allowed transition-all relative">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase bg-rose-100 text-rose-800">Level 3: Hard</span>
+              <span id="status-hard" class="text-xs font-bold text-slate-500 flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                Locked
+              </span>
+            </div>
+            <div class="text-sm font-bold text-slate-900">IB DP Paper 1/2 Exam-Style Challenges</div>
+            <p class="text-xs text-slate-500 mt-0.5">Log laws + domain checks, hidden quadratics, composite inverses.</p>
+            <div id="dots-hard" class="flex gap-1.5 mt-3"></div>
+          </button>
+        </div>
+
+        <!-- Inline Lock Notice Banner -->
+        <div id="lock-notice" class="hidden mt-3 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-800">
+        </div>
+      </div>
+
+      <!-- Active Question Workspace -->
+      <div id="practice-workspace" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm max-w-4xl mx-auto space-y-6">
+        <!-- Question Metadata Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-100">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span id="q-level-badge" class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-emerald-100 text-emerald-800">Easy</span>
+            <span id="q-topic-tag" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">Topic</span>
+            <span id="q-remediation-badge" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+              Additional Practice Question
+            </span>
+          </div>
+          <div class="text-xs font-semibold text-slate-500 flex items-center gap-3">
+            <span>Goal: <strong id="q-progress-text" class="text-indigo-700">0 / 5</strong> correct</span>
+            <span>&bull;</span>
+            <span>Attempts: <strong id="q-attempts-text" class="text-slate-700">0</strong></span>
+          </div>
+        </div>
+
+        <!-- Question Stem -->
+        <div class="space-y-3">
+          <div id="q-prompt" class="text-lg sm:text-xl font-bold text-slate-900 leading-relaxed">
+            Loading question...
+          </div>
+          <!-- Optional Hint Toggle -->
+          <div>
+            <button id="btn-show-hint" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Need an IB Teacher Hint?
+            </button>
+            <div id="q-hint-box" class="hidden mt-2 p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-200 text-xs sm:text-sm text-indigo-900">
+            </div>
+          </div>
+        </div>
+
+        <!-- Answer Choices Grid -->
+        <div id="q-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Options injected dynamically -->
+        </div>
+
+        <!-- Feedback & Worked Solution Panel -->
+        <div id="q-feedback" class="hidden rounded-2xl p-5 border-2 space-y-3">
+          <div class="flex items-start gap-3">
+            <div id="q-feedback-icon" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-white mt-0.5"></div>
+            <div class="space-y-1.5 flex-1">
+              <h4 id="q-feedback-title" class="text-base font-extrabold"></h4>
+              <p id="q-feedback-subtitle" class="text-xs sm:text-sm"></p>
+            </div>
+          </div>
+          <div class="bg-white/90 rounded-xl p-4 border border-slate-200/80 space-y-1.5">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500">IB Teacher Worked Solution</div>
+            <div id="q-explanation" class="text-sm text-slate-800 leading-relaxed space-y-1"></div>
+          </div>
+          <div class="flex flex-wrap justify-end gap-3 pt-1">
+            <button id="btn-next-question" class="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition">
+              Next Question &rarr;
+            </button>
+            <button id="btn-advance-level" class="hidden px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition">
+              Unlock &amp; Start Next Level &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Mastery Certificate Banner (Revealed once all 3 levels have 5/5) -->
+      <div id="mastery-complete-card" class="hidden max-w-4xl mx-auto bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-6 sm:p-8 text-white shadow-lg">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <span class="inline-block px-3 py-0.5 rounded-full bg-white/20 text-xs font-extrabold uppercase tracking-wider">IB DP Topic Mastery Achieved</span>
+            <h3 class="text-2xl font-extrabold">Congratulations! You Mastered All 3 Levels!</h3>
+            <p class="text-emerald-100 text-sm">
+              You successfully solved 5 questions each in Easy, Medium, and Hard tiers. You can continue practicing any level to sharpen your Paper 1 &amp; Paper 2 speed!
+            </p>
+          </div>
+          <div class="text-5xl select-none">&#127942;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- TAB 4: REAL-WORLD APPLICATIONS OF EXP & LOG FUNCTIONS            -->
+    <!-- ================================================================ -->
+    <section id="tab-applications" class="tab-panel hidden animate-panel space-y-6">
+      <!-- Intro Header -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="max-w-3xl space-y-1">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-teal-600">Connecting Algebra, Graphs &amp; Reality</span>
+            <h2 class="text-2xl font-extrabold text-slate-900">Why Do Exponential &amp; Logarithmic Functions Matter?</h2>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              <strong>Exponential functions</strong> model phenomena that grow or decay by a constant <em>percentage</em> per unit time (finance, biology, physics).
+              <strong>Logarithmic functions</strong> solve for unknown time/rates in those models and create human-readable scales for quantities spanning many orders of magnitude (earthquakes, acidity, sound).
+            </p>
+          </div>
+        </div>
+
+        <!-- Application Sub-Tabs -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mt-5">
+          <button data-app="compound" class="app-pill p-3.5 rounded-xl border-2 border-indigo-600 bg-indigo-50 text-left transition">
+            <div class="text-xs font-extrabold uppercase text-indigo-700">Exponential Growth</div>
+            <div class="text-sm font-bold text-slate-900 mt-0.5">Compound Interest</div>
+          </button>
+          <button data-app="decay" class="app-pill p-3.5 rounded-xl border-2 border-slate-200 hover:border-indigo-300 bg-white text-left transition">
+            <div class="text-xs font-extrabold uppercase text-indigo-600">Exponential Decay</div>
+            <div class="text-sm font-bold text-slate-900 mt-0.5">Radioactive Half-Life</div>
+          </button>
+          <button data-app="richter" class="app-pill p-3.5 rounded-xl border-2 border-slate-200 hover:border-teal-300 bg-white text-left transition">
+            <div class="text-xs font-extrabold uppercase text-teal-600">Logarithmic Scale</div>
+            <div class="text-sm font-bold text-slate-900 mt-0.5">Richter Earthquakes</div>
+          </button>
+          <button data-app="ph" class="app-pill p-3.5 rounded-xl border-2 border-slate-200 hover:border-teal-300 bg-white text-left transition">
+            <div class="text-xs font-extrabold uppercase text-teal-600">Logarithmic Scale</div>
+            <div class="text-sm font-bold text-slate-900 mt-0.5">Chemistry pH Scale</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- APPLICATION 1: COMPOUND INTEREST -->
+      <div id="app-panel-compound" class="app-panel grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-5">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">Finance &amp; Population</span>
+            <h3 class="text-lg font-extrabold text-slate-900 mt-1.5">Continuous Compound Growth</h3>
+            <p class="text-xs text-slate-500 mt-1">Model: <span class="font-mono font-bold text-indigo-700">A(t) = P &middot; e<sup>rt</sup></span></p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>Initial Investment (<span class="font-mono">P</span>)</span>
+                <span id="ci-p-val" class="font-mono text-indigo-700">$1,000</span>
+              </div>
+              <input id="ci-p" type="range" min="500" max="10000" step="500" value="1000" class="w-full" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>Annual Interest Rate (<span class="font-mono">r</span>)</span>
+                <span id="ci-r-val" class="font-mono text-indigo-700">7.0%</span>
+              </div>
+              <input id="ci-r" type="range" min="1" max="15" step="0.5" value="7" class="w-full" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>Time Horizon (<span class="font-mono">t</span> years)</span>
+                <span id="ci-t-val" class="font-mono text-indigo-700">20 yrs</span>
+              </div>
+              <input id="ci-t" type="range" min="1" max="40" step="1" value="20" class="w-full" />
+            </div>
+          </div>
+
+          <!-- Output Metrics -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-xl bg-indigo-50 border border-indigo-200 p-3.5">
+              <div class="text-[11px] font-bold uppercase text-indigo-700">Final Value A(t)</div>
+              <div id="ci-final" class="text-xl font-extrabold font-mono text-indigo-950 mt-0.5">$4,055</div>
+            </div>
+            <div class="rounded-xl bg-teal-50 border border-teal-200 p-3.5">
+              <div class="text-[11px] font-bold uppercase text-teal-700">Doubling Time (via ln)</div>
+              <div id="ci-double" class="text-xl font-extrabold font-mono text-teal-950 mt-0.5">9.90 yrs</div>
+            </div>
+          </div>
+
+          <!-- How Exp & Log Work Together -->
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs text-slate-700 space-y-1.5">
+            <div class="font-extrabold text-slate-900">How Exponential &amp; Logarithmic Forms Cooperate:</div>
+            <p>&bull; <strong>Exponential</strong> predicts the future amount: <span id="ci-exp-formula" class="font-mono text-indigo-700 font-semibold">1000e<sup>0.07(20)</sup></span>.</p>
+            <p>&bull; <strong>Logarithm</strong> answers "How long until my money doubles?":
+              <span class="font-mono text-teal-700 font-semibold">2P = Pe<sup>rt</sup> &rArr; t = ln(2) / r</span>.
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-sm font-bold text-slate-800">Growth Curve vs. Linear Growth Comparison</h4>
+            <span class="text-xs text-slate-500">Notice the accelerating slope!</span>
+          </div>
+          <div class="relative w-full h-72 sm:h-80 rounded-xl bg-slate-50 border border-slate-200 overflow-hidden">
+            <canvas id="canvas-compound" class="block w-full h-full"></canvas>
+          </div>
+          <p class="text-xs text-slate-500 mt-3">
+            <strong>Domain in context:</strong> <span class="font-mono">t &ge; 0</span> &nbsp;|&nbsp;
+            <strong>Range in context:</strong> <span class="font-mono">A &ge; P</span> &nbsp;|&nbsp;
+            The dashed gray line shows simple (linear) interest so you can visually appreciate the power of exponential compounding.
+          </p>
+        </div>
+      </div>
+
+      <!-- APPLICATION 2: RADIOACTIVE DECAY -->
+      <div id="app-panel-decay" class="app-panel hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-5">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">Physics &amp; Archaeology</span>
+            <h3 class="text-lg font-extrabold text-slate-900 mt-1.5">Radioactive Decay &amp; Carbon Dating</h3>
+            <p class="text-xs text-slate-500 mt-1">Model: <span class="font-mono font-bold text-indigo-700">N(t) = N<sub>0</sub>(0.5)<sup>t/T</sup> = N<sub>0</sub>e<sup>&minus;kt</sup></span></p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>Initial Mass (<span class="font-mono">N<sub>0</sub></span>)</span>
+                <span id="dc-n0-val" class="font-mono text-indigo-700">100 g</span>
+              </div>
+              <input id="dc-n0" type="range" min="20" max="200" step="10" value="100" class="w-full" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>Half-Life (<span class="font-mono">T<sub>1/2</sub></span>)</span>
+                <span id="dc-hl-val" class="font-mono text-indigo-700">5.0 yrs</span>
+              </div>
+              <input id="dc-hl" type="range" min="1" max="20" step="0.5" value="5" class="w-full" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>Elapsed Time (<span class="font-mono">t</span>)</span>
+                <span id="dc-t-val" class="font-mono text-indigo-700">10.0 yrs</span>
+              </div>
+              <input id="dc-t" type="range" min="0" max="40" step="0.5" value="10" class="w-full" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-xl bg-indigo-50 border border-indigo-200 p-3.5">
+              <div class="text-[11px] font-bold uppercase text-indigo-700">Remaining Mass</div>
+              <div id="dc-rem" class="text-xl font-extrabold font-mono text-indigo-950 mt-0.5">25.0 g</div>
+            </div>
+            <div class="rounded-xl bg-teal-50 border border-teal-200 p-3.5">
+              <div class="text-[11px] font-bold uppercase text-teal-700">Decay Constant k</div>
+              <div id="dc-k" class="text-xl font-extrabold font-mono text-teal-950 mt-0.5">0.1386</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs text-slate-700 space-y-1.5">
+            <div class="font-extrabold text-slate-900">Why Asymptote <span class="font-mono">N = 0</span> Matters:</div>
+            <p>Each half-life cuts the remaining substance in half, approaching <strong>zero asymptotically</strong> without mathematically reaching zero.</p>
+            <p>Scientists find the age of fossils using the inverse log: <span class="font-mono text-teal-700 font-semibold">t = &minus;ln(N / N<sub>0</sub>) / k</span>.</p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-sm font-bold text-slate-800">Exponential Decay Curve (Base 0 &lt; a &lt; 1)</h4>
+            <span id="dc-pct-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700">25.0% remaining</span>
+          </div>
+          <div class="relative w-full h-72 sm:h-80 rounded-xl bg-slate-50 border border-slate-200 overflow-hidden">
+            <canvas id="canvas-decay" class="block w-full h-full"></canvas>
+          </div>
+          <p class="text-xs text-slate-500 mt-3">
+            <strong>Horizontal Asymptote:</strong> <span class="font-mono">N = 0</span> &nbsp;|&nbsp;
+            <strong>Domain:</strong> <span class="font-mono">t &ge; 0</span> &nbsp;|&nbsp;
+            <strong>Range:</strong> <span class="font-mono">0 &lt; N &le; N<sub>0</sub></span>.
+          </p>
+        </div>
+      </div>
+
+      <!-- APPLICATION 3: RICHTER SCALE -->
+      <div id="app-panel-richter" class="app-panel hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-5">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-100 text-teal-700">Earth Science &amp; Seismology</span>
+            <h3 class="text-lg font-extrabold text-slate-900 mt-1.5">Richter Earthquake Magnitude Scale</h3>
+            <p class="text-xs text-slate-500 mt-1">Model: <span class="font-mono font-bold text-teal-700">M = log<sub>10</sub>(I / I<sub>0</sub>)</span></p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>Earthquake A Magnitude (<span class="font-mono">M<sub>1</sub></span>)</span>
+                <span id="eq1-val" class="font-mono text-slate-700 bg-slate-100 px-2 py-0.5 rounded">5.0</span>
+              </div>
+              <input id="eq1-slider" type="range" min="2" max="9" step="0.1" value="5.0" class="w-full slider-teal" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>Earthquake B Magnitude (<span class="font-mono">M<sub>2</sub></span>)</span>
+                <span id="eq2-val" class="font-mono text-teal-700 bg-teal-50 px-2 py-0.5 rounded">7.0</span>
+              </div>
+              <input id="eq2-slider" type="range" min="2" max="9" step="0.1" value="7.0" class="w-full slider-teal" />
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-teal-50 border-2 border-teal-200 p-4 text-center space-y-1">
+            <div class="text-xs font-bold uppercase text-teal-700">Seismic Wave Amplitude Ratio</div>
+            <div id="eq-ratio-text" class="text-2xl sm:text-3xl font-extrabold font-mono text-teal-950">100&times;</div>
+            <div id="eq-ratio-sub" class="text-xs text-teal-800">Earthquake B has 100 times larger wave amplitude than A!</div>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs text-slate-700 space-y-1.5">
+            <div class="font-extrabold text-slate-900">Why Use a Logarithm Here?</div>
+            <p>Seismic waves range from <span class="font-mono">10<sup>2</sup></span> to <span class="font-mono">10<sup>9</sup></span> times baseline intensity—too huge for a linear scale!</p>
+            <p>Using <span class="font-mono font-bold text-teal-700">log<sub>10</sub></span> compresses factors of 10 into steps of +1:
+              <br /><span id="eq-math-proof" class="font-mono text-indigo-700 font-semibold">I<sub>2</sub> / I<sub>1</sub> = 10<sup>7.0 &minus; 5.0</sup> = 10<sup>2.0</sup> = 100</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-sm font-bold text-slate-800">Logarithmic Compression: Magnitude vs. Wave Amplitude</h4>
+            <span class="text-xs text-slate-500">Every +1 step = &times;10 amplitude</span>
+          </div>
+          <div class="relative w-full h-64 sm:h-72 rounded-xl bg-slate-50 border border-slate-200 overflow-hidden">
+            <canvas id="canvas-richter" class="block w-full h-full"></canvas>
+          </div>
+          <div class="grid grid-cols-3 gap-2.5 text-center text-xs">
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="font-bold text-slate-800">M = 3.0</div>
+              <div class="text-slate-500">Often felt, minor</div>
+              <div class="font-mono text-teal-700 font-semibold">1,000 I<sub>0</sub></div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="font-bold text-slate-800">M = 6.0</div>
+              <div class="text-slate-500">Strong damage</div>
+              <div class="font-mono text-teal-700 font-semibold">1,000,000 I<sub>0</sub></div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="font-bold text-slate-800">M = 9.0</div>
+              <div class="text-slate-500">Catastrophic</div>
+              <div class="font-mono text-teal-700 font-semibold">1,000,000,000 I<sub>0</sub></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPLICATION 4: CHEMISTRY pH SCALE -->
+      <div id="app-panel-ph" class="app-panel hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-5">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-100 text-teal-700">Chemistry &amp; Biology</span>
+            <h3 class="text-lg font-extrabold text-slate-900 mt-1.5">Acidity &amp; the pH Logarithmic Scale</h3>
+            <p class="text-xs text-slate-500 mt-1">Model: <span class="font-mono font-bold text-teal-700">pH = &minus;log<sub>10</sub>([H<sup>+</sup>])</span> &nbsp;&harr;&nbsp; <span class="font-mono font-bold text-indigo-700">[H<sup>+</sup>] = 10<sup>&minus;pH</sup></span></p>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex justify-between items-center text-xs font-bold">
+              <span>Adjust Solution pH</span>
+              <span id="ph-val-badge" class="font-mono text-base px-3 py-0.5 rounded-lg bg-emerald-100 text-emerald-800">pH = 7.0</span>
+            </div>
+            <input id="ph-slider" type="range" min="0" max="14" step="0.5" value="7" class="w-full slider-teal" />
+            <!-- pH Color Spectrum Bar -->
+            <div class="h-3 rounded-full w-full" style="background: linear-gradient(to right, #ef4444, #f97316, #eab308, #22c55e, #06b6d4, #3b82f6, #7c3aed);"></div>
+            <div class="flex justify-between text-[11px] font-bold text-slate-500">
+              <span>0 (Strong Acid)</span>
+              <span>7 (Neutral)</span>
+              <span>14 (Strong Base)</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-xl bg-indigo-50 border border-indigo-200 p-3.5">
+              <div class="text-[11px] font-bold uppercase text-indigo-700">Hydrogen Ion [H<sup>+</sup>]</div>
+              <div id="ph-conc" class="text-lg font-extrabold font-mono text-indigo-950 mt-0.5">1.0 &times; 10<sup>&minus;7</sup> M</div>
+            </div>
+            <div class="rounded-xl bg-teal-50 border border-teal-200 p-3.5">
+              <div class="text-[11px] font-bold uppercase text-teal-700">Everyday Match</div>
+              <div id="ph-substance" class="text-base font-extrabold text-teal-950 mt-0.5">Pure Water</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs text-slate-700 space-y-1.5">
+            <div class="font-extrabold text-slate-900">IB Exam Tip (Negative Log Reflection):</div>
+            <p>Because of the negative sign in <span class="font-mono">pH = &minus;log<sub>10</sub>([H<sup>+</sup>])</span>, the function is <strong>decreasing</strong>: a <em>lower</em> pH means a <em>higher</em> concentration of hydrogen ions!</p>
+            <p id="ph-water-compare" class="font-semibold text-indigo-700">Pure water is neutral (baseline concentration 10<sup>&minus;7</sup> mol/L).</p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-sm font-bold text-slate-800">Interactive Everyday Substances &amp; Powers of 10</h4>
+            <span class="text-xs text-slate-500">Click any substance to test!</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <button class="ph-preset p-3 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-left transition" data-ph="1">
+              <div class="text-xs font-extrabold text-rose-700">pH 1.0</div>
+              <div class="text-sm font-bold text-slate-900">Stomach Acid</div>
+              <div class="text-[11px] font-mono text-slate-600">10<sup>&minus;1</sup> M</div>
+            </button>
+            <button class="ph-preset p-3 rounded-xl border border-orange-200 bg-orange-50 hover:bg-orange-100 text-left transition" data-ph="2">
+              <div class="text-xs font-extrabold text-orange-700">pH 2.0</div>
+              <div class="text-sm font-bold text-slate-900">Lemon Juice</div>
+              <div class="text-[11px] font-mono text-slate-600">10<sup>&minus;2</sup> M</div>
+            </button>
+            <button class="ph-preset p-3 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-left transition" data-ph="5">
+              <div class="text-xs font-extrabold text-amber-700">pH 5.0</div>
+              <div class="text-sm font-bold text-slate-900">Black Coffee</div>
+              <div class="text-[11px] font-mono text-slate-600">10<sup>&minus;5</sup> M</div>
+            </button>
+            <button class="ph-preset p-3 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-left transition" data-ph="7">
+              <div class="text-xs font-extrabold text-emerald-700">pH 7.0</div>
+              <div class="text-sm font-bold text-slate-900">Pure Water</div>
+              <div class="text-[11px] font-mono text-slate-600">10<sup>&minus;7</sup> M</div>
+            </button>
+            <button class="ph-preset p-3 rounded-xl border border-cyan-200 bg-cyan-50 hover:bg-cyan-100 text-left transition" data-ph="8.5">
+              <div class="text-xs font-extrabold text-cyan-700">pH 8.5</div>
+              <div class="text-sm font-bold text-slate-900">Baking Soda</div>
+              <div class="text-[11px] font-mono text-slate-600">10<sup>&minus;8.5</sup> M</div>
+            </button>
+            <button class="ph-preset p-3 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-left transition" data-ph="10">
+              <div class="text-xs font-extrabold text-blue-700">pH 10.0</div>
+              <div class="text-sm font-bold text-slate-900">Hand Soap</div>
+              <div class="text-[11px] font-mono text-slate-600">10<sup>&minus;10</sup> M</div>
+            </button>
+            <button class="ph-preset p-3 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-left transition" data-ph="12.5">
+              <div class="text-xs font-extrabold text-indigo-700">pH 12.5</div>
+              <div class="text-sm font-bold text-slate-900">Bleach</div>
+              <div class="text-[11px] font-mono text-slate-600">10<sup>&minus;12.5</sup> M</div>
+            </button>
+            <button class="ph-preset p-3 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-left transition" data-ph="14">
+              <div class="text-xs font-extrabold text-purple-700">pH 14.0</div>
+              <div class="text-sm font-bold text-slate-900">Drain Cleaner</div>
+              <div class="text-[11px] font-mono text-slate-600">10<sup>&minus;14</sup> M</div>
+            </button>
+          </div>
+
+          <div class="relative w-full h-48 rounded-xl bg-slate-50 border border-slate-200 overflow-hidden">
+            <canvas id="canvas-ph" class="block w-full h-full"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t border-slate-200 bg-white py-4 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <span>IB DP Mathematics SL Interactive Investigation &amp; Practice Tool</span>
+      <span>Tip: Use the Graph Lab whenever you want to verify asymptotes or inverse reflections!</span>
+    </div>
+  </footer>
+
+  <!-- ==================== APPLICATION JAVASCRIPT ==================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* =====================================================================
+         1. NAVIGATION & TAB MANAGEMENT
+         ===================================================================== */
+      const navTabs = document.querySelectorAll('.nav-tab');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+      let currentTab = 'bridge';
+
+      function switchTab(tabId) {
+        currentTab = tabId;
+        navTabs.forEach(btn => {
+          const isActive = btn.dataset.tab === tabId;
+          btn.classList.toggle('bg-indigo-600', isActive);
+          btn.classList.toggle('text-white', isActive);
+          btn.classList.toggle('shadow-sm', isActive);
+          btn.classList.toggle('text-slate-600', !isActive);
+          btn.classList.toggle('hover:bg-slate-100', !isActive);
+        });
+
+        tabPanels.forEach(panel => {
+          panel.classList.toggle('hidden', panel.id !== `tab-${tabId}`);
+        });
+
+        // Trigger responsive canvas redraws when tabs become visible
+        if (tabId === 'graph') {
+          requestAnimationFrame(() => resizeAndDrawGraph());
+        } else if (tabId === 'applications') {
+          requestAnimationFrame(() => renderActiveApp());
+        }
+      }
+
+      navTabs.forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+
+      /* =====================================================================
+         2. TAB 1: ALGEBRAIC BRIDGE (EXPONENTIAL <-> LOGARITHMIC FORM)
+         ===================================================================== */
+      const bridgeState = {
+        baseRaw: '2',   // Can be 'e' or numeric string
+        baseVal: 2,
+        exp: 3
+      };
+
+      const elBridgeBaseDisp = document.getElementById('bridge-base-display');
+      const elBridgeExpDisp = document.getElementById('bridge-exp-display');
+      const elBridgeExpSlider = document.getElementById('bridge-exp-slider');
+      const elBridgeCustomBase = document.getElementById('bridge-custom-base');
+      const elBridgeBaseErr = document.getElementById('bridge-base-error');
+      const elExpEq = document.getElementById('bridge-exp-equation');
+      const elLogEq = document.getElementById('bridge-log-equation');
+      const elReadExp = document.getElementById('read-exp');
+      const elReadLog = document.getElementById('read-log');
+      const elRoleBase = document.getElementById('role-base');
+      const elRoleExp = document.getElementById('role-exp');
+      const elRoleVal = document.getElementById('role-val');
+
+      // Format numbers cleanly (showing nice fractions like 1/8 when exact!)
+      function formatExactOrDecimal(val, baseRaw, exp) {
+        if (baseRaw === 'e') {
+          if (exp === 0) return '1';
+          if (exp === 1) return 'e (≈ 2.72)';
+          return `${val.toFixed(2)}`;
+        }
+        if (Number.isInteger(val) && Math.abs(val) < 1e7) {
+          return String(val);
+        }
+        // Check neat unit fraction 1/k
+        if (val > 0 && val < 1) {
+          const recip = 1 / val;
+          if (Math.abs(recip - Math.round(recip)) < 1e-6 && Math.round(recip) <= 10000) {
+            return `1/${Math.round(recip)}`;
+          }
+        }
+        // Check clean decimal up to 4 places
+        const rounded = Math.round(val * 10000) / 10000;
+        if (Math.abs(val - rounded) < 1e-9) {
+          return String(rounded);
+        }
+        return val.toFixed(3);
+      }
+
+      function updateBridgeUI() {
+        const bStr = bridgeState.baseRaw === 'e' ? 'e' : (bridgeState.baseVal === 0.5 ? '½' : String(bridgeState.baseVal));
+        const y = bridgeState.exp;
+        const yStr = y < 0 ? `−${Math.abs(y)}` : String(y);
+        const xVal = Math.pow(bridgeState.baseVal, y);
+        const xStr = formatExactOrDecimal(xVal, bridgeState.baseRaw, y);
+        const xShort = bridgeState.baseRaw === 'e' && y !== 0 ? xVal.toFixed(2) : xStr;
+
+        elBridgeBaseDisp.textContent = bStr;
+        elBridgeExpDisp.textContent = yStr;
+        elRoleBase.textContent = bStr;
+        elRoleExp.textContent = yStr;
+        elRoleVal.textContent = xStr;
+
+        // Render Exponential Equation
+        const baseFormatted = bridgeState.baseVal === 0.5 ? '(½)' : bStr;
+        elExpEq.innerHTML = `<span class="text-amber-600">${baseFormatted}</span><sup class="text-indigo-600">${yStr}</sup> = <span class="text-teal-600">${xShort}</span>`;
+
+        // Render Logarithmic Equation (use ln for base e, log for base 10 optionally annotated)
+        if (bridgeState.baseRaw === 'e') {
+          elLogEq.innerHTML = `ln(<span class="text-teal-600">${xShort}</span>) = <span class="text-indigo-600">${yStr}</span>`;
+        } else {
+          elLogEq.innerHTML = `log<sub class="text-amber-600">${bStr}</sub>(<span class="text-teal-600">${xShort}</span>) = <span class="text-indigo-600">${yStr}</span>`;
+        }
+
+        elReadExp.textContent = `${bStr} raised to the power of ${yStr} equals ${xShort}`;
+        elReadLog.textContent = `The exponent needed on base ${bStr} to produce ${xShort} is ${yStr}`;
+
+        // Sync active chip styling
+        document.querySelectorAll('.base-chip').forEach(chip => {
+          const active = chip.dataset.base === bridgeState.baseRaw;
+          chip.classList.toggle('border-2', active);
+          chip.classList.toggle('border-amber-500', active);
+          chip.classList.toggle('bg-amber-50', active);
+          chip.classList.toggle('text-amber-800', active);
+          chip.classList.toggle('border', !active);
+          chip.classList.toggle('border-slate-200', !active);
+        });
+      }
+
+      document.querySelectorAll('.base-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const raw = chip.dataset.base;
+          bridgeState.baseRaw = raw;
+          bridgeState.baseVal = raw === 'e' ? Math.E : parseFloat(raw);
+          elBridgeBaseErr.classList.add('hidden');
+          if (raw !== 'e') elBridgeCustomBase.value = bridgeState.baseVal;
+          updateBridgeUI();
+        });
+      });
+
+      elBridgeCustomBase.addEventListener('input', () => {
+        const val = parseFloat(elBridgeCustomBase.value);
+        if (isNaN(val) || val <= 0 || Math.abs(val - 1) < 1e-6) {
+          elBridgeBaseErr.classList.remove('hidden');
+          return;
+        }
+        elBridgeBaseErr.classList.add('hidden');
+        bridgeState.baseRaw = String(val);
+        bridgeState.baseVal = val;
+        updateBridgeUI();
+      });
+
+      elBridgeExpSlider.addEventListener('input', () => {
+        bridgeState.exp = parseFloat(elBridgeExpSlider.value);
+        updateBridgeUI();
+      });
+
+      document.querySelectorAll('.bridge-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const b = btn.dataset.b;
+          const y = parseFloat(btn.dataset.y);
+          bridgeState.baseRaw = b;
+          bridgeState.baseVal = b === 'e' ? Math.E : parseFloat(b);
+          bridgeState.exp = y;
+          elBridgeExpSlider.value = y;
+          if (b !== 'e') elBridgeCustomBase.value = bridgeState.baseVal;
+          elBridgeBaseErr.classList.add('hidden');
+          updateBridgeUI();
+        });
+      });
+
+      updateBridgeUI();
+
+
+      /* =====================================================================
+         3. TAB 2: INTERACTIVE GRAPH, DOMAIN & RANGE LAB
+         ===================================================================== */
+      const graphCanvas = document.getElementById('inverse-canvas');
+      const graphWrapper = document.getElementById('graph-canvas-wrapper');
+      const gCtx = graphCanvas.getContext('2d');
+
+      const graphState = {
+        a: 2.0,
+        h: 0,
+        k: 0,
+        x0: 1.0,
+        showMirror: true,
+        showAsymptotes: true,
+        showReflectionSeg: true,
+        viewMin: -6,
+        viewMax: 6,
+        isDragging: false
+      };
+
+      const elGraphASlider = document.getElementById('graph-a-slider');
+      const elGraphAVal = document.getElementById('graph-a-val');
+      const elGraphANote = document.getElementById('graph-a-note');
+      const elGraphX0Slider = document.getElementById('graph-x0-slider');
+      const elGraphX0Val = document.getElementById('graph-x0-val');
+      const elGraphHSlider = document.getElementById('graph-h-slider');
+      const elGraphHVal = document.getElementById('graph-h-val');
+      const elGraphKSlider = document.getElementById('graph-k-slider');
+      const elGraphKVal = document.getElementById('graph-k-val');
+
+      function expFn(x) {
+        return Math.pow(graphState.a, x - graphState.h) + graphState.k;
+      }
+
+      function logFn(x) {
+        if (x <= graphState.k) return NaN;
+        return Math.log(x - graphState.k) / Math.log(graphState.a) + graphState.h;
+      }
+
+      function fmtNum(n) {
+        if (Math.abs(n) < 1e-9) return '0';
+        return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.00$/, '');
+      }
+
+      function formatShiftTerm(varName, shift) {
+        if (Math.abs(shift) < 1e-9) return varName;
+        return shift > 0 ? `${varName} − ${fmtNum(shift)}` : `${varName} + ${fmtNum(Math.abs(shift))}`;
+      }
+
+      function formatOuterShift(val) {
+        if (Math.abs(val) < 1e-9) return '';
+        return val > 0 ? ` + ${fmtNum(val)}` : ` − ${fmtNum(Math.abs(val))}`;
+      }
+
+      function updateGraphMetadata() {
+        const { a, h, k, x0 } = graphState;
+        const isE = Math.abs(a - Math.E) < 0.03;
+        const aLabel = isE ? 'e' : fmtNum(a);
+
+        elGraphAVal.textContent = isE ? 'e ≈ 2.72' : a.toFixed(2);
+        elGraphX0Val.textContent = x0.toFixed(2);
+        elGraphHVal.textContent = fmtNum(h);
+        elGraphKVal.textContent = fmtNum(k);
+
+        if (a > 1) {
+          elGraphANote.textContent = 'Growth case (a > 1): both functions are strictly increasing.';
+        } else {
+          elGraphANote.textContent = 'Decay case (0 < a < 1): both functions are strictly decreasing!';
+        }
+
+        // Update Equation Displays
+        const expPower = formatShiftTerm('x', h);
+        const expOuter = formatOuterShift(k);
+        document.getElementById('eq-exp-display').innerHTML = `f(x) = ${aLabel}<sup>${expPower}</sup>${expOuter}`;
+
+        const logArg = formatShiftTerm('x', k);
+        const logOuter = formatOuterShift(h);
+        if (isE) {
+          document.getElementById('eq-log-display').innerHTML = `f<sup>&minus;1</sup>(x) = ln(${logArg})${logOuter}`;
+        } else {
+          document.getElementById('eq-log-display').innerHTML = `f<sup>&minus;1</sup>(x) = log<sub>${aLabel}</sub>(${logArg})${logOuter}`;
+        }
+
+        // Update Domain, Range, Asymptotes, Key Points
+        document.getElementById('prop-exp-dom').innerHTML = 'x &isin; &Ropf;';
+        document.getElementById('prop-log-dom').innerHTML = `x &gt; ${fmtNum(k)}`;
+
+        document.getElementById('prop-exp-ran').innerHTML = `y &gt; ${fmtNum(k)}`;
+        document.getElementById('prop-log-ran').innerHTML = 'y &isin; &Ropf;';
+
+        document.getElementById('prop-exp-asy').textContent = `y = ${fmtNum(k)} (Horiz.)`;
+        document.getElementById('prop-log-asy').textContent = `x = ${fmtNum(k)} (Vert.)`;
+
+        // Anchor point when exponent is 0: (h, 1+k) <-> (1+k, h)
+        const keyX = fmtNum(h);
+        const keyY = fmtNum(1 + k);
+        document.getElementById('prop-exp-pt').textContent = `(${keyX}, ${keyY})`;
+        document.getElementById('prop-log-pt').textContent = `(${keyY}, ${keyX})`;
+
+        const mono = a > 1 ? 'Strictly Increasing' : 'Strictly Decreasing';
+        document.getElementById('prop-exp-mono').textContent = mono;
+        document.getElementById('prop-log-mono').textContent = mono;
+
+        // Update Floating Coordinate Pills
+        const y0 = expFn(x0);
+        document.getElementById('coord-exp-pill').textContent = `P on f: (${x0.toFixed(2)}, ${y0.toFixed(2)})`;
+        document.getElementById('coord-log-pill').textContent = `P′ on f⁻¹: (${y0.toFixed(2)}, ${x0.toFixed(2)})`;
+      }
+
+      function drawGraphCanvas() {
+        try {
+          const rect = graphWrapper.getBoundingClientRect();
+          if (rect.width === 0 || rect.height === 0) return;
+
+          const dpr = window.devicePixelRatio || 1;
+          graphCanvas.width = Math.round(rect.width * dpr);
+          graphCanvas.height = Math.round(rect.height * dpr);
+          gCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          const W = rect.width;
+          const H = rect.height;
+          const min = graphState.viewMin;
+          const max = graphState.viewMax;
+          const span = max - min;
+
+          const toX = x => ((x - min) / span) * W;
+          const toY = y => H - ((y - min) / span) * H;
+
+          // Clear background
+          gCtx.fillStyle = '#f8fafc';
+          gCtx.fillRect(0, 0, W, H);
+
+          // Draw Gridlines
+          gCtx.strokeStyle = '#e2e8f0';
+          gCtx.lineWidth = 1;
+          gCtx.beginPath();
+          for (let i = Math.ceil(min); i <= Math.floor(max); i++) {
+            const px = toX(i);
+            const py = toY(i);
+            gCtx.moveTo(px, 0);
+            gCtx.lineTo(px, H);
+            gCtx.moveTo(0, py);
+            gCtx.lineTo(W, py);
+          }
+          gCtx.stroke();
+
+          // Draw Axes
+          gCtx.strokeStyle = '#64748b';
+          gCtx.lineWidth = 1.75;
+          gCtx.beginPath();
+          gCtx.moveTo(0, toY(0));
+          gCtx.lineTo(W, toY(0));
+          gCtx.moveTo(toX(0), 0);
+          gCtx.lineTo(toX(0), H);
+          gCtx.stroke();
+
+          // Axis labels
+          gCtx.fillStyle = '#64748b';
+          gCtx.font = '600 11px Inter, sans-serif';
+          gCtx.textAlign = 'center';
+          gCtx.textBaseline = 'top';
+          for (let i = Math.ceil(min); i <= Math.floor(max); i++) {
+            if (i === 0 || i % 2 !== 0) continue;
+            gCtx.fillText(String(i), toX(i), toY(0) + 5);
+          }
+          gCtx.textAlign = 'right';
+          gCtx.textBaseline = 'middle';
+          for (let i = Math.ceil(min); i <= Math.floor(max); i++) {
+            if (i === 0 || i % 2 !== 0) continue;
+            gCtx.fillText(String(i), toX(0) - 6, toY(i));
+          }
+
+          // Draw Asymptotes (y = k and x = k)
+          if (graphState.showAsymptotes) {
+            gCtx.save();
+            gCtx.strokeStyle = '#f43f5e';
+            gCtx.lineWidth = 1.6;
+            gCtx.setLineDash([6, 5]);
+            gCtx.beginPath();
+            // Horizontal asymptote y = k
+            const hy = toY(graphState.k);
+            gCtx.moveTo(0, hy);
+            gCtx.lineTo(W, hy);
+            // Vertical asymptote x = k
+            const vx = toX(graphState.k);
+            gCtx.moveTo(vx, 0);
+            gCtx.lineTo(vx, H);
+            gCtx.stroke();
+
+            gCtx.fillStyle = '#e11d48';
+            gCtx.font = '700 11px JetBrains Mono, monospace';
+            gCtx.textAlign = 'left';
+            gCtx.textBaseline = 'bottom';
+            gCtx.fillText(`y = ${fmtNum(graphState.k)}`, 8, hy - 4);
+            gCtx.textAlign = 'left';
+            gCtx.textBaseline = 'top';
+            gCtx.fillText(`x = ${fmtNum(graphState.k)}`, vx + 6, 8);
+            gCtx.restore();
+          }
+
+          // Draw Mirror Line y = x
+          if (graphState.showMirror) {
+            gCtx.save();
+            gCtx.strokeStyle = '#f59e0b';
+            gCtx.lineWidth = 2;
+            gCtx.setLineDash([7, 6]);
+            gCtx.beginPath();
+            gCtx.moveTo(toX(min), toY(min));
+            gCtx.lineTo(toX(max), toY(max));
+            gCtx.stroke();
+            gCtx.fillStyle = '#d97706';
+            gCtx.font = '700 12px JetBrains Mono, monospace';
+            gCtx.textAlign = 'right';
+            gCtx.textBaseline = 'bottom';
+            gCtx.fillText('y = x', toX(max - 0.35), toY(max - 0.6));
+            gCtx.restore();
+          }
+
+          // Draw Exponential Curve f(x)
+          gCtx.strokeStyle = '#4f46e5';
+          gCtx.lineWidth = 3;
+          gCtx.beginPath();
+          let started = false;
+          const samples = 400;
+          for (let i = 0; i <= samples; i++) {
+            const x = min + (i / samples) * span;
+            const y = expFn(x);
+            if (isFinite(y) && y >= min - 4 && y <= max + 4) {
+              const px = toX(x);
+              const py = toY(y);
+              if (!started) {
+                gCtx.moveTo(px, py);
+                started = true;
+              } else {
+                gCtx.lineTo(px, py);
+              }
+            } else {
+              started = false;
+            }
+          }
+          gCtx.stroke();
+
+          // Draw Logarithmic Curve f^-1(x)
+          gCtx.strokeStyle = '#0d9488';
+          gCtx.lineWidth = 3;
+          gCtx.beginPath();
+          started = false;
+          for (let i = 0; i <= samples; i++) {
+            // Sample parametrically using t = y so vertical steepness near asymptote stays smooth!
+            const y = min + (i / samples) * span;
+            const x = Math.pow(graphState.a, y - graphState.h) + graphState.k;
+            if (isFinite(x) && x >= min - 4 && x <= max + 4) {
+              const px = toX(x);
+              const py = toY(y);
+              if (!started) {
+                gCtx.moveTo(px, py);
+                started = true;
+              } else {
+                gCtx.lineTo(px, py);
+              }
+            } else {
+              started = false;
+            }
+          }
+          gCtx.stroke();
+
+          // Draw Interactive Reflection Points P(x0, y0) & P'(y0, x0)
+          const px0 = graphState.x0;
+          const py0 = expFn(px0);
+
+          if (graphState.showReflectionSeg && isFinite(py0)) {
+            gCtx.save();
+            gCtx.strokeStyle = '#6366f1';
+            gCtx.lineWidth = 1.6;
+            gCtx.setLineDash([4, 4]);
+            gCtx.beginPath();
+            gCtx.moveTo(toX(px0), toY(py0));
+            gCtx.lineTo(toX(py0), toY(px0));
+            gCtx.stroke();
+
+            // Midpoint dot on y = x showing perpendicular bisector
+            const mid = (px0 + py0) / 2;
+            gCtx.fillStyle = '#f59e0b';
+            gCtx.beginPath();
+            gCtx.arc(toX(mid), toY(mid), 4, 0, Math.PI * 2);
+            gCtx.fill();
+            gCtx.restore();
+          }
+
+          // Point P on Exp
+          const sx1 = toX(px0);
+          const sy1 = toY(py0);
+          gCtx.fillStyle = '#4f46e5';
+          gCtx.strokeStyle = '#ffffff';
+          gCtx.lineWidth = 2.5;
+          gCtx.beginPath();
+          gCtx.arc(sx1, sy1, 7.5, 0, Math.PI * 2);
+          gCtx.fill();
+          gCtx.stroke();
+
+          // Point P' on Log
+          const sx2 = toX(py0);
+          const sy2 = toY(px0);
+          gCtx.fillStyle = '#0d9488';
+          gCtx.strokeStyle = '#ffffff';
+          gCtx.lineWidth = 2.5;
+          gCtx.beginPath();
+          gCtx.arc(sx2, sy2, 7.5, 0, Math.PI * 2);
+          gCtx.fill();
+          gCtx.stroke();
+        } catch (err) {
+          console.error('Graph rendering error:', err);
+        }
+      }
+
+      function resizeAndDrawGraph() {
+        updateGraphMetadata();
+        drawGraphCanvas();
+      }
+
+      // Guard against a == 1 when dragging base slider
+      elGraphASlider.addEventListener('input', () => {
+        let val = parseFloat(elGraphASlider.value);
+        if (Math.abs(val - 1) < 0.08) {
+          val = val >= 1 ? 1.1 : 0.9;
+          elGraphASlider.value = val;
+        }
+        graphState.a = val;
+        resizeAndDrawGraph();
+      });
+
+      elGraphX0Slider.addEventListener('input', () => {
+        graphState.x0 = parseFloat(elGraphX0Slider.value);
+        resizeAndDrawGraph();
+      });
+
+      elGraphHSlider.addEventListener('input', () => {
+        graphState.h = parseFloat(elGraphHSlider.value);
+        resizeAndDrawGraph();
+      });
+
+      elGraphKSlider.addEventListener('input', () => {
+        graphState.k = parseFloat(elGraphKSlider.value);
+        resizeAndDrawGraph();
+      });
+
+      document.querySelectorAll('.graph-base-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const val = parseFloat(btn.dataset.a);
+          graphState.a = val;
+          elGraphASlider.value = val;
+          document.querySelectorAll('.graph-base-preset').forEach(b => {
+            const active = b === btn;
+            b.classList.toggle('bg-indigo-100', active);
+            b.classList.toggle('text-indigo-700', active);
+            b.classList.toggle('bg-slate-100', !active);
+            b.classList.toggle('text-slate-700', !active);
+          });
+          resizeAndDrawGraph();
+        });
+      });
+
+      document.getElementById('toggle-mirror').addEventListener('change', e => {
+        graphState.showMirror = e.target.checked;
+        drawGraphCanvas();
+      });
+      document.getElementById('toggle-asymptotes').addEventListener('change', e => {
+        graphState.showAsymptotes = e.target.checked;
+        drawGraphCanvas();
+      });
+      document.getElementById('toggle-reflection-seg').addEventListener('change', e => {
+        graphState.showReflectionSeg = e.target.checked;
+        drawGraphCanvas();
+      });
+
+      document.getElementById('toggle-shifts-btn').addEventListener('click', () => {
+        const panel = document.getElementById('shifts-panel');
+        const chev = document.getElementById('shifts-chevron');
+        panel.classList.toggle('hidden');
+        chev.style.transform = panel.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+
+      document.getElementById('btn-reset-graph').addEventListener('click', () => {
+        graphState.a = 2;
+        graphState.h = 0;
+        graphState.k = 0;
+        graphState.x0 = 1;
+        elGraphASlider.value = 2;
+        elGraphHSlider.value = 0;
+        elGraphKSlider.value = 0;
+        elGraphX0Slider.value = 1;
+        resizeAndDrawGraph();
+      });
+
+      // Direct Pointer/Touch Dragging on Graph Canvas
+      function updatePointFromPointer(clientX) {
+        const rect = graphCanvas.getBoundingClientRect();
+        const relX = (clientX - rect.left) / rect.width;
+        const mathX = graphState.viewMin + relX * (graphState.viewMax - graphState.viewMin);
+        const clamped = Math.max(-4, Math.min(3.5, Math.round(mathX * 20) / 20));
+        graphState.x0 = clamped;
+        elGraphX0Slider.value = clamped;
+        resizeAndDrawGraph();
+      }
+
+      graphCanvas.addEventListener('mousedown', e => {
+        graphState.isDragging = true;
+        updatePointFromPointer(e.clientX);
+      });
+      window.addEventListener('mousemove', e => {
+        if (graphState.isDragging) updatePointFromPointer(e.clientX);
+      });
+      window.addEventListener('mouseup', () => {
+        graphState.isDragging = false;
+      });
+      graphCanvas.addEventListener('touchstart', e => {
+        if (e.touches.length > 0) {
+          graphState.isDragging = true;
+          updatePointFromPointer(e.touches[0].clientX);
+        }
+      }, { passive: true });
+      graphCanvas.addEventListener('touchmove', e => {
+        if (graphState.isDragging && e.touches.length > 0) {
+          updatePointFromPointer(e.touches[0].clientX);
+        }
+      }, { passive: true });
+      window.addEventListener('touchend', () => {
+        graphState.isDragging = false;
+      });
+
+
+      /* =====================================================================
+         4. TAB 3: LEVEL-WISE ADAPTIVE PRACTICE ENGINE
+         ===================================================================== */
+      const TARGET_CORRECT = 5;
+
+      // Utility: shuffle array copy
+      function shuffle(arr) {
+        const copy = arr.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      /* -------------------------------------------------------------------
+         Question Generators (Rich, mathematically verified IB DP templates)
+         Each generator returns:
+           { idKey, topic, prompt, options: [4 unique HTML strings], correctIndex, hint, explanation }
+         ------------------------------------------------------------------- */
+
+      // --- EASY LEVEL GENERATORS ---
+      const easyGenerators = [
+        // Template E1: Convert Exponential Form to Logarithmic Form
+        () => {
+          const pairs = [
+            { b: 2, y: 5, x: 32 }, { b: 3, y: 4, x: 81 }, { b: 5, y: 3, x: 125 },
+            { b: 4, y: 3, x: 64 }, { b: 2, y: 6, x: 64 }, { b: 6, y: 2, x: 36 },
+            { b: 7, y: 2, x: 49 }, { b: 10, y: 4, x: 10000 }, { b: 3, y: 3, x: 27 }
+          ];
+          const { b, y, x } = pick(pairs);
+          const correct = `log<sub>${b}</sub>(${x}) = ${y}`;
+          const distractors = [
+            `log<sub>${b}</sub>(${y}) = ${x}`,
+            `log<sub>${y}</sub>(${x}) = ${b}`,
+            `log<sub>${x}</sub>(${b}) = ${y}`
+          ];
+          const opts = shuffle([correct, ...distractors]);
+          return {
+            idKey: `e-exp2log-${b}-${y}`,
+            topic: 'Exponential → Log Form',
+            prompt: `Rewrite the exponential equation <span class="font-mono text-indigo-700">${b}<sup>${y}</sup> = ${x}</span> in equivalent logarithmic form.`,
+            options: opts,
+            correctIndex: opts.indexOf(correct),
+            hint: `Remember: b<sup>y</sup> = x is equivalent to log<sub>b</sub>(x) = y. The base (${b}) stays the base, and the exponent (${y}) stands alone!`,
+            explanation: `In <span class="font-mono">${b}<sup>${y}</sup> = ${x}</span>, the base is <strong>${b}</strong>, the exponent is <strong>${y}</strong>, and the result is <strong>${x}</strong>. Writing this as a logarithm gives <strong>log<sub>${b}</sub>(${x}) = ${y}</strong>.`
+          };
+        },
+
+        // Template E2: Convert Logarithmic Form to Exponential Form
+        () => {
+          const pairs = [
+            { b: 2, y: 4, x: 16 }, { b: 3, y: 5, x: 243 }, { b: 5, y: 2, x: 25 },
+            { b: 4, y: 2, x: 16 }, { b: 10, y: 3, x: 1000 }, { b: 2, y: 7, x: 128 },
+            { b: 8, y: 2, x: 64 }, { b: 6, y: 3, x: 216 }
+          ];
+          const { b, y, x } = pick(pairs);
+          const correct = `${b}<sup>${y}</sup> = ${x}`;
+          const distractors = [
+            `${y}<sup>${b}</sup> = ${x}`,
+            `${b}<sup>${x}</sup> = ${y}`,
+            `${x}<sup>${y}</sup> = ${b}`
+          ];
+          const opts = shuffle([correct, ...distractors]);
+          return {
+            idKey: `e-log2exp-${b}-${y}`,
+            topic: 'Log → Exponential Form',
+            prompt: `Which exponential equation is equivalent to <span class="font-mono text-teal-700">log<sub>${b}</sub>(${x}) = ${y}</span>?`,
+            options: opts,
+            correctIndex: opts.indexOf(correct),
+            hint: `Use the base ${b} as the base of the power, and raise it to the output of the logarithm (${y}).`,
+            explanation: `By definition, <span class="font-mono">log<sub>b</sub>(x) = y &harr; b<sup>y</sup> = x</span>. Thus base <strong>${b}</strong> raised to exponent <strong>${y}</strong> equals <strong>${x}</strong>: <strong>${b}<sup>${y}</sup> = ${x}</strong>.`
+          };
+        },
+
+        // Template E3: Evaluate Basic Exact Logarithm
+        () => {
+          const items = [
+            { b: 2, x: 8, ans: 3 }, { b: 2, x: 32, ans: 5 }, { b: 3, x: 27, ans: 3 },
+            { b: 3, x: 81, ans: 4 }, { b: 5, x: 125, ans: 3 }, { b: 4, x: 16, ans: 2 },
+            { b: 7, x: 1, ans: 0 }, { b: 9, x: 9, ans: 1 }, { b: 10, x: 1000, ans: 3 },
+            { b: 6, x: 1, ans: 0 }, { b: 2, x: 64, ans: 6 }
+          ];
+          const { b, x, ans } = pick(items);
+          const correct = String(ans);
+          const candidatePool = [ans + 1, ans + 2, Math.max(0, ans - 1), b, x / b].map(v => String(Math.round(v)));
+          const uniqueDist = [...new Set(candidatePool.filter(v => v !== correct))].slice(0, 3);
+          while (uniqueDist.length < 3) {
+            const extra = String(ans + uniqueDist.length + 3);
+            if (extra !== correct && !uniqueDist.includes(extra)) uniqueDist.push(extra);
+          }
+          const opts = shuffle([correct, ...uniqueDist]);
+          return {
+            idKey: `e-eval-${b}-${x}`,
+            topic: 'Evaluating Logarithms',
+            prompt: `Evaluate the exact value of <span class="font-mono text-teal-700">log<sub>${b}</sub>(${x})</span>.`,
+            options: opts,
+            correctIndex: opts.indexOf(correct),
+            hint: `Ask yourself: "${b} raised to what power equals ${x}?"`,
+            explanation: `Let <span class="font-mono">y = log<sub>${b}</sub>(${x})</span>. In exponential form, <span class="font-mono">${b}<sup>y</sup> = ${x}</span>. Since <span class="font-mono">${b}<sup>${ans}</sup> = ${x}</span>, the answer is <strong>${ans}</strong>.`
+          };
+        },
+
+        // Template E4: Domain, Range, Asymptotes & Intercepts of Basic Exp/Log
+        () => {
+          const bank = [
+            {
+              key: 'dom-log',
+              topic: 'Domain & Range',
+              prompt: `What is the <strong>domain</strong> of the logarithmic function <span class="font-mono text-teal-700">g(x) = log<sub>3</sub>(x)</span>?`,
+              correct: 'x &gt; 0',
+              distractors: ['x &isin; &Ropf;', 'x &ge; 0', 'x &lt; 0'],
+              hint: `Can you take the logarithm of zero or a negative number? Remember the range of 3<sup>x</sup>!`,
+              explanation: `Because <span class="font-mono">3<sup>y</sup></span> is always strictly positive, the input <span class="font-mono">x</span> to its inverse <span class="font-mono">log<sub>3</sub>(x)</span> must satisfy <strong>x &gt; 0</strong>.`
+            },
+            {
+              key: 'ran-exp',
+              topic: 'Domain & Range',
+              prompt: `What is the <strong>range</strong> of the exponential function <span class="font-mono text-indigo-700">f(x) = 5<sup>x</sup></span>?`,
+              correct: 'y &gt; 0',
+              distractors: ['y &isin; &Ropf;', 'y &ge; 0', 'y &ge; 1'],
+              hint: `As x becomes very negative, what value does 5<sup>x</sup> approach without ever touching?`,
+              explanation: `A positive base raised to any real power is always strictly greater than zero. Therefore the range is <strong>y &gt; 0</strong> (with horizontal asymptote <span class="font-mono">y = 0</span>).`
+            },
+            {
+              key: 'asy-log',
+              topic: 'Graph Asymptotes',
+              prompt: `What is the equation of the asymptote of <span class="font-mono text-teal-700">y = log<sub>2</sub>(x)</span>?`,
+              correct: 'x = 0 (vertical asymptote)',
+              distractors: ['y = 0 (horizontal asymptote)', 'x = 1 (vertical asymptote)', 'y = x (oblique asymptote)'],
+              hint: `The exponential graph y = 2<sup>x</sup> has horizontal asymptote y = 0. Swap x and y for the inverse!`,
+              explanation: `Reflecting the horizontal asymptote <span class="font-mono">y = 0</span> of <span class="font-mono">y = 2<sup>x</sup></span> across <span class="font-mono">y = x</span> gives the vertical asymptote <strong>x = 0</strong> (the y-axis).`
+            },
+            {
+              key: 'int-log',
+              topic: 'Graph Intercepts',
+              prompt: `Every basic logarithmic function <span class="font-mono text-teal-700">y = log<sub>a</sub>(x)</span> (for a &gt; 0, a &ne; 1) passes through which fixed point?`,
+              correct: '(1, 0)',
+              distractors: ['(0, 1)', '(0, 0)', '(a, 0)'],
+              hint: `Since a<sup>0</sup> = 1 for every valid base a, what is log<sub>a</sub>(1)?`,
+              explanation: `Because <span class="font-mono">a<sup>0</sup> = 1</span>, we always have <span class="font-mono">log<sub>a</sub>(1) = 0</span>. This means the x-intercept is always <strong>(1, 0)</strong>, the reflection of <span class="font-mono">(0, 1)</span>.`
+            },
+            {
+              key: 'reflect-line',
+              topic: 'Inverse Symmetry',
+              prompt: `The graph of <span class="font-mono text-teal-700">y = ln(x)</span> is obtained by reflecting the graph of <span class="font-mono text-indigo-700">y = e<sup>x</sup></span> in which line?`,
+              correct: 'y = x',
+              distractors: ['y = 0 (the x-axis)', 'x = 0 (the y-axis)', 'y = &minus;x'],
+              hint: `How are the graphs of any function f(x) and its inverse f<sup>&minus;1</sup>(x) geometrically related?`,
+              explanation: `Swapping coordinates <span class="font-mono">(x, y) &rarr; (y, x)</span> corresponds geometrically to a reflection across the line <strong>y = x</strong>.`
+            },
+            {
+              key: 'ran-log',
+              topic: 'Domain & Range',
+              prompt: `What is the <strong>range</strong> of <span class="font-mono text-teal-700">f(x) = ln(x)</span>?`,
+              correct: 'y &isin; &Ropf;',
+              distractors: ['y &gt; 0', 'y &ge; 0', 'y &gt; 1'],
+              hint: `Remember that the range of f<sup>&minus;1</sup> equals the domain of f(x) = e<sup>x</sup>!`,
+              explanation: `Since the domain of <span class="font-mono">e<sup>x</sup></span> is all real numbers, the range of its inverse <span class="font-mono">ln(x)</span> is <strong>y &isin; &Ropf;</strong> (all real numbers).`
+            }
+          ];
+          const item = pick(bank);
+          const opts = shuffle([item.correct, ...item.distractors]);
+          return {
+            idKey: `e-prop-${item.key}`,
+            topic: item.topic,
+            prompt: item.prompt,
+            options: opts,
+            correctIndex: opts.indexOf(item.correct),
+            hint: item.hint,
+            explanation: item.explanation
+          };
+        },
+
+        // Template E5: Inverse Point Reflection
+        () => {
+          const pts = [
+            { b: 2, p: 3, q: 8 }, { b: 3, p: 2, q: 9 }, { b: 2, p: 4, q: 16 },
+            { b: 5, p: 2, q: 25 }, { b: 4, p: 3, q: 64 }
+          ];
+          const { b, p, q } = pick(pts);
+          const correct = `(${q}, ${p})`;
+          const distractors = [`(${p}, &minus;${q})`, `(&minus;${p}, ${q})`, `(1/${q}, ${p})`];
+          const opts = shuffle([correct, ...distractors]);
+          return {
+            idKey: `e-pt-${b}-${p}`,
+            topic: 'Inverse Points',
+            prompt: `The point <span class="font-mono text-indigo-700">(${p}, ${q})</span> lies on the graph of <span class="font-mono">y = ${b}<sup>x</sup></span>. Which point must lie on <span class="font-mono text-teal-700">y = log<sub>${b}</sub>(x)</span>?`,
+            options: opts,
+            correctIndex: opts.indexOf(correct),
+            hint: `For inverse functions, input and output swap: (x, y) on f becomes (y, x) on f<sup>&minus;1</sup>.`,
+            explanation: `Since <span class="font-mono">${b}<sup>${p}</sup> = ${q}</span>, taking the logarithm gives <span class="font-mono">log<sub>${b}</sub>(${q}) = ${p}</span>. Thus the reflected point is <strong>(${q}, ${p})</strong>.`
+          };
+        }
+      ];
+
+      // --- MEDIUM LEVEL GENERATORS ---
+      const mediumGenerators = [
+        // Template M1: Negative & Fractional Logarithms
+        () => {
+          const items = [
+            { expr: 'log<sub>2</sub>(1/8)', ans: '&minus;3', d: ['3', '&minus;1/3', '1/3'], step: '1/8 = 2<sup>&minus;3</sup>, so log<sub>2</sub>(2<sup>&minus;3</sup>) = &minus;3.' },
+            { expr: 'log<sub>3</sub>(1/9)', ans: '&minus;2', d: ['2', '&minus;1/2', '1/2'], step: '1/9 = 3<sup>&minus;2</sup>, so log<sub>3</sub>(3<sup>&minus;2</sup>) = &minus;2.' },
+            { expr: 'log<sub>5</sub>(1/125)', ans: '&minus;3', d: ['3', '&minus;1/3', '&minus;25'], step: '1/125 = 5<sup>&minus;3</sup>, so the logarithm equals &minus;3.' },
+            { expr: 'log<sub>10</sub>(0.001)', ans: '&minus;3', d: ['3', '&minus;2', '0.001'], step: '0.001 = 10<sup>&minus;3</sup>, so log<sub>10</sub>(10<sup>&minus;3</sup>) = &minus;3.' },
+            { expr: 'log<sub>9</sub>(3)', ans: '1/2', d: ['2', '&minus;2', '&minus;1/2'], step: 'Since &radic;9 = 9<sup>1/2</sup> = 3, we have log<sub>9</sub>(3) = 1/2.' },
+            { expr: 'log<sub>8</sub>(2)', ans: '1/3', d: ['3', '&minus;3', '1/4'], step: 'Since 8<sup>1/3</sup> = 2, we have log<sub>8</sub>(2) = 1/3.' },
+            { expr: 'log<sub>16</sub>(4)', ans: '1/2', d: ['2', '4', '&minus;1/2'], step: 'Since 16<sup>1/2</sup> = 4, we have log<sub>16</sub>(4) = 1/2.' },
+            { expr: 'ln(1 / e<sup>4</sup>)', ans: '&minus;4', d: ['4', '1/4', '&minus;1/4'], step: 'Rewrite 1/e<sup>4</sup> as e<sup>&minus;4</sup>. Then ln(e<sup>&minus;4</sup>) = &minus;4.' },
+            { expr: 'log<sub>4</sub>(8)', ans: '3/2', d: ['2', '2/3', '3'], step: '4<sup>y</sup> = 8 &rArr; (2<sup>2</sup>)<sup>y</sup> = 2<sup>3</sup> &rArr; 2y = 3 &rArr; y = 3/2.' }
+          ];
+          const item = pick(items);
+          const opts = shuffle([item.ans, ...item.d]);
+          return {
+            idKey: `m-negfrac-${item.expr}`,
+            topic: 'Negative & Fractional Logs',
+            prompt: `Find the exact value of <span class="font-mono text-teal-700">${item.expr}</span>.`,
+            options: opts,
+            correctIndex: opts.indexOf(item.ans),
+            hint: `Express the argument inside the log as a power of the base (remember a<sup>&minus;n</sup> = 1/a<sup>n</sup> and a<sup>1/n</sup> = <sup>n</sup>&radic;a).`,
+            explanation: item.step
+          };
+        },
+
+        // Template M2: Shifted Exponential/Log Domain, Range & Asymptotes
+        () => {
+          const variants = [
+            () => {
+              const h = pick([1, 2, 3, 4]);
+              const k = pick([2, 3, 5, -2, -4]);
+              const kStr = k > 0 ? `+ ${k}` : `&minus; ${Math.abs(k)}`;
+              const kPlain = k > 0 ? `${k}` : `&minus;${Math.abs(k)}`;
+              const correct = `y = ${kPlain} and y &gt; ${kPlain}`;
+              const opts = shuffle([
+                correct,
+                `y = ${h} and y &gt; ${h}`,
+                `x = ${kPlain} and x &gt; ${kPlain}`,
+                `y = 0 and y &gt; 0`
+              ]);
+              return {
+                idKey: `m-shift-exp-${h}-${k}`,
+                topic: 'Transformed Exp Graph',
+                prompt: `For <span class="font-mono text-indigo-700">f(x) = 2<sup>x &minus; ${h}</sup> ${kStr}</span>, state the horizontal asymptote and the range.`,
+                options: opts,
+                correctIndex: opts.indexOf(correct),
+                hint: `A horizontal shift (${h}) does NOT change a horizontal asymptote. Only the vertical shift (${kPlain}) moves it!`,
+                explanation: `Since <span class="font-mono">2<sup>x&minus;${h}</sup> &gt; 0</span> for all real x, adding ${kPlain} shifts every output by ${kPlain}. Thus <span class="font-mono">f(x) &gt; ${kPlain}</span> and the horizontal asymptote is <strong>y = ${kPlain}</strong>.`
+              };
+            },
+            () => {
+              const h = pick([2, 3, 4, 5]);
+              const k = pick([1, 2, -3]);
+              const kStr = k > 0 ? `+ ${k}` : `&minus; ${Math.abs(k)}`;
+              const correct = `x &gt; &minus;${h}`;
+              const opts = shuffle([correct, `x &gt; ${h}`, `x &ge; &minus;${h}`, `x &gt; ${k}`]);
+              return {
+                idKey: `m-shift-log-${h}-${k}`,
+                topic: 'Transformed Log Domain',
+                prompt: `Determine the <strong>domain</strong> of <span class="font-mono text-teal-700">g(x) = log<sub>3</sub>(x + ${h}) ${kStr}</span>.`,
+                options: opts,
+                correctIndex: opts.indexOf(correct),
+                hint: `The expression strictly inside the logarithm must be greater than zero: set x + ${h} > 0.`,
+                explanation: `A logarithm requires a strictly positive argument: <span class="font-mono">x + ${h} &gt; 0 &rArr; x &gt; &minus;${h}</span>. The vertical shift (${kStr}) does not affect the domain.`
+              };
+            },
+            () => {
+              const h = pick([1, 2, 4, 6]);
+              const k = pick([3, -2, 5]);
+              const kStr = k > 0 ? `+ ${k}` : `&minus; ${Math.abs(k)}`;
+              const correct = `x = ${h}`;
+              const opts = shuffle([correct, `x = &minus;${h}`, `y = ${k}`, `y = ${h}`]);
+              return {
+                idKey: `m-asy-log-${h}-${k}`,
+                topic: 'Vertical Asymptote',
+                prompt: `Find the equation of the vertical asymptote of <span class="font-mono text-teal-700">g(x) = ln(x &minus; ${h}) ${kStr}</span>.`,
+                options: opts,
+                correctIndex: opts.indexOf(correct),
+                hint: `The vertical asymptote occurs where the input to the natural log equals zero.`,
+                explanation: `Setting the argument equal to zero gives <span class="font-mono">x &minus; ${h} = 0 &rArr; <strong>x = ${h}</strong></span>.`
+              };
+            }
+          ];
+          return pick(variants)();
+        },
+
+        // Template M3: Solving Basic Exponential & Log Equations
+        () => {
+          const items = [
+            {
+              key: 'eq1',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-indigo-700">2<sup>x + 3</sup> = 32</span>`,
+              correct: 'x = 2',
+              d: ['x = 5', 'x = 8', 'x = 13'],
+              hint: `Rewrite 32 as a power of 2.`,
+              explanation: `Since <span class="font-mono">32 = 2<sup>5</sup></span>, we equate exponents: <span class="font-mono">x + 3 = 5 &rArr; <strong>x = 2</strong></span>.`
+            },
+            {
+              key: 'eq2',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-indigo-700">3<sup>2x &minus; 1</sup> = 27</span>`,
+              correct: 'x = 2',
+              d: ['x = 1', 'x = 4', 'x = 5'],
+              hint: `Write 27 as 3<sup>3</sup>, then set the exponents equal.`,
+              explanation: `<span class="font-mono">3<sup>2x&minus;1</sup> = 3<sup>3</sup> &rArr; 2x &minus; 1 = 3 &rArr; 2x = 4 &rArr; <strong>x = 2</strong></span>.`
+            },
+            {
+              key: 'eq3',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-teal-700">log<sub>2</sub>(3x &minus; 1) = 3</span>`,
+              correct: 'x = 3',
+              d: ['x = 7/3', 'x = 10/3', 'x = 2'],
+              hint: `Convert to exponential form first: 3x &minus; 1 = 2<sup>3</sup>.`,
+              explanation: `Converting to exponential form: <span class="font-mono">3x &minus; 1 = 2<sup>3</sup> = 8 &rArr; 3x = 9 &rArr; <strong>x = 3</strong></span>.`
+            },
+            {
+              key: 'eq4',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-teal-700">log<sub>3</sub>(2x + 1) = 2</span>`,
+              correct: 'x = 4',
+              d: ['x = 5/2', 'x = 3', 'x = 5'],
+              hint: `Convert to exponential form: 2x + 1 = 3<sup>2</sup>.`,
+              explanation: `Converting to exponential form: <span class="font-mono">2x + 1 = 3<sup>2</sup> = 9 &rArr; 2x = 8 &rArr; <strong>x = 4</strong></span>.`
+            },
+            {
+              key: 'eq5',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-indigo-700">5<sup>x &minus; 2</sup> = 1/25</span>`,
+              correct: 'x = 0',
+              d: ['x = 4', 'x = &minus;2', 'x = &minus;4'],
+              hint: `Rewrite 1/25 as 5<sup>&minus;2</sup>.`,
+              explanation: `<span class="font-mono">5<sup>x&minus;2</sup> = 5<sup>&minus;2</sup> &rArr; x &minus; 2 = &minus;2 &rArr; <strong>x = 0</strong></span>.`
+            }
+          ];
+          const item = pick(items);
+          const opts = shuffle([item.correct, ...item.d]);
+          return {
+            idKey: `m-solve-${item.key}`,
+            topic: 'Solving Exp/Log Equations',
+            prompt: item.prompt,
+            options: opts,
+            correctIndex: opts.indexOf(item.correct),
+            hint: item.hint,
+            explanation: item.explanation
+          };
+        },
+
+        // Template M4: Finding Shifted Inverse Functions
+        () => {
+          const items = [
+            {
+              key: 'inv1',
+              prompt: `Find the inverse function <span class="font-mono">f<sup>&minus;1</sup>(x)</span> of <span class="font-mono text-indigo-700">f(x) = 3<sup>x</sup> + 2</span>.`,
+              correct: 'log<sub>3</sub>(x &minus; 2)',
+              d: ['log<sub>3</sub>(x) &minus; 2', 'log<sub>3</sub>(x + 2)', '3<sup>x &minus; 2</sup>'],
+              hint: `Write y = 3<sup>x</sup> + 2, swap x and y to get x = 3<sup>y</sup> + 2, isolate 3<sup>y</sup>, then take log<sub>3</sub>.`,
+              explanation: `Swap x and y: <span class="font-mono">x = 3<sup>y</sup> + 2 &rArr; x &minus; 2 = 3<sup>y</sup> &rArr; y = <strong>log<sub>3</sub>(x &minus; 2)</strong></span>.`
+            },
+            {
+              key: 'inv2',
+              prompt: `Find the inverse function <span class="font-mono">f<sup>&minus;1</sup>(x)</span> of <span class="font-mono text-teal-700">f(x) = log<sub>2</sub>(x &minus; 4)</span>.`,
+              correct: '2<sup>x</sup> + 4',
+              d: ['2<sup>x + 4</sup>', '2<sup>x &minus; 4</sup>', '2<sup>x</sup> &minus; 4'],
+              hint: `Swap x and y: x = log<sub>2</sub>(y &minus; 4). Rewrite in exponential form first!`,
+              explanation: `<span class="font-mono">x = log<sub>2</sub>(y &minus; 4) &rArr; 2<sup>x</sup> = y &minus; 4 &rArr; y = <strong>2<sup>x</sup> + 4</strong></span>.`
+            },
+            {
+              key: 'inv3',
+              prompt: `Find the inverse function <span class="font-mono">f<sup>&minus;1</sup>(x)</span> of <span class="font-mono text-indigo-700">f(x) = e<sup>x &minus; 5</sup></span>.`,
+              correct: 'ln(x) + 5',
+              d: ['ln(x + 5)', 'ln(x &minus; 5)', 'ln(x) &minus; 5'],
+              hint: `Swap x and y: x = e<sup>y &minus; 5</sup>. Take ln of both sides, then solve for y.`,
+              explanation: `<span class="font-mono">x = e<sup>y&minus;5</sup> &rArr; ln(x) = y &minus; 5 &rArr; y = <strong>ln(x) + 5</strong></span>.`
+            },
+            {
+              key: 'inv4',
+              prompt: `For <span class="font-mono text-indigo-700">f(x) = (0.5)<sup>x</sup></span>, what happens to <span class="font-mono">f(x)</span> as <span class="font-mono">x &rarr; +&infin;</span>?`,
+              correct: 'f(x) &rarr; 0 (decreasing towards y = 0)',
+              d: ['f(x) &rarr; +&infin;', 'f(x) &rarr; &minus;&infin;', 'f(x) &rarr; 0.5'],
+              hint: `Since the base 0.5 is between 0 and 1, multiplying 0.5 by itself repeatedly makes the value smaller and smaller.`,
+              explanation: `When <span class="font-mono">0 &lt; a &lt; 1</span>, <span class="font-mono">a<sup>x</sup></span> is a strictly decreasing decay function approaching the horizontal asymptote <strong>y = 0</strong> as <span class="font-mono">x &rarr; +&infin;</span>.`
+            }
+          ];
+          const item = pick(items);
+          const opts = shuffle([item.correct, ...item.d]);
+          return {
+            idKey: `m-inv-${item.key}`,
+            topic: 'Inverse Functions & Behavior',
+            prompt: item.prompt,
+            options: opts,
+            correctIndex: opts.indexOf(item.correct),
+            hint: item.hint,
+            explanation: item.explanation
+          };
+        }
+      ];
+
+      // --- HARD LEVEL GENERATORS (IB DP PAPER 1 / PAPER 2 STYLE) ---
+      const hardGenerators = [
+        // Template H1: Log Laws + Extraneous Root Domain Check (Classic IB!)
+        () => {
+          const items = [
+            {
+              key: 'loglaw1',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-teal-700">log<sub>2</sub>(x) + log<sub>2</sub>(x &minus; 2) = 3</span>`,
+              correct: 'x = 4 only',
+              d: ['x = 4 or x = &minus;2', 'x = 5', 'x = 2 or x = 4'],
+              hint: `Combine using log<sub>b</sub>(A) + log<sub>b</sub>(B) = log<sub>b</sub>(AB), convert to exponential form, and ALWAYS check that x makes every log argument positive!`,
+              explanation: `Combine logs: <span class="font-mono">log<sub>2</sub>(x(x &minus; 2)) = 3 &rArr; x<sup>2</sup> &minus; 2x = 2<sup>3</sup> = 8 &rArr; x<sup>2</sup> &minus; 2x &minus; 8 = 0 &rArr; (x &minus; 4)(x + 2) = 0</span>. So <span class="font-mono">x = 4</span> or <span class="font-mono">x = &minus;2</span>. Since the domain requires <span class="font-mono">x &gt; 2</span>, we reject <span class="font-mono">&minus;2</span>. Solution: <strong>x = 4 only</strong>.`
+            },
+            {
+              key: 'loglaw2',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-teal-700">log<sub>3</sub>(x) + log<sub>3</sub>(x &minus; 8) = 2</span>`,
+              correct: 'x = 9 only',
+              d: ['x = 9 or x = &minus;1', 'x = 8 or x = 1', 'x = 7'],
+              hint: `Use the product law to get x(x &minus; 8) = 3<sup>2</sup>, then check the domain restriction x &gt; 8.`,
+              explanation: `<span class="font-mono">log<sub>3</sub>(x(x &minus; 8)) = 2 &rArr; x<sup>2</sup> &minus; 8x = 9 &rArr; (x &minus; 9)(x + 1) = 0</span>. Because <span class="font-mono">x &gt; 8</span> is required for both logs to be defined, we reject <span class="font-mono">x = &minus;1</span>. Thus <strong>x = 9 only</strong>.`
+            },
+            {
+              key: 'loglaw3',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-teal-700">log<sub>6</sub>(x) + log<sub>6</sub>(x + 5) = 2</span>`,
+              correct: 'x = 4 only',
+              d: ['x = 4 or x = &minus;9', 'x = 9 only', 'x = 7/2'],
+              hint: `Combine into log<sub>6</sub>(x(x + 5)) = 2, so x(x + 5) = 36. Don't forget to reject negative roots!`,
+              explanation: `<span class="font-mono">x<sup>2</sup> + 5x = 6<sup>2</sup> = 36 &rArr; x<sup>2</sup> + 5x &minus; 36 = 0 &rArr; (x + 9)(x &minus; 4) = 0</span>. Domain requires <span class="font-mono">x &gt; 0</span>, so reject <span class="font-mono">&minus;9</span>. Solution: <strong>x = 4 only</strong>.`
+            },
+            {
+              key: 'loglaw4',
+              prompt: `Solve for <span class="math-var">x</span>: <span class="font-mono text-teal-700">log<sub>5</sub>(x + 4) + log<sub>5</sub>(x) = 1</span>`,
+              correct: 'x = 1 only',
+              d: ['x = 1 or x = &minus;5', 'x = 5 only', 'x = 1/2'],
+              hint: `Combine logs so x(x + 4) = 5<sup>1</sup>, solve the quadratic, and verify x &gt; 0.`,
+              explanation: `<span class="font-mono">x<sup>2</sup> + 4x = 5 &rArr; x<sup>2</sup> + 4x &minus; 5 = 0 &rArr; (x + 5)(x &minus; 1) = 0</span>. Since <span class="font-mono">log<sub>5</sub>(x)</span> requires <span class="font-mono">x &gt; 0</span>, reject <span class="font-mono">&minus;5</span>. Answer: <strong>x = 1 only</strong>.`
+            }
+          ];
+          const item = pick(items);
+          const opts = shuffle([item.correct, ...item.d]);
+          return {
+            idKey: `h-law-${item.key}`,
+            topic: 'Log Laws & Domain Check',
+            prompt: item.prompt,
+            options: opts,
+            correctIndex: opts.indexOf(item.correct),
+            hint: item.hint,
+            explanation: item.explanation
+          };
+        },
+
+        // Template H2: Hidden Quadratic Exponential Equations
+        () => {
+          const items = [
+            {
+              key: 'hq1',
+              prompt: `Find all real solutions to <span class="font-mono text-indigo-700">e<sup>2x</sup> &minus; 5e<sup>x</sup> + 6 = 0</span>.`,
+              correct: 'x = ln(2) or x = ln(3)',
+              d: ['x = 2 or x = 3', 'x = e<sup>2</sup> or x = e<sup>3</sup>', 'x = ln(6) only'],
+              hint: `Let u = e<sup>x</sup>. The equation becomes the quadratic u<sup>2</sup> &minus; 5u + 6 = 0.`,
+              explanation: `Substitute <span class="font-mono">u = e<sup>x</sup></span>: <span class="font-mono">(u &minus; 2)(u &minus; 3) = 0 &rArr; e<sup>x</sup> = 2</span> or <span class="font-mono">e<sup>x</sup> = 3</span>. Both are positive, so taking <span class="font-mono">ln</span> gives <strong>x = ln(2) or x = ln(3)</strong>.`
+            },
+            {
+              key: 'hq2',
+              prompt: `Find all real solutions to <span class="font-mono text-indigo-700">e<sup>2x</sup> &minus; 2e<sup>x</sup> &minus; 8 = 0</span>.`,
+              correct: 'x = ln(4) only',
+              d: ['x = ln(4) or x = ln(&minus;2)', 'x = 4 only', 'x = ln(2) only'],
+              hint: `Factor with u = e<sup>x</sup>. Remember the range of e<sup>x</sup>: can e<sup>x</sup> ever be negative?`,
+              explanation: `Let <span class="font-mono">u = e<sup>x</sup></span>: <span class="font-mono">(u &minus; 4)(u + 2) = 0 &rArr; e<sup>x</sup> = 4</span> or <span class="font-mono">e<sup>x</sup> = &minus;2</span>. Since <span class="font-mono">e<sup>x</sup> &gt; 0</span> always, <span class="font-mono">e<sup>x</sup> = &minus;2</span> has no real solution. Thus <strong>x = ln(4) only</strong>.`
+            },
+            {
+              key: 'hq3',
+              prompt: `Find all real solutions to <span class="font-mono text-indigo-700">e<sup>2x</sup> &minus; 3e<sup>x</sup> &minus; 10 = 0</span>.`,
+              correct: 'x = ln(5) only',
+              d: ['x = ln(5) or x = &minus;ln(2)', 'x = 5 or x = &minus;2', 'No real solutions'],
+              hint: `Factor (e<sup>x</sup> &minus; 5)(e<sup>x</sup> + 2) = 0 and check which factor can equal zero.`,
+              explanation: `<span class="font-mono">(e<sup>x</sup> &minus; 5)(e<sup>x</sup> + 2) = 0</span>. Since <span class="font-mono">e<sup>x</sup> &gt; 0</span>, <span class="font-mono">e<sup>x</sup> = &minus;2</span> is impossible. Only <span class="font-mono">e<sup>x</sup> = 5</span> is valid, giving <strong>x = ln(5) only</strong>.`
+            },
+            {
+              key: 'hq4',
+              prompt: `Solve <span class="font-mono text-indigo-700">2<sup>2x</sup> &minus; 6(2<sup>x</sup>) + 8 = 0</span>.`,
+              correct: 'x = 1 or x = 2',
+              d: ['x = 2 or x = 4', 'x = 1 or x = 4', 'x = 2 only'],
+              hint: `Notice 2<sup>2x</sup> = (2<sup>x</sup>)<sup>2</sup>. Let u = 2<sup>x</sup> and factor u<sup>2</sup> &minus; 6u + 8 = 0.`,
+              explanation: `<span class="font-mono">(2<sup>x</sup> &minus; 2)(2<sup>x</sup> &minus; 4) = 0 &rArr; 2<sup>x</sup> = 2</span> or <span class="font-mono">2<sup>x</sup> = 4</span>. Therefore <strong>x = 1 or x = 2</strong>.`
+            }
+          ];
+          const item = pick(items);
+          const opts = shuffle([item.correct, ...item.d]);
+          return {
+            idKey: `h-quad-${item.key}`,
+            topic: 'Hidden Exponential Quadratics',
+            prompt: item.prompt,
+            options: opts,
+            correctIndex: opts.indexOf(item.correct),
+            hint: item.hint,
+            explanation: item.explanation
+          };
+        },
+
+        // Template H3: Composite Inverse & Domain of f^-1
+        () => {
+          const items = [
+            {
+              key: 'comp1',
+              prompt: `Given <span class="font-mono text-teal-700">f(x) = 2ln(x &minus; 3) + 1</span> for <span class="font-mono">x &gt; 3</span>, find <span class="font-mono">f<sup>&minus;1</sup>(x)</span>.`,
+              correct: 'e<sup>(x &minus; 1)/2</sup> + 3',
+              d: ['e<sup>(x + 1)/2</sup> + 3', '2e<sup>x &minus; 1</sup> + 3', 'e<sup>x/2 &minus; 1</sup> &minus; 3'],
+              hint: `Swap x and y: x = 2ln(y &minus; 3) + 1. Subtract 1, divide by 2, then apply e^(...) to both sides.`,
+              explanation: `<span class="font-mono">x &minus; 1 = 2ln(y &minus; 3) &rArr; (x &minus; 1)/2 = ln(y &minus; 3) &rArr; y &minus; 3 = e<sup>(x&minus;1)/2</sup> &rArr; f<sup>&minus;1</sup>(x) = <strong>e<sup>(x &minus; 1)/2</sup> + 3</strong></span>.`
+            },
+            {
+              key: 'comp2',
+              prompt: `Let <span class="font-mono text-indigo-700">f(x) = 5 &minus; 2e<sup>&minus;x</sup></span> for <span class="font-mono">x &isin; &Ropf;</span>. What is the <strong>domain of f<sup>&minus;1</sup>(x)</strong>?`,
+              correct: 'x &lt; 5',
+              d: ['x &gt; 5', 'x &isin; &Ropf;', 'x &gt; &minus;2'],
+              hint: `The domain of f<sup>&minus;1</sup> equals the RANGE of f! Since e<sup>&minus;x</sup> &gt; 0, what values can 5 &minus; 2e<sup>&minus;x</sup> take?`,
+              explanation: `Because <span class="font-mono">2e<sup>&minus;x</sup> &gt; 0</span>, subtracting it from 5 means <span class="font-mono">f(x) &lt; 5</span>. So the range of <span class="font-mono">f</span> is <span class="font-mono">y &lt; 5</span>, which means the domain of <span class="font-mono">f<sup>&minus;1</sup></span> is <strong>x &lt; 5</strong>.`
+            },
+            {
+              key: 'comp3',
+              prompt: `Let <span class="font-mono text-indigo-700">f(x) = 3e<sup>x + 1</sup> &minus; 4</span>. What is the <strong>domain of f<sup>&minus;1</sup>(x)</strong>?`,
+              correct: 'x &gt; &minus;4',
+              d: ['x &gt; &minus;1', 'x &gt; 4', 'x &isin; &Ropf;'],
+              hint: `Find the range of f first, because Domain(f<sup>&minus;1</sup>) = Range(f).`,
+              explanation: `Since <span class="font-mono">3e<sup>x+1</sup> &gt; 0</span>, we have <span class="font-mono">f(x) &gt; &minus;4</span>. Therefore the range of <span class="font-mono">f</span> is <span class="font-mono">y &gt; &minus;4</span>, so the domain of <span class="font-mono">f<sup>&minus;1</sup></span> is <strong>x &gt; &minus;4</strong>.`
+            }
+          ];
+          const item = pick(items);
+          const opts = shuffle([item.correct, ...item.d]);
+          return {
+            idKey: `h-inv-${item.key}`,
+            topic: 'Composite Inverses & Domain',
+            prompt: item.prompt,
+            options: opts,
+            correctIndex: opts.indexOf(item.correct),
+            hint: item.hint,
+            explanation: item.explanation
+          };
+        },
+
+        // Template H4: Composite Log Domains & Exact Solutions / Applications
+        () => {
+          const items = [
+            {
+              key: 'dom1',
+              prompt: `Find the maximal domain of <span class="font-mono text-teal-700">g(x) = ln(6 &minus; 2x)</span>.`,
+              correct: 'x &lt; 3',
+              d: ['x &gt; 3', 'x &le; 3', 'x &lt; &minus;3'],
+              hint: `Set 6 &minus; 2x &gt; 0 and remember to flip the inequality sign when dividing by a negative!`,
+              explanation: `<span class="font-mono">6 &minus; 2x &gt; 0 &rArr; 6 &gt; 2x &rArr; <strong>x &lt; 3</strong></span>.`
+            },
+            {
+              key: 'dom2',
+              prompt: `Find the maximal domain of <span class="font-mono text-teal-700">h(x) = log<sub>2</sub>(x<sup>2</sup> &minus; 9)</span>.`,
+              correct: 'x &lt; &minus;3 or x &gt; 3',
+              d: ['&minus;3 &lt; x &lt; 3', 'x &gt; 3 only', 'x &ne; &plusmn;3'],
+              hint: `We need x<sup>2</sup> &minus; 9 &gt; 0. Sketch the upward parabola y = x<sup>2</sup> &minus; 9 to see where it is above the x-axis.`,
+              explanation: `<span class="font-mono">x<sup>2</sup> &minus; 9 &gt; 0 &rArr; (x &minus; 3)(x + 3) &gt; 0</span>. This holds outside the roots: <strong>x &lt; &minus;3 or x &gt; 3</strong>.`
+            },
+            {
+              key: 'exact1',
+              prompt: `Find the exact solution to <span class="font-mono text-indigo-700">3e<sup>2x</sup> = 15</span>.`,
+              correct: 'x = &frac12;ln(5)',
+              d: ['x = ln(5/2)', 'x = 2ln(5)', 'x = &frac12;ln(12)'],
+              hint: `Divide both sides by 3 first before taking the natural logarithm.`,
+              explanation: `Divide by 3: <span class="font-mono">e<sup>2x</sup> = 5</span>. Take <span class="font-mono">ln</span>: <span class="font-mono">2x = ln(5) &rArr; <strong>x = &frac12;ln(5)</strong></span>.`
+            },
+            {
+              key: 'app1',
+              prompt: `A radioactive isotope decays as <span class="font-mono">M(t) = 80e<sup>&minus;0.05t</sup></span>. Find the exact time <span class="math-var">t</span> (in years) until only <strong>20 g</strong> remain.`,
+              correct: 't = 20ln(4)',
+              d: ['t = 20ln(0.25)', 't = 0.05ln(4)', 't = 80ln(4)'],
+              hint: `Set 20 = 80e<sup>&minus;0.05t</sup>, simplify 20/80 = 1/4, take ln, and note that &minus;ln(1/4) = ln(4)!`,
+              explanation: `<span class="font-mono">1/4 = e<sup>&minus;0.05t</sup> &rArr; ln(1/4) = &minus;0.05t &rArr; &minus;ln(4) = &minus;(1/20)t &rArr; <strong>t = 20ln(4)</strong></span>.`
+            },
+            {
+              key: 'app2',
+              prompt: `On the Richter scale <span class="font-mono">M = log<sub>10</sub>(I / I<sub>0</sub>)</span>, an earthquake of magnitude <strong>7.4</strong> has a wave amplitude how many times greater than one of magnitude <strong>5.4</strong>?`,
+              correct: '100 times greater',
+              d: ['2 times greater', '20 times greater', '1000 times greater'],
+              hint: `Subtract the magnitudes: M<sub>2</sub> &minus; M<sub>1</sub> = log<sub>10</sub>(I<sub>2</sub> / I<sub>1</sub>).`,
+              explanation: `<span class="font-mono">7.4 &minus; 5.4 = 2.0 = log<sub>10</sub>(I<sub>2</sub>/I<sub>1</sub>) &rArr; I<sub>2</sub>/I<sub>1</sub> = 10<sup>2</sup> = <strong>100</strong></span> times greater.`
+            }
+          ];
+          const item = pick(items);
+          const opts = shuffle([item.correct, ...item.d]);
+          return {
+            idKey: `h-mix-${item.key}`,
+            topic: 'IB Exam Problem Solving',
+            prompt: item.prompt,
+            options: opts,
+            correctIndex: opts.indexOf(item.correct),
+            hint: item.hint,
+            explanation: item.explanation
+          };
+        }
+      ];
+
+      const generatorMap = {
+        easy: easyGenerators,
+        medium: mediumGenerators,
+        hard: hardGenerators
+      };
+
+      // Practice State Object
+      const practiceState = {
+        currentLevel: 'easy',
+        levels: {
+          easy: { unlocked: true, correct: 0, attempts: 0, recentKeys: [], lastGenIdx: -1 },
+          medium: { unlocked: false, correct: 0, attempts: 0, recentKeys: [], lastGenIdx: -1 },
+          hard: { unlocked: false, correct: 0, attempts: 0, recentKeys: [], lastGenIdx: -1 }
+        },
+        activeQuestion: null,
+        answered: false,
+        isRemediation: false,
+        preferredGenIdx: null // If user missed a question, offer a fresh question from similar concept!
+      };
+
+      function generateFreshQuestion(level) {
+        const gens = generatorMap[level];
+        const lvlData = practiceState.levels[level];
+
+        let genIdx;
+        if (practiceState.isRemediation && practiceState.preferredGenIdx !== null) {
+          // Keep same template category for targeted similar-level practice!
+          genIdx = practiceState.preferredGenIdx;
+        } else {
+          // Cycle systematically across templates so the 5 questions cover varied skills
+          genIdx = (lvlData.correct) % gens.length;
+          if (genIdx === lvlData.lastGenIdx && gens.length > 1) {
+            genIdx = (genIdx + 1) % gens.length;
+          }
+        }
+
+        // Try up to 15 times to avoid repeating a recently seen exact question
+        let candidate = null;
+        for (let tries = 0; tries < 15; tries++) {
+          const idxToUse = tries < 8 ? genIdx : Math.floor(Math.random() * gens.length);
+          const q = gens[idxToUse]();
+          if (!lvlData.recentKeys.includes(q.idKey)) {
+            candidate = q;
+            lvlData.lastGenIdx = idxToUse;
+            break;
+          }
+          candidate = q;
+        }
+
+        lvlData.recentKeys.push(candidate.idKey);
+        if (lvlData.recentKeys.length > 8) lvlData.recentKeys.shift();
+
+        return candidate;
+      }
+
+      function renderLevelCards() {
+        const levels = ['easy', 'medium', 'hard'];
+        levels.forEach(lvl => {
+          const data = practiceState.levels[lvl];
+          const card = document.getElementById(`lvl-btn-${lvl}`);
+          const statusEl = document.getElementById(`status-${lvl}`);
+          const dotsEl = document.getElementById(`dots-${lvl}`);
+          const miniBadge = document.getElementById(`badge-${lvl}-mini`);
+
+          const isSelected = practiceState.currentLevel === lvl;
+          const isCompleted = data.correct >= TARGET_CORRECT;
+
+          // Styling card
+          card.classList.remove('border-indigo-600', 'bg-indigo-50/60', 'border-emerald-500', 'bg-emerald-50/50', 'border-slate-200', 'bg-white', 'bg-slate-50', 'opacity-75', 'cursor-not-allowed');
+          if (!data.unlocked) {
+            card.classList.add('border-slate-200', 'bg-slate-50', 'opacity-75', 'cursor-not-allowed');
+          } else if (isSelected) {
+            card.classList.add('border-indigo-600', 'bg-indigo-50/60');
+          } else if (isCompleted) {
+            card.classList.add('border-emerald-500', 'bg-emerald-50/50');
+          } else {
+            card.classList.add('border-slate-200', 'bg-white');
+          }
+
+          // Status text & Header mini badges
+          const prefix = lvl === 'easy' ? 'E' : lvl === 'medium' ? 'M' : 'H';
+          if (!data.unlocked) {
+            statusEl.innerHTML = `<svg class="w-3.5 h-3.5 inline" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg> Locked`;
+            statusEl.className = 'text-xs font-bold text-slate-500 flex items-center gap-1';
+            miniBadge.textContent = `${prefix}: Locked`;
+            miniBadge.className = 'px-2 py-0.5 rounded-md text-xs font-bold bg-slate-200 text-slate-500';
+          } else if (isCompleted) {
+            statusEl.textContent = `✓ Mastered (${data.correct}/5)`;
+            statusEl.className = 'text-xs font-extrabold text-emerald-700';
+            miniBadge.textContent = `${prefix}: ✓`;
+            miniBadge.className = 'px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800';
+          } else {
+            statusEl.textContent = `${data.correct} / ${TARGET_CORRECT} Correct`;
+            statusEl.className = 'text-xs font-bold text-indigo-700';
+            miniBadge.textContent = `${prefix}: ${data.correct}/${TARGET_CORRECT}`;
+            miniBadge.className = 'px-2 py-0.5 rounded-md text-xs font-bold bg-indigo-100 text-indigo-700';
+          }
+
+          // 5 Progress Dots
+          let dotsHTML = '';
+          for (let i = 0; i < TARGET_CORRECT; i++) {
+            const filled = i < data.correct;
+            dotsHTML += `<span class="h-2 flex-1 rounded-full transition-all ${filled ? 'bg-emerald-500' : (data.unlocked ? 'bg-slate-200' : 'bg-slate-200/70')}"></span>`;
+          }
+          dotsEl.innerHTML = dotsHTML;
+        });
+
+        // Show full mastery banner if all 3 levels mastered
+        const allDone = practiceState.levels.easy.correct >= TARGET_CORRECT &&
+                        practiceState.levels.medium.correct >= TARGET_CORRECT &&
+                        practiceState.levels.hard.correct >= TARGET_CORRECT;
+        document.getElementById('mastery-complete-card').classList.toggle('hidden', !allDone);
+      }
+
+      function renderActiveQuestion() {
+        const lvl = practiceState.currentLevel;
+        const lvlData = practiceState.levels[lvl];
+        const q = practiceState.activeQuestion;
+
+        const badgeMap = {
+          easy: { label: 'Level 1: Easy', cls: 'bg-emerald-100 text-emerald-800' },
+          medium: { label: 'Level 2: Medium', cls: 'bg-amber-100 text-amber-800' },
+          hard: { label: 'Level 3: Hard', cls: 'bg-rose-100 text-rose-800' }
+        };
+
+        const qBadge = document.getElementById('q-level-badge');
+        qBadge.textContent = badgeMap[lvl].label;
+        qBadge.className = `px-3 py-1 rounded-full text-xs font-extrabold uppercase ${badgeMap[lvl].cls}`;
+
+        document.getElementById('q-topic-tag').textContent = q.topic;
+        document.getElementById('q-remediation-badge').classList.toggle('hidden', !practiceState.isRemediation);
+        document.getElementById('q-progress-text').textContent = `${Math.min(lvlData.correct, TARGET_CORRECT)} / ${TARGET_CORRECT}`;
+        document.getElementById('q-attempts-text').textContent = String(lvlData.attempts);
+
+        document.getElementById('q-prompt').innerHTML = q.prompt;
+
+        // Reset Hint & Feedback
+        const hintBox = document.getElementById('q-hint-box');
+        hintBox.classList.add('hidden');
+        hintBox.innerHTML = q.hint;
+
+        const feedbackBox = document.getElementById('q-feedback');
+        feedbackBox.classList.add('hidden');
+
+        // Render 4 Choice Buttons
+        const optionsEl = document.getElementById('q-options');
+        optionsEl.innerHTML = '';
+        const letters = ['A', 'B', 'C', 'D'];
+
+        q.options.forEach((optHTML, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn group flex items-center gap-3.5 p-4 rounded-xl border-2 border-slate-200 bg-white hover:border-indigo-400 hover:bg-indigo-50/40 text-left transition-all';
+          btn.innerHTML = `
+            <span class="w-8 h-8 rounded-lg bg-slate-100 group-hover:bg-indigo-100 text-slate-700 group-hover:text-indigo-700 font-extrabold text-sm flex items-center justify-center shrink-0 transition">${letters[idx]}</span>
+            <span class="font-mono text-sm sm:text-base font-semibold text-slate-800">${optHTML}</span>
+          `;
+          btn.addEventListener('click', () => handleAnswerSelection(idx));
+          optionsEl.appendChild(btn);
+        });
+
+        renderLevelCards();
+      }
+
+      function handleAnswerSelection(selectedIdx) {
+        if (practiceState.answered) return;
+        practiceState.answered = true;
+
+        const lvl = practiceState.currentLevel;
+        const lvlData = practiceState.levels[lvl];
+        const q = practiceState.activeQuestion;
+        const isCorrect = selectedIdx === q.correctIndex;
+
+        lvlData.attempts += 1;
+
+        // Style option buttons
+        const optionBtns = document.querySelectorAll('#q-options .option-btn');
+        optionBtns.forEach((btn, idx) => {
+          btn.disabled = true;
+          btn.classList.remove('hover:border-indigo-400', 'hover:bg-indigo-50/40');
+          if (idx === q.correctIndex) {
+            btn.classList.remove('border-slate-200', 'bg-white');
+            btn.classList.add('border-emerald-500', 'bg-emerald-50');
+          } else if (idx === selectedIdx && !isCorrect) {
+            btn.classList.remove('border-slate-200', 'bg-white');
+            btn.classList.add('border-rose-500', 'bg-rose-50');
+          } else {
+            btn.classList.add('opacity-55');
+          }
+        });
+
+        const feedbackBox = document.getElementById('q-feedback');
+        const feedbackIcon = document.getElementById('q-feedback-icon');
+        const feedbackTitle = document.getElementById('q-feedback-title');
+        const feedbackSub = document.getElementById('q-feedback-subtitle');
+        const explanationEl = document.getElementById('q-explanation');
+        const btnNext = document.getElementById('btn-next-question');
+        const btnAdvance = document.getElementById('btn-advance-level');
+
+        feedbackBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300');
+        explanationEl.innerHTML = q.explanation;
+
+        if (isCorrect) {
+          lvlData.correct += 1;
+          practiceState.isRemediation = false;
+          practiceState.preferredGenIdx = null;
+
+          // Unlock next tier if 5 right reached!
+          let justUnlockedNext = false;
+          let nextLevelName = null;
+          if (lvl === 'easy' && lvlData.correct >= TARGET_CORRECT && !practiceState.levels.medium.unlocked) {
+            practiceState.levels.medium.unlocked = true;
+            justUnlockedNext = true;
+            nextLevelName = 'Medium';
+          } else if (lvl === 'medium' && lvlData.correct >= TARGET_CORRECT && !practiceState.levels.hard.unlocked) {
+            practiceState.levels.hard.unlocked = true;
+            justUnlockedNext = true;
+            nextLevelName = 'Hard';
+          }
+
+          feedbackBox.classList.add('bg-emerald-50', 'border-emerald-300');
+          feedbackIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-white bg-emerald-600 mt-0.5';
+          feedbackIcon.textContent = '✓';
+
+          if (justUnlockedNext) {
+            feedbackTitle.textContent = `Spot on! You achieved 5/5 and unlocked ${nextLevelName} Level!`;
+            feedbackTitle.className = 'text-base font-extrabold text-emerald-900';
+            feedbackSub.textContent = `Outstanding IB DP work! Advance to ${nextLevelName} Level or keep practicing here.`;
+            feedbackSub.className = 'text-xs sm:text-sm text-emerald-800';
+            btnAdvance.textContent = `Start ${nextLevelName} Level →`;
+            btnAdvance.classList.remove('hidden');
+            btnNext.textContent = 'Extra Practice Here →';
+          } else if (lvl === 'hard' && lvlData.correct === TARGET_CORRECT) {
+            feedbackTitle.textContent = 'Brilliant! You have mastered the Hard Level (5/5)!';
+            feedbackTitle.className = 'text-base font-extrabold text-emerald-900';
+            feedbackSub.textContent = 'You completed all three mastery tiers for Exponential & Logarithmic Functions.';
+            feedbackSub.className = 'text-xs sm:text-sm text-emerald-800';
+            btnAdvance.classList.add('hidden');
+            btnNext.textContent = 'Try Another Hard Challenge →';
+          } else {
+            const remaining = Math.max(0, TARGET_CORRECT - lvlData.correct);
+            feedbackTitle.textContent = 'Correct! Well done.';
+            feedbackTitle.className = 'text-base font-extrabold text-emerald-900';
+            feedbackSub.textContent = remaining > 0
+              ? `You now have ${lvlData.correct} / ${TARGET_CORRECT} correct in this level (${remaining} more to unlock the next level).`
+              : `Level already mastered (${lvlData.correct} correct total)! Great extra practice.`;
+            feedbackSub.className = 'text-xs sm:text-sm text-emerald-800';
+
+            // If already unlocked next level, offer quick advance button too
+            if (lvl === 'easy' && practiceState.levels.medium.unlocked && practiceState.levels.medium.correct < TARGET_CORRECT) {
+              btnAdvance.textContent = 'Go to Medium Level →';
+              btnAdvance.classList.remove('hidden');
+            } else if (lvl === 'medium' && practiceState.levels.hard.unlocked && practiceState.levels.hard.correct < TARGET_CORRECT) {
+              btnAdvance.textContent = 'Go to Hard Level →';
+              btnAdvance.classList.remove('hidden');
+            } else {
+              btnAdvance.classList.add('hidden');
+            }
+            btnNext.textContent = 'Next Question →';
+          }
+        } else {
+          // INCORRECT: Trigger adaptive similar-level additional question!
+          practiceState.isRemediation = true;
+          practiceState.preferredGenIdx = lvlData.lastGenIdx;
+
+          feedbackBox.classList.add('bg-rose-50', 'border-rose-300');
+          feedbackIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-white bg-rose-600 mt-0.5';
+          feedbackIcon.textContent = '✕';
+          feedbackTitle.textContent = 'Not quite right — let’s practice a similar question!';
+          feedbackTitle.className = 'text-base font-extrabold text-rose-900';
+          feedbackSub.textContent = `Your score stays at ${lvlData.correct} / ${TARGET_CORRECT}. Review the IB worked solution below, then try an additional similar-level question until you get it right.`;
+          feedbackSub.className = 'text-xs sm:text-sm text-rose-800';
+          btnAdvance.classList.add('hidden');
+          btnNext.textContent = 'Try Additional Similar Question →';
+        }
+
+        document.getElementById('q-progress-text').textContent = `${Math.min(lvlData.correct, TARGET_CORRECT)} / ${TARGET_CORRECT}`;
+        document.getElementById('q-attempts-text').textContent = String(lvlData.attempts);
+        renderLevelCards();
+      }
+
+      function loadLevel(lvl) {
+        const notice = document.getElementById('lock-notice');
+        if (!practiceState.levels[lvl].unlocked) {
+          const prev = lvl === 'medium' ? 'Easy' : 'Medium';
+          const prevKey = lvl === 'medium' ? 'easy' : 'medium';
+          const needed = TARGET_CORRECT - practiceState.levels[prevKey].correct;
+          notice.textContent = `🔒 ${lvl.charAt(0).toUpperCase() + lvl.slice(1)} Level is locked! Get ${needed} more correct answer${needed === 1 ? '' : 's'} in ${prev} Level to unlock it.`;
+          notice.classList.remove('hidden');
+          return;
+        }
+        notice.classList.add('hidden');
+        practiceState.currentLevel = lvl;
+        practiceState.answered = false;
+        practiceState.isRemediation = false;
+        practiceState.preferredGenIdx = null;
+        practiceState.activeQuestion = generateFreshQuestion(lvl);
+        renderActiveQuestion();
+      }
+
+      document.querySelectorAll('.level-card').forEach(btn => {
+        btn.addEventListener('click', () => loadLevel(btn.dataset.level));
+      });
+
+      document.getElementById('btn-show-hint').addEventListener('click', () => {
+        document.getElementById('q-hint-box').classList.toggle('hidden');
+      });
+
+      document.getElementById('btn-next-question').addEventListener('click', () => {
+        practiceState.answered = false;
+        practiceState.activeQuestion = generateFreshQuestion(practiceState.currentLevel);
+        renderActiveQuestion();
+      });
+
+      document.getElementById('btn-advance-level').addEventListener('click', () => {
+        if (practiceState.currentLevel === 'easy' && practiceState.levels.medium.unlocked) {
+          loadLevel('medium');
+        } else if (practiceState.currentLevel === 'medium' && practiceState.levels.hard.unlocked) {
+          loadLevel('hard');
+        }
+      });
+
+      document.getElementById('btn-reset-practice').addEventListener('click', () => {
+        practiceState.currentLevel = 'easy';
+        practiceState.levels = {
+          easy: { unlocked: true, correct: 0, attempts: 0, recentKeys: [], lastGenIdx: -1 },
+          medium: { unlocked: false, correct: 0, attempts: 0, recentKeys: [], lastGenIdx: -1 },
+          hard: { unlocked: false, correct: 0, attempts: 0, recentKeys: [], lastGenIdx: -1 }
+        };
+        practiceState.isRemediation = false;
+        practiceState.preferredGenIdx = null;
+        practiceState.answered = false;
+        document.getElementById('lock-notice').classList.add('hidden');
+        practiceState.activeQuestion = generateFreshQuestion('easy');
+        renderActiveQuestion();
+      });
+
+      // Initialize Practice Engine
+      practiceState.activeQuestion = generateFreshQuestion('easy');
+      renderActiveQuestion();
+
+
+      /* =====================================================================
+         5. TAB 4: REAL-WORLD APPLICATIONS INTERACTIVE SIMULATORS
+         ===================================================================== */
+      let activeApp = 'compound';
+      const appPills = document.querySelectorAll('.app-pill');
+      const appPanels = document.querySelectorAll('.app-panel');
+
+      function switchApp(appId) {
+        activeApp = appId;
+        appPills.forEach(p => {
+          const on = p.dataset.app === appId;
+          const isLogApp = appId === 'richter' || appId === 'ph';
+          p.classList.remove('border-indigo-600', 'bg-indigo-50', 'border-teal-600', 'bg-teal-50', 'border-slate-200', 'bg-white');
+          if (on) {
+            p.classList.add(isLogApp ? 'border-teal-600' : 'border-indigo-600', isLogApp ? 'bg-teal-50' : 'bg-indigo-50');
+          } else {
+            p.classList.add('border-slate-200', 'bg-white');
+          }
+        });
+        appPanels.forEach(panel => {
+          panel.classList.toggle('hidden', panel.id !== `app-panel-${appId}`);
+        });
+        requestAnimationFrame(() => renderActiveApp());
+      }
+
+      appPills.forEach(p => p.addEventListener('click', () => switchApp(p.dataset.app)));
+
+      function setupHiDPICanvas(canvas) {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return null;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.round(rect.width * dpr);
+        canvas.height = Math.round(rect.height * dpr);
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return { ctx, W: rect.width, H: rect.height };
+      }
+
+      // --- APP 1: COMPOUND INTEREST ---
+      function renderCompound() {
+        const P = parseFloat(document.getElementById('ci-p').value);
+        const rPct = parseFloat(document.getElementById('ci-r').value);
+        const r = rPct / 100;
+        const T = parseFloat(document.getElementById('ci-t').value);
+
+        const finalVal = P * Math.exp(r * T);
+        const doubling = Math.log(2) / r;
+
+        document.getElementById('ci-p-val').textContent = `$${P.toLocaleString()}`;
+        document.getElementById('ci-r-val').textContent = `${rPct.toFixed(1)}%`;
+        document.getElementById('ci-t-val').textContent = `${T} yrs`;
+        document.getElementById('ci-final').textContent = `$${Math.round(finalVal).toLocaleString()}`;
+        document.getElementById('ci-double').textContent = `${doubling.toFixed(2)} yrs`;
+        document.getElementById('ci-exp-formula').innerHTML = `${P}e<sup>${r.toFixed(3)}(${T})</sup> = $${Math.round(finalVal).toLocaleString()}`;
+
+        const canvas = document.getElementById('canvas-compound');
+        const setup = setupHiDPICanvas(canvas);
+        if (!setup) return;
+        const { ctx, W, H } = setup;
+
+        const pad = { l: 58, r: 22, t: 22, b: 36 };
+        const pw = W - pad.l - pad.r;
+        const ph = H - pad.t - pad.b;
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, W, H);
+
+        const maxY = Math.max(finalVal * 1.15, P * 2.5);
+
+        const xOf = t => pad.l + (t / T) * pw;
+        const yOf = val => pad.t + ph - (val / maxY) * ph;
+
+        // Grid & Y labels
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+        ctx.fillStyle = '#64748b';
+        ctx.font = '600 11px Inter, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        for (let i = 0; i <= 4; i++) {
+          const val = (maxY / 4) * i;
+          const y = yOf(val);
+          ctx.beginPath();
+          ctx.moveTo(pad.l, y);
+          ctx.lineTo(W - pad.r, y);
+          ctx.stroke();
+          ctx.fillText(`$${Math.round(val / 100) * 100 >= 1000 ? (val / 1000).toFixed(1) + 'k' : Math.round(val)}`, pad.l - 8, y);
+        }
+
+        // X Axis labels
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        for (let i = 0; i <= 4; i++) {
+          const tVal = (T / 4) * i;
+          ctx.fillText(`${Math.round(tVal)}y`, xOf(tVal), H - pad.b + 8);
+        }
+
+        // Simple Linear Interest Reference Line
+        ctx.save();
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(xOf(0), yOf(P));
+        ctx.lineTo(xOf(T), yOf(P * (1 + r * T)));
+        ctx.stroke();
+        ctx.restore();
+
+        // Area under Exponential Curve
+        ctx.beginPath();
+        ctx.moveTo(xOf(0), yOf(0));
+        for (let i = 0; i <= 120; i++) {
+          const t = (i / 120) * T;
+          ctx.lineTo(xOf(t), yOf(P * Math.exp(r * t)));
+        }
+        ctx.lineTo(xOf(T), yOf(0));
+        ctx.closePath();
+        const grad = ctx.createLinearGradient(0, pad.t, 0, H - pad.b);
+        grad.addColorStop(0, 'rgba(79, 70, 229, 0.25)');
+        grad.addColorStop(1, 'rgba(79, 70, 229, 0.02)');
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Exponential Curve
+        ctx.strokeStyle = '#4f46e5';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let i = 0; i <= 120; i++) {
+          const t = (i / 120) * T;
+          const px = xOf(t);
+          const py = yOf(P * Math.exp(r * t));
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        // Doubling Point marker (if within horizon)
+        if (doubling <= T) {
+          const dx = xOf(doubling);
+          const dy = yOf(2 * P);
+          ctx.fillStyle = '#0d9488';
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(dx, dy, 6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#0f766e';
+          ctx.font = '700 11px Inter, sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText(`2× at ${doubling.toFixed(1)}y`, Math.min(dx + 8, W - 95), dy - 10);
+        }
+      }
+
+      ['ci-p', 'ci-r', 'ci-t'].forEach(id => {
+        document.getElementById(id).addEventListener('input', renderCompound);
+      });
+
+      // --- APP 2: RADIOACTIVE DECAY ---
+      function renderDecay() {
+        const N0 = parseFloat(document.getElementById('dc-n0').value);
+        const hl = parseFloat(document.getElementById('dc-hl').value);
+        const t = parseFloat(document.getElementById('dc-t').value);
+        const k = Math.log(2) / hl;
+        const rem = N0 * Math.exp(-k * t);
+        const pct = (rem / N0) * 100;
+
+        document.getElementById('dc-n0-val').textContent = `${N0} g`;
+        document.getElementById('dc-hl-val').textContent = `${hl.toFixed(1)} yrs`;
+        document.getElementById('dc-t-val').textContent = `${t.toFixed(1)} yrs`;
+        document.getElementById('dc-rem').textContent = `${rem.toFixed(1)} g`;
+        document.getElementById('dc-k').textContent = k.toFixed(4);
+        document.getElementById('dc-pct-badge').textContent = `${pct.toFixed(1)}% remaining`;
+
+        const canvas = document.getElementById('canvas-decay');
+        const setup = setupHiDPICanvas(canvas);
+        if (!setup) return;
+        const { ctx, W, H } = setup;
+
+        const pad = { l: 50, r: 22, t: 22, b: 36 };
+        const pw = W - pad.l - pad.r;
+        const ph = H - pad.t - pad.b;
+        const maxT = 40;
+        const maxY = Math.max(N0 * 1.1, 100);
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, W, H);
+
+        const xOf = x => pad.l + (x / maxT) * pw;
+        const yOf = y => pad.t + ph - (y / maxY) * ph;
+
+        // Horizontal Grid
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+        ctx.fillStyle = '#64748b';
+        ctx.font = '600 11px Inter, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        for (let i = 0; i <= 4; i++) {
+          const val = (maxY / 4) * i;
+          const y = yOf(val);
+          ctx.beginPath();
+          ctx.moveTo(pad.l, y);
+          ctx.lineTo(W - pad.r, y);
+          ctx.stroke();
+          ctx.fillText(`${Math.round(val)}g`, pad.l - 8, y);
+        }
+
+        // X Axis ticks
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        for (let i = 0; i <= 4; i++) {
+          const tv = i * 10;
+          ctx.fillText(`${tv}y`, xOf(tv), H - pad.b + 8);
+        }
+
+        // Horizontal asymptote highlight N = 0
+        ctx.save();
+        ctx.strokeStyle = '#f43f5e';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(pad.l, yOf(0));
+        ctx.lineTo(W - pad.r, yOf(0));
+        ctx.stroke();
+        ctx.restore();
+
+        // Decay curve
+        ctx.strokeStyle = '#4f46e5';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let i = 0; i <= 160; i++) {
+          const tv = (i / 160) * maxT;
+          const nv = N0 * Math.exp(-k * tv);
+          if (i === 0) ctx.moveTo(xOf(tv), yOf(nv));
+          else ctx.lineTo(xOf(tv), yOf(nv));
+        }
+        ctx.stroke();
+
+        // Current time marker
+        const cx = xOf(t);
+        const cy = yOf(rem);
+        ctx.save();
+        ctx.strokeStyle = '#0d9488';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(cx, yOf(0));
+        ctx.lineTo(cx, cy);
+        ctx.lineTo(pad.l, cy);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.fillStyle = '#0d9488';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      ['dc-n0', 'dc-hl', 'dc-t'].forEach(id => {
+        document.getElementById(id).addEventListener('input', renderDecay);
+      });
+
+      // --- APP 3: RICHTER SCALE ---
+      function renderRichter() {
+        const m1 = parseFloat(document.getElementById('eq1-slider').value);
+        const m2 = parseFloat(document.getElementById('eq2-slider').value);
+        const diff = Math.abs(m2 - m1);
+        const ratio = Math.pow(10, diff);
+
+        document.getElementById('eq1-val').textContent = m1.toFixed(1);
+        document.getElementById('eq2-val').textContent = m2.toFixed(1);
+
+        const ratioFormatted = ratio >= 1000 ? Math.round(ratio).toLocaleString() : (ratio >= 10 ? ratio.toFixed(1) : ratio.toFixed(2));
+        document.getElementById('eq-ratio-text').textContent = `${ratioFormatted}×`;
+
+        if (Math.abs(m2 - m1) < 0.05) {
+          document.getElementById('eq-ratio-sub').textContent = 'Both earthquakes have the exact same magnitude and wave amplitude!';
+        } else {
+          const stronger = m2 > m1 ? 'B' : 'A';
+          const weaker = m2 > m1 ? 'A' : 'B';
+          document.getElementById('eq-ratio-sub').textContent = `Earthquake ${stronger} has ${ratioFormatted} times larger seismic wave amplitude than ${weaker}!`;
+        }
+
+        const hi = Math.max(m1, m2).toFixed(1);
+        const lo = Math.min(m1, m2).toFixed(1);
+        document.getElementById('eq-math-proof').innerHTML = `I<sub>max</sub> / I<sub>min</sub> = 10<sup>${hi} &minus; ${lo}</sup> = 10<sup>${diff.toFixed(1)}</sup> &approx; ${ratioFormatted}`;
+
+        const canvas = document.getElementById('canvas-richter');
+        const setup = setupHiDPICanvas(canvas);
+        if (!setup) return;
+        const { ctx, W, H } = setup;
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, W, H);
+
+        // Draw two live seismic wave comparisons (visualized cleanly scaled)
+        const midA = H * 0.30;
+        const midB = H * 0.72;
+        const maxAmp = H * 0.19;
+
+        // Normalize visual amplitudes using log-compressed height so both waves stay readable while still visually distinct
+        const ampA = Math.max(4, maxAmp * Math.pow(10, (m1 - Math.max(m1, m2)) * 0.45));
+        const ampB = Math.max(4, maxAmp * Math.pow(10, (m2 - Math.max(m1, m2)) * 0.45));
+
+        function drawWave(midY, amp, color, label) {
+          // Baseline
+          ctx.strokeStyle = '#cbd5e1';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(16, midY);
+          ctx.lineTo(W - 16, midY);
+          ctx.stroke();
+
+          // Seismic burst wave
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          for (let x = 20; x <= W - 20; x += 2) {
+            const norm = (x - 20) / (W - 40);
+            const env = Math.exp(-Math.pow((norm - 0.5) * 4.2, 2));
+            const y = midY + Math.sin(norm * 55) * amp * env;
+            if (x === 20) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+
+          ctx.fillStyle = color;
+          ctx.font = '700 12px Inter, sans-serif';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'top';
+          ctx.fillText(label, 18, midY - maxAmp - 12);
+        }
+
+        drawWave(midA, ampA, '#4f46e5', `Earthquake A: M = ${m1.toFixed(1)} (10^${m1.toFixed(1)} I₀)`);
+        drawWave(midB, ampB, '#0d9488', `Earthquake B: M = ${m2.toFixed(1)} (10^${m2.toFixed(1)} I₀)`);
+      }
+
+      ['eq1-slider', 'eq2-slider'].forEach(id => {
+        document.getElementById(id).addEventListener('input', renderRichter);
+      });
+
+      // --- APP 4: CHEMISTRY pH SCALE ---
+      function getPhSubstance(ph) {
+        if (ph <= 1.2) return 'Battery / Stomach Acid';
+        if (ph <= 2.8) return 'Lemon Juice / Vinegar';
+        if (ph <= 4.5) return 'Orange Juice / Soda';
+        if (ph <= 5.8) return 'Black Coffee';
+        if (ph <= 6.7) return 'Milk / Rainwater';
+        if (ph <= 7.3) return 'Pure Water (Neutral)';
+        if (ph <= 9.0) return 'Baking Soda / Seawater';
+        if (ph <= 11.2) return 'Hand Soap / Ammonia';
+        if (ph <= 13.0) return 'Household Bleach';
+        return 'Liquid Drain Cleaner';
+      }
+
+      function renderPh() {
+        const ph = parseFloat(document.getElementById('ph-slider').value);
+        document.getElementById('ph-val-badge').textContent = `pH = ${ph.toFixed(1)}`;
+        document.getElementById('ph-conc').innerHTML = `1.0 &times; 10<sup>&minus;${ph.toFixed(1)}</sup> M`;
+        document.getElementById('ph-substance').textContent = getPhSubstance(ph);
+
+        const cmpEl = document.getElementById('ph-water-compare');
+        const diff = 7 - ph;
+        if (Math.abs(diff) < 0.05) {
+          cmpEl.innerHTML = 'Neutral! Same [H<sup>+</sup>] concentration as pure water (10<sup>&minus;7</sup> M).';
+        } else if (diff > 0) {
+          const factor = Math.pow(10, diff);
+          const fStr = factor >= 1000 ? Math.round(factor).toLocaleString() : factor.toFixed(1);
+          cmpEl.innerHTML = `Acidic: <strong>${fStr}&times;</strong> more H<sup>+</sup> ions than pure water!`;
+        } else {
+          const factor = Math.pow(10, -diff);
+          const fStr = factor >= 1000 ? Math.round(factor).toLocaleString() : factor.toFixed(1);
+          cmpEl.innerHTML = `Basic (Alkaline): <strong>${fStr}&times;</strong> fewer H<sup>+</sup> ions than pure water!`;
+        }
+
+        const canvas = document.getElementById('canvas-ph');
+        const setup = setupHiDPICanvas(canvas);
+        if (!setup) return;
+        const { ctx, W, H } = setup;
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, W, H);
+
+        // Plot pH = -log10(x) conceptual curve across log-orders from 10^-14 to 10^0
+        const pad = { l: 48, r: 22, t: 20, b: 32 };
+        const pw = W - pad.l - pad.r;
+        const phH = H - pad.t - pad.b;
+
+        // Horizontal axis: exponent k from -14 to 0 (log scale of [H+])
+        const xOfPh = p => pad.l + ((14 - p) / 14) * pw;
+        const yOfPh = p => pad.t + phH - (p / 14) * phH;
+
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+        for (let p = 0; p <= 14; p += 7) {
+          const y = yOfPh(p);
+          ctx.beginPath();
+          ctx.moveTo(pad.l, y);
+          ctx.lineTo(W - pad.r, y);
+          ctx.stroke();
+          ctx.fillStyle = '#64748b';
+          ctx.font = '600 11px Inter, sans-serif';
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(`pH ${p}`, pad.l - 6, y);
+        }
+
+        // Decreasing line pH vs log10([H+])
+        ctx.strokeStyle = '#0d9488';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(xOfPh(14), yOfPh(14));
+        ctx.lineTo(xOfPh(0), yOfPh(0));
+        ctx.stroke();
+
+        // X Axis label
+        ctx.fillStyle = '#64748b';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText('10⁻¹⁴ M (Basic)', pad.l + 35, H - pad.b + 8);
+        ctx.fillText('10⁻⁷ M (Neutral)', pad.l + pw / 2, H - pad.b + 8);
+        ctx.fillText('10⁰ M (Acidic)', W - pad.r - 35, H - pad.b + 8);
+
+        // Active marker
+        const mx = xOfPh(ph);
+        const my = yOfPh(ph);
+        ctx.fillStyle = '#4f46e5';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(mx, my, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      document.getElementById('ph-slider').addEventListener('input', renderPh);
+      document.querySelectorAll('.ph-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById('ph-slider').value = btn.dataset.ph;
+          renderPh();
+        });
+      });
+
+      function renderActiveApp() {
+        if (activeApp === 'compound') renderCompound();
+        else if (activeApp === 'decay') renderDecay();
+        else if (activeApp === 'richter') renderRichter();
+        else if (activeApp === 'ph') renderPh();
+      }
+
+      /* =====================================================================
+         6. GLOBAL RESIZE OBSERVER FOR RESPONSIVE CANVASES
+         ===================================================================== */
+      window.addEventListener('resize', () => {
+        if (currentTab === 'graph') resizeAndDrawGraph();
+        if (currentTab === 'applications') renderActiveApp();
+      });
+    })();
+  </script>
+</body>
+</html>
