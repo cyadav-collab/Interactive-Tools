@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBDP Mathematics Hub | Chandrabhan</title>
     <style>
+        /* Universal reset */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -134,8 +135,8 @@
         
         .cards-container {
             display: grid;
-            /* Changed auto-fit to auto-fill to prevent single cards from stretching */
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            /* Responsive auto-fill grid preventing single cards from stretching or overflowing small screens */
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
             gap: 30px;
             width: 100%;
         }
@@ -172,7 +173,8 @@
         .card:nth-child(2) { border-top: 4px solid #ec4899; }
         .card:nth-child(3) { border-top: 4px solid #10b981; }
         .card:nth-child(4) { border-top: 4px solid #f97316; }
-        .card:nth-child(5) { border-top: 4px solid #8b5cf6; } /* New Purple for Card 5 */
+        .card:nth-child(5) { border-top: 4px solid #8b5cf6; } /* Purple for Card 5 */
+        .card:nth-child(6) { border-top: 4px solid #14b8a6; } /* Teal for Card 6 */
         
         .card:hover {
             transform: translateY(-6px);
@@ -216,6 +218,11 @@
             color: #7c3aed;
             border-color: rgba(139, 92, 246, 0.3);
         }
+        .card:nth-child(6) .topic-tag {
+            background: rgba(20, 184, 166, 0.12);
+            color: #0f766e;
+            border-color: rgba(20, 184, 166, 0.35);
+        }
         
         .card-title {
             font-size: 1.5rem;
@@ -248,6 +255,7 @@
             align-items: center;
             width: 20px;
             height: 20px;
+            flex-shrink: 0;
             background: rgba(16, 185, 129, 0.15);
             color: #059669;
             border-radius: 50%;
@@ -291,6 +299,11 @@
             background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
             box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
+        /* Card 6 Button Colors */
+        .card:nth-child(6) .sim-btn {
+            background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+            box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
+        }
         .sim-btn:hover {
             opacity: 0.95;
             transform: scale(1.02);
@@ -321,7 +334,7 @@
     <div class="header">
         <span class="badge">IBDP MATHEMATICS</span>
         <h1>Interactive Simulations Hub</h1>
-        <p class="subtitle">Interactive visual tools for Analysis & Approaches (AA) and Applications & Interpretation (AI)</p>
+        <p class="subtitle">Interactive visual tools for Analysis &amp; Approaches (AA) and Applications &amp; Interpretation (AI)</p>
         <div class="curator">
             <span>Curated and designed by:</span>
             <span class="curator-name">Chandrabhan</span>
@@ -353,7 +366,7 @@
                     <ul class="features-list">
                         <li>15-Minute Pre-Lesson Discovery Lab Task</li>
                         <li>Real-time dynamic graph sandbox (a, b, c, d sliders)</li>
-                        <li>Interactive Asymptote Detector & Business Models</li>
+                        <li>Interactive Asymptote Detector &amp; Business Models</li>
                     </ul>
                 </div>
                 <a href="interactive_rational_functions_visualizer.html" class="sim-btn">
@@ -402,7 +415,7 @@
                 </a>
             </div>
              
-             <!-- Card 4: Inverse Functions -->
+            <!-- Card 4: Inverse Functions -->
             <div class="card">
                 <div>
                     <div class="card-header">
@@ -410,11 +423,11 @@
                     </div>
                     <h2 class="card-title">Inverse Functions</h2>
                     <p class="card-desc">
-                        Explore graphs if inverse functions, real life context of inverse functions.
+                        Explore graphs of inverse functions and real-life contexts of inverse functions.
                     </p>
                     <ul class="features-list">
                         <li>Dynamic inverse function generator</li>
-                        <li>Real-life application of inverse function</li>
+                        <li>Real-life application of inverse functions</li>
                     </ul>
                 </div>
                 <a href="Inversefunctions.html" class="sim-btn">
@@ -442,7 +455,28 @@
                     Launch Simulation →
                 </a>
             </div>
-         </div>
+
+            <!-- Card 6: Exponential & Logarithmic Functions Lab -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="topic-tag">Topic 2.9</span>
+                    </div>
+                    <h2 class="card-title">Exponential &amp; Logarithmic Functions</h2>
+                    <p class="card-desc">
+                        Investigate the algebraic relationship between exponential and logarithmic forms, explore their inverse graphs, domain &amp; range, and model real-world growth, decay, and log scales.
+                    </p>
+                    <ul class="features-list">
+                        <li>Interactive Exponential ↔ Logarithmic form bridge</li>
+                        <li>Dynamic inverse graph lab with asymptotes &amp; reflection in y = x</li>
+                        <li>Adaptive practice (Easy, Medium, Hard) &amp; real-world applications</li>
+                    </ul>
+                </div>
+                <a href="exponential%20and%20logarithmic%20functions.html" class="sim-btn">
+                    Launch Simulation →
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- UNIT 3 -->
@@ -465,7 +499,7 @@
     <div class="unit-section">
         <h2 class="unit-title"><span class="unit-number">Topic 5</span> Calculus</h2>
         <div class="cards-container">
-            <!-- New Card: Volume of Revolution Visualizer -->
+            <!-- Card 1: Volume of Revolution Visualizer -->
             <div class="card">
                 <div>
                     <div class="card-header">
